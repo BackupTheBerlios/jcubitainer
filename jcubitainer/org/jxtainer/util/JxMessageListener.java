@@ -20,58 +20,14 @@
 
 /* History & changes **************************************************
  *                                                                     *
- ******** May 5, 2004 **************************************************
+ ******** March 22, 2005 **************************************************
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jxtainer;
+package org.jxtainer.util;
 
-import java.util.Iterator;
+public interface JxMessageListener {
 
-import org.jxtainer.util.JxStatutListener;
-
-public class J3xta {
-
-    private static final String JXTA_ID = "J3xtainer";
-    
-    private static String suffix = "";
-
-    public static final int JXTA_STATUT_OFF = 0;
-
-    public static final int JXTA_STATUT_ON = 1;
-
-    public static final int JXTA_STATUT_ERROR = 2;
-
-    public static final int JXTA_STATUT_CONNECT = 3;
-
-    private static int statut = JXTA_STATUT_OFF;
-
-    /**
-     * @return
-     */
-    public static int getStatut() {
-        return statut;
-    }
-
-    /**
-     * @param i
-     */
-    public static void setStatut(int i) {
-        statut = i;
-        // Listener :
-        Iterator list = StartJXTA.jxStatutListenerList.iterator();
-        JxStatutListener listener = null;
-        while ( list.hasNext() ) {
-            listener = (JxStatutListener) list.next();                
-            listener.newStatut();
-        }    
-    }
-
-    public static void setSuffix(String suffix) {
-        J3xta.suffix = suffix;
-    }
-
-    public static String getJXTA_ID() {
-        return JXTA_ID + suffix;
-    }
+	public void receiveMessage();
+	
 }

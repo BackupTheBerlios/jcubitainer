@@ -28,9 +28,11 @@ package org.jxtainer;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
+import org.jxtainer.util.JxPeerListener;
 
 public class J3PeerManager extends Process {
 
@@ -71,6 +73,14 @@ public class J3PeerManager extends Process {
         if (nb == 0) {
             System.out.println("! Nouveau Peer actif : " + peer.getName());
             put(peer, String.valueOf(3));
+            // Listener :
+            Iterator list = StartJXTA.jxPeerListenerList.iterator();
+            JxPeerListener listener = null;
+            while ( list.hasNext() ) {
+                listener = (JxPeerListener) list.next();                
+                listener.newPeer();
+            }            
+            
         } else if (nb < 11)
             put(peer, String.valueOf(nb + 1));
         latest = peer;
@@ -90,6 +100,13 @@ public class J3PeerManager extends Process {
         peers_int.remove(peer.toString());
         peers_name.remove(peer.toString());
         latest_remove = peer;
+        // Listener :
+        Iterator list = StartJXTA.jxPeerListenerList.iterator();
+        JxPeerListener listener = null;
+        while ( list.hasNext() ) {
+            listener = (JxPeerListener) list.next();                
+            listener.deletePeer();
+        }
     }
 
     private static void put(J3Peer peer, String s) {

@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -38,7 +38,7 @@ public class Configuration extends Properties {
 
     public static final String DIR = ".jcubitainer";
 
-    public static final String VERSION = "0.3";
+    public static final String VERSION = "0.3.1";
 
     public static final String NAME_VERSION = "VERSION";
 

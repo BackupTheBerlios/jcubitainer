@@ -294,7 +294,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
                         + ".jxtainer"); //$NON-NLS-1$
                 home.mkdirs();
             }
-            StartJXTA.wakeUp(s, SUFFIX, home);
+            StartJXTA.wakeUp(s, SUFFIX, home, false);
             clearHit();
             StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame(), s);
             frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

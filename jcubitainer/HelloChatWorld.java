@@ -1,8 +1,43 @@
+/***********************************************************************
+ * HelloChatWorld                                                      *
+ * Version release date : March 22, 2005                               *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** March 22, 2005 ***********************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.jxtainer.*;
+import org.jxtainer.J3PeerManager;
+import org.jxtainer.J3Pipe;
+import org.jxtainer.J3xta;
+import org.jxtainer.StartJXTA;
+import org.jxtainer.util.J3Message;
+import org.jxtainer.util.J3MessagePipe;
+import org.jxtainer.util.JxMessageListener;
+import org.jxtainer.util.JxPeerListener;
+import org.jxtainer.util.JxStatutListener;
 
 /**
  * 
@@ -41,7 +76,7 @@ public class HelloChatWorld {
 		}
 
 		// Evenement lorsque l'on reçoit un message du chat :
-		StartJXTA.addJxMessageListener(new JxMessageLister() {
+		StartJXTA.addJxMessageListener(new JxMessageListener() {
 			public void receiveMessage() {
 				J3Message message = J3MessagePipe.drop();
 				consoleOut(message.getWho() + " a dit : " + message.getWhat());
@@ -60,7 +95,7 @@ public class HelloChatWorld {
 				consoleOut(J3PeerManager.getLatest().getName() + " vient d'arriver sur le chat !");
 			}
 			public void deletePeer() {
-				consoleOut(J3PeerManager.getLatest().getName() + " vient de partir du chat !");
+				consoleOut(J3PeerManager.getLatest_remove().getName() + " vient de partir du chat !");
 			}
 		});
 
@@ -70,7 +105,7 @@ public class HelloChatWorld {
 		consoleOut("Recherche du chat sur le réseau...");
 
 		try {
-			while (StartJXTA.isConnected()) {
+			while (J3xta.JXTA_STATUT_CONNECT == J3xta.getStatut()) {
 				Thread.sleep(100);
 			}
 		} catch (InterruptedException e) {

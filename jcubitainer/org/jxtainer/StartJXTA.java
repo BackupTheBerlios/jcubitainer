@@ -1,22 +1,42 @@
-/*
- * Created on 25 mai 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 25, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jxtainer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
+import org.jxtainer.util.JxMessageListener;
+import org.jxtainer.util.JxPeerListener;
+import org.jxtainer.util.JxStatutListener;
 
-/**
- * @author mounes
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 public class StartJXTA extends Process {
 
     static J3xtaConnect connect = null;
@@ -28,6 +48,13 @@ public class StartJXTA extends Process {
     private static ProcessMg manager = new ProcessMg(new StartJXTA());
 
     private static File config_dir = null;
+
+    // Les listeners :
+    public static List jxStatutListenerList = new ArrayList();
+
+    public static List jxPeerListenerList = new ArrayList();
+
+    public static List jxMessageListenerList = new ArrayList();
 
     public StartJXTA() {
         super(1000);
@@ -43,11 +70,17 @@ public class StartJXTA extends Process {
         }
     }
 
-    public static void wakeUp(String n, String suffix_group,
-            File configuration_dir) {
+    /**
+     * @param login
+     * @param suffix
+     * @param object
+     * @param firewall
+     */
+    public static void wakeUp(String login, String suffix_group,
+            File configuration_dir, boolean firewall) {
         J3xta.setSuffix(suffix_group);
         config_dir = configuration_dir;
-        name = n;
+        name = login;
         manager.wakeUp();
     }
 
@@ -61,5 +94,40 @@ public class StartJXTA extends Process {
 
     public static String getPeer_ID() {
         return peer_ID;
+    }
+
+    /**
+     * @param lister
+     */
+    public static void addJxMessageListener(JxMessageListener listener) {
+        jxMessageListenerList.add(listener);
+    }
+
+    /**
+     * @param listener
+     */
+    public static void addJxStatutListener(JxStatutListener listener) {
+        jxStatutListenerList.add(listener);
+    }
+
+    /**
+     * @param listener
+     */
+    public static void addJxPeerListener(JxPeerListener listener) {
+        jxPeerListenerList.add(listener);
+    }
+
+    /**
+     * @return
+     */
+    public static J3Pipe getPipe() {
+        Enumeration liste = J3Group.getJ3Groups();
+        J3Pipe pipe = null;
+        if (liste != null) 
+            if(liste.hasMoreElements()){
+                J3Group group = (J3Group)liste.nextElement();
+                pipe = group.getPipe();
+            }
+        return pipe;
     }
 }

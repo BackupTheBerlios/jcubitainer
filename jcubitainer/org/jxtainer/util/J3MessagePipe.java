@@ -27,7 +27,10 @@
 package org.jxtainer.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.jxtainer.StartJXTA;
 
 public class J3MessagePipe {
 
@@ -45,6 +48,13 @@ public class J3MessagePipe {
     public static void put(J3Message mes) {
         synchronized (pipe) {
             pipe.add(mes);
+        }
+        // Listener :
+        Iterator list = StartJXTA.jxMessageListenerList.iterator();
+        JxMessageListener listener = null;
+        while ( list.hasNext() ) {
+            listener = (JxMessageListener) list.next();                
+            listener.receiveMessage();
         }
     }
 
