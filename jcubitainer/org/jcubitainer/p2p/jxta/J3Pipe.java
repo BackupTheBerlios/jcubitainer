@@ -1,7 +1,6 @@
 package org.jcubitainer.p2p.jxta;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.document.AdvertisementFactory;
@@ -57,7 +56,6 @@ public class J3Pipe extends Process implements PipeMsgListener {
 
 			discovery.publish(pipeAdv);
 			sendMsg("ping");
-			System.out.print("|");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -150,23 +148,10 @@ public class J3Pipe extends Process implements PipeMsgListener {
 	 * @throws Exception
 	 *             if the data could not be retrieved
 	 */
-	protected byte[] getTagValue(Message msg, String tag) throws Exception {
+	protected String getTagValue(Message msg, String tag) throws Exception {
 
-		byte[] buffer = null;
 		MessageElement elem = msg.getMessageElement(null, tag);
-		// Remove the element from the message
-		if (elem != null) {
-			msg.removeMessageElement(elem);
-			InputStream ip = elem.getStream();
-			if (ip != null) {
-				buffer = new byte[ip.available()];
-				ip.read(buffer);
-			}
-			return buffer;
-		} else {
-			return null;
-		}
-
+		return elem == null ? null : new String(elem.getBytes(false));
 	}
 
 	/**
@@ -184,16 +169,13 @@ public class J3Pipe extends Process implements PipeMsgListener {
 	 */
 	protected String getTagString(Message msg, String tag, String defaultValue)
 			throws Exception {
-		byte[] buffer = getTagValue(msg, tag);
-		String result;
+		String result = getTagValue(msg, tag);
 
-		if (buffer != null) {
-			result = new String(buffer);
+		if (result != null) {
+			return result;
 		} else {
-			result = defaultValue;
+			return defaultValue;
 		}
-
-		return result;
 	}
 
 	/**
@@ -214,6 +196,6 @@ public class J3Pipe extends Process implements PipeMsgListener {
 		return id;
 
 	}
-	
+
 }
 

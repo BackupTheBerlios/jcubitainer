@@ -55,6 +55,8 @@ public class J3Group {
 	private static ProcessMg peerDiscoveryServiceProcess = null;
 
 	ProcessMg pipe_listener = null;
+	
+	private boolean rendezvous = false;
 
 	/**
 	 *  
@@ -65,6 +67,7 @@ public class J3Group {
 		rootGroup = peergroupPere;
 		rootdiscoSvc = pdiscoSvcPere;
 		peerGroup = this_;
+		rendezvous = peerGroup.isRendezvous();
 	}
 
 	protected static J3Group getInstance(PeerGroupAdvertisement groupAdv) {
@@ -95,7 +98,6 @@ public class J3Group {
 		// Publication du groupe.
 		try {
 			rootdiscoSvc.publish(peerGroup.getPeerGroupAdvertisement());
-			rootdiscoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
 		} catch (Exception e) {
 			System.out
 					.println("Failed to publish peer advertisement in the group ["
@@ -152,13 +154,6 @@ public class J3Group {
 		return peerGroup.getDiscoveryService();
 	}
 
-	//    public void addPeer(J3Peer peer) {
-	//        System.out.println(">>" + peer.getPeerID().toString());
-	//        knowPeers.put(peer.getPeerID().toString(), peer);
-	//        // ArrayList al = new ArrayList(knowPeers.values());
-	//        // getGroupTableForDisplay().setFils(al);
-	//    }
-
 	public String toString() {
 		return peerGroup.getPeerGroupName();
 	}
@@ -167,20 +162,12 @@ public class J3Group {
 		return peerGroup.getPipeService();
 	}
 
-	//    public GroupTable getGroupTableForDisplay() {
-	//        return gt;
-	//    }
-	//
-	//    public void setGroupTableForDisplay(GroupTable p) {
-	//        gt = p;
-	//    }
-
 	public PeerGroupID getPeerGroupID() {
 		return peerGroup.getPeerGroupID();
 	}
 
 	public static boolean isConnectToGroup() {
-		return !knowPeerGroups.isEmpty();
+		return !joinPeerGroups.isEmpty();
 	}
 
 	public void createPipeListener() {
@@ -189,8 +176,18 @@ public class J3Group {
 		pipe_listener.wakeUp();
 	}
 
+	public boolean isJoinnedToGroup() {
+		return joinPeerGroups.containsKey(getPeerGroupID());
+	}
+
 	public DiscoveryService getDiscoveryService() {
 		return peerGroup.getDiscoveryService();
 	}
 
+	/**
+	 * @return Returns the rendezvous.
+	 */
+	public boolean isRendezvous() {
+		return rendezvous;
+	}
 }

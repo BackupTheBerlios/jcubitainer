@@ -73,7 +73,10 @@ public class J3GroupDiscoveryListener extends Process implements
 						if (adv.getName().startsWith(J3xta.JXTA_ID)) {
 							J3Group j3g = J3Group.getInstance(adv, rootGroup,
 									discoveryService);
-							j3g.joinThisGroup();
+							if (true)//j3g.isRendezvous()
+								j3g.joinThisGroup();
+							else
+								System.out.println("! Not RDV PeerGroup");
 						}
 					}
 				} catch (Exception e) {

@@ -96,7 +96,7 @@ public class J3xtaConnect {
 
 		System.out.print("On va essayé de trouver une partie.");
 		try {
-			int boucle = 60 * 5; // 5 minutes
+			int boucle = 60 * 1; // 5 minutes
 			while (!J3Group.isConnectToGroup() && --boucle > 0) {
 				Thread.sleep(1000);
 				System.out.print(".");

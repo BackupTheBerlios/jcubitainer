@@ -68,7 +68,6 @@ public class J3GroupRDV extends Process {
 			ModuleImplAdvertisement implAdv = rootGroup
 					.getAllPurposePeerGroupImplAdvertisement();
 
-
 			PeerGroupAdvertisement newPGAdv = (PeerGroupAdvertisement) AdvertisementFactory
 					.newAdvertisement(PeerGroupAdvertisement
 							.getAdvertisementType());
@@ -96,8 +95,7 @@ public class J3GroupRDV extends Process {
 	}
 
 	public void publishGroup() {
-		System.out.println("Publication du groupe : " +
-		 peerGroup.getPeerGroupName());
+
 		try {
 			discoSvc.publish(adv, PeerGroup.DEFAULT_LIFETIME,
 					PeerGroup.DEFAULT_EXPIRATION);
@@ -118,7 +116,6 @@ public class J3GroupRDV extends Process {
 	public DiscoveryService getDiscoveryService() {
 		return peerGroup.getDiscoveryService();
 	}
-
 
 	public PeerGroupID getPeerGroupID() {
 		return peerGroup.getPeerGroupID();
