@@ -96,14 +96,14 @@ public class DisplayInfo extends JPanel implements ActionListener {
         start.setAlignmentX(Component.CENTER_ALIGNMENT);
         start.setBackground(Color.black);
         start.setForeground(Color.white);
-        start.setIcon(Ressources.getImageIcon("/ressources/Play16.gif"));
+        start.setIcon(Ressources.getImageIcon("/ressources/images/Play16.gif"));
         start.addActionListener(this);
 
         network = new JButton("Réseau"); //$NON-NLS-1$
         network.setAlignmentX(Component.CENTER_ALIGNMENT);
         network.setBackground(Color.black);
         network.setForeground(Color.white);
-        network.setIcon(Ressources.getImageIcon("/ressources/Search16.gif"));
+        network.setIcon(Ressources.getImageIcon("/ressources/images/Search16.gif"));
         network.addActionListener(this);
 
         // Bar pour le démarrage :
