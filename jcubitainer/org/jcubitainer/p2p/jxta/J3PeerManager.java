@@ -114,4 +114,8 @@ public class J3PeerManager extends Process {
     public static J3Peer getLatest_remove() {
         return latest_remove;
     }
+    
+    public static boolean existPeer(String peer_id) {
+        return peers_name.containsKey(peer_id);
+    }
 }

@@ -156,22 +156,27 @@ public class J3Pipe extends Process implements PipeMsgListener {
     public void pipeMsgEvent(PipeMsgEvent event) {
         J3Message mes = new J3Message(event.getMessage());
 
-        System.out.println("! Message reçu de " + mes.getWho() + " de : " + mes.getWhat());
-        
         if (mes.isSystem()) {
             if (MESSAGE_PING.equals(mes.getWhat())
-                    /*&& !StartJXTA.name.equals(mes.getWho())*/) {
+            /*&& !StartJXTA.name.equals(mes.getWho())*/) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 J3PeerManager.addPeer(peer);
             }
             if (MESSAGE_REMOVE.equals(mes.getWhat())
                     && !StartJXTA.getPeer_ID().equals(mes.getPeer_id())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
-                System.out.println("! Demande de suppression de : " + peer.getName());
+                System.out.println("! Demande de suppression de : "
+                        + peer.getName());
                 J3PeerManager.remove(peer);
             }
-        } else
-            J3MessagePipe.put(mes);
+        } else {
+            // On veut recevoir les messages que des peers connus :
+            if (J3PeerManager.existPeer(mes.getPeer_id())) {
+                System.out.println("! Message reçu de " + mes.getWho()
+                        + " de : " + mes.getWhat());
+                J3MessagePipe.put(mes);
+            }
+        }
     }
 
     private PipeID getUniquePipeID() {
