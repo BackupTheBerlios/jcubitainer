@@ -84,7 +84,7 @@ public class J3Group {
             pg = new J3Group(peerGroup_temp, proot, pdiscoSvc);
             pg.publishGroup();
             knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
-            System.out.println("Groupe trouvé : " + groupAdv.getName());
+            System.out.println("- Groupe trouvé : " + groupAdv.getName());
 
             // On veut trouver ses peers :
             peerDiscoveryServiceProcess = new ProcessMg(
@@ -141,7 +141,7 @@ public class J3Group {
             if (auth.isReadyForJoin()) {
                 Credential myCred = membership.join(auth);
 
-                System.out.println("Successfully joined group "
+                System.out.println("! Successfully joined group "
                         + peerGroup.getPeerGroupName());
 
                 /*				// display the credential as a plain text document.

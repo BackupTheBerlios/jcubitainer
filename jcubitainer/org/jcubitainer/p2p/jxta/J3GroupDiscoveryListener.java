@@ -70,13 +70,9 @@ public class J3GroupDiscoveryListener extends Process implements
 							.nextElement();
 
 					if (knowsPeers.add(adv.getID())) {
-						System.out.println("- Peer Group = " + adv.getName());
 						if (adv.getName().startsWith(J3xta.JXTA_ID)) {
-							System.out.println("! Peergroup à nous : "
-									+ adv.getName());
 							J3Group j3g = J3Group.getInstance(adv, rootGroup,
 									discoveryService);
-
 							j3g.joinThisGroup();
 						}
 					}
