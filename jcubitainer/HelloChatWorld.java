@@ -26,9 +26,11 @@
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.jcubitainer.manager.Configuration;
 import org.jxtainer.J3PeerManager;
 import org.jxtainer.J3Pipe;
 import org.jxtainer.J3xta;
@@ -85,7 +87,7 @@ public class HelloChatWorld {
 		// Evenement de connexion		
 		StartJXTA.addJxStatutListener(new JxStatutListener() {
 			public void newStatut() {
-				if (J3xta.JXTA_STATUT_CONNECT == J3xta.getStatut())
+				if (J3xta.JXTA_STATUT_ON == J3xta.getStatut())
 					consoleOut("Vous êtes sur le chat !");
 			}
 		});
@@ -100,12 +102,18 @@ public class HelloChatWorld {
 		});
 
 		// Démarrage du chat...
-		StartJXTA.wakeUp(login, SUFFIX, null, firewall);
+		File home = null;
+		if ( !firewall ) {
+		    home = new File(System.getProperty("user.home") 
+                    + File.separator
+                    + ".jxtainer"); 
+		}
+		StartJXTA.wakeUp(login, SUFFIX, home, firewall);
 
 		consoleOut("Recherche du chat sur le réseau...");
 
 		try {
-			while (J3xta.JXTA_STATUT_CONNECT == J3xta.getStatut()) {
+			while (J3xta.JXTA_STATUT_ON == J3xta.getStatut()) {
 				Thread.sleep(100);
 			}
 		} catch (InterruptedException e) {
