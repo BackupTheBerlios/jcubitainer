@@ -40,8 +40,8 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.ProcessMg;
 
 public class J3Group {
 
@@ -85,11 +85,11 @@ public class J3Group {
 			pg = new J3Group(peerGroup_temp, proot, pdiscoSvc);
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
-			Log.debug("! Groupe trouv� : " + groupAdv.getName());
+			Log.debug("! Groupe trouve : " + groupAdv.getName());
 			StartJXTA.setPeer_ID(pg.getPeerID().toString());
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
-			Log.debug("! Impossible de cr�� le groupe : "
+			Log.debug("! Impossible de cree le groupe : "
 					+ groupAdv.getName());
 		}
 		return pg;
@@ -179,7 +179,7 @@ public class J3Group {
 	}
 
 	public void createPipeListener() {
-		// On veut �couter l'arriv� des pipes
+		// On veut ecouter l'arrive des pipes
 	    
 	    pipe = new J3Pipe(this);	    
 		pipe_listener = new ProcessMg(pipe);
@@ -210,8 +210,8 @@ public class J3Group {
     }
     
     public void quitGroup(){
-        Log.debug("! On quitte le r�seau, ");
+        Log.debug("! On quitte le reseau, ");
         pipe.sendMsg(J3Pipe.MESSAGE_REMOVE,true);
-        Log.debug(" message envoy�.");
+        Log.debug(" message envoye.");
     }
 }

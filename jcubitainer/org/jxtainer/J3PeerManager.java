@@ -30,10 +30,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.jcubitainer.tools.Process;
-import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.JxPeerListener;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.Process;
+import org.jxtainer.util.ProcessMg;
 
 public class J3PeerManager extends Process {
 
@@ -79,7 +79,7 @@ public class J3PeerManager extends Process {
             JxPeerListener listener = null;
             while ( list.hasNext() ) {
                 listener = (JxPeerListener) list.next();                
-                listener.newPeer();
+                listener.newPeer(peer);
             }            
             
         } else if (nb < 11)
@@ -106,7 +106,7 @@ public class J3PeerManager extends Process {
         JxPeerListener listener = null;
         while ( list.hasNext() ) {
             listener = (JxPeerListener) list.next();                
-            listener.deletePeer();
+            listener.deletePeer(peer);
         }
     }
 

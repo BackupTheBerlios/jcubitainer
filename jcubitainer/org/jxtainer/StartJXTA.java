@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounes Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.jcubitainer.tools.Process;
-import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.JxMessageListener;
 import org.jxtainer.util.JxPeerListener;
 import org.jxtainer.util.JxStatutListener;
+import org.jxtainer.util.Process;
+import org.jxtainer.util.ProcessMg;
 
 public class StartJXTA extends Process {
 
@@ -48,6 +48,8 @@ public class StartJXTA extends Process {
     private static ProcessMg manager = new ProcessMg(new StartJXTA());
 
     private static File config_dir = null;
+
+    private static boolean proxy = false;
 
     // Les listeners :
     public static List jxStatutListenerList = new ArrayList();
@@ -62,10 +64,10 @@ public class StartJXTA extends Process {
     }
 
     public void action() throws InterruptedException {
-        //D�marrage de JXTA :
+        //Demarrage de JXTA :
         if (connect == null) {
-            connect = new J3xtaConnect(config_dir);
-            //Pour �tre � l'�coute des autres :
+            connect = new J3xtaConnect(config_dir,proxy);
+            //Pour etre a l'ecoute des autres :
             connect.addGroupListener();
         }
     }
@@ -77,10 +79,11 @@ public class StartJXTA extends Process {
      * @param firewall
      */
     public static void wakeUp(String login, String suffix_group,
-            File configuration_dir, boolean firewall) {
+            File configuration_dir, boolean pproxy) {
         J3xta.setSuffix(suffix_group);
         config_dir = configuration_dir;
         name = login;
+        proxy = pproxy;
         manager.wakeUp();
     }
 
@@ -123,9 +126,13 @@ public class StartJXTA extends Process {
     public static J3Pipe getPipe() {
         Enumeration liste = J3Group.getJ3Groups();
         J3Pipe pipe = null;
-        if(liste.hasMoreElements()){
-            J3Group group = (J3Group)liste.nextElement();
-            pipe = group.getPipe();
+        J3Group group = null;
+        while(liste.hasMoreElements()){
+            group = (J3Group)liste.nextElement();
+            if (group.isJoinnedToGroup()) {
+                pipe = group.getPipe();    
+                break;
+            }
         }
         return pipe;
     }

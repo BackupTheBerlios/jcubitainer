@@ -35,8 +35,8 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.tools.Process;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.Process;
 
 public class J3GroupDiscoveryListener extends Process implements
 		DiscoveryListener {

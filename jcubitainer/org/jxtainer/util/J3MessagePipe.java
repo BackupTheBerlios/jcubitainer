@@ -54,7 +54,7 @@ public class J3MessagePipe {
         JxMessageListener listener = null;
         while ( list.hasNext() ) {
             listener = (JxMessageListener) list.next();                
-            listener.receiveMessage();
+            listener.receiveMessage(drop());
         }
     }
 

@@ -34,8 +34,8 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
 
-import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.ProcessMg;
 
 public class J3xtaConnect {
 
@@ -51,10 +51,10 @@ public class J3xtaConnect {
 
     private RendezVousService rdv_root;
 
-    public J3xtaConnect(File configuration) {
+    public J3xtaConnect(File configuration, boolean proxy) {
         try {
             J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
-            Log.debug("! Connexion � JXTA !");
+            Log.debug("! Connexion a JXTA !");
 
             // Configuration automatique :
             if (configuration != null)
@@ -65,18 +65,16 @@ public class J3xtaConnect {
             File config_jxta = new File(Configurator.getHome(),
                     "PlatformConfig").getAbsoluteFile();
 
-            if (!config_jxta.exists()) {
+            if (!proxy && !config_jxta.exists()) {
                 try {
-                    System.out
-                            .println("! Cr�ation du fichier de configuration JXTA.");
+                    Log.debug("! Creation du fichier de configuration JXTA.");
                     String name = StartJXTA.getPeerName();
                     Configurator config = new Configurator(name,
                             "JXTAConfiguration", name, "monmotdepasse2005");
                     config.save();
                     
                 } catch (ConfiguratorException ce) {
-                    System.out
-                            .println("! Cr�ation du fichier de configuration JXTA impossible.");
+                    Log.debug("! Creation du fichier de configuration JXTA impossible.");
                     // Impossible de faire une configuration automatique !
                 }
             }
@@ -100,11 +98,11 @@ public class J3xtaConnect {
             }
 
             if (rdv_root.isConnectedToRendezVous())
-                Log.debug("! Peer Rendez-vous trouv�.");
+                Log.debug("! Peer Rendez-vous trouve.");
             else
-                Log.debug("! Peer Rendez-vous non trouv�.");
+                Log.debug("! Peer Rendez-vous non trouve.");
 
-            Log.debug("! Connect� � JXTA.");
+            Log.debug("! vous etes connectez a JXTA.");
 
         } catch (Exception e) {
             Log.debug("! fatal error : group creation failure");
@@ -120,15 +118,9 @@ public class J3xtaConnect {
                 new J3GroupDiscoveryListener(rootDiscoveryService, root));
         groupDiscoveryServiceProcess.wakeUp();
 
-        // On lance le service qui va devoir trouver les advs :
-        //		advDiscoveryServiceProcess = new ProcessMg(new
-        // J3AdvDiscoveryListener(
-        //				rootDiscoveryService));
-        //		advDiscoveryServiceProcess.wakeUp();
-
         // On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
-        Log.debug("! On va essay� de trouver une partie.");
+        Log.debug("! On va essaye de trouver une partie.");
         try {
             int boucle = 60 * 1; // 5 minutes
             while (!J3Group.isConnectToGroup() && --boucle > 0) {
@@ -140,11 +132,11 @@ public class J3xtaConnect {
         }
 
         if (!J3Group.isConnectToGroup()) {
-            Log.debug("! Pas de groupe trouv� :-(");
+            Log.debug("! Pas de groupe trouve :-(");
             J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
             group = new ProcessMg(rdv);
             group.wakeUp();
         } else
-            Log.debug("! Une partie trouv�e sur Internet.");
+            Log.debug("! Une partie trouvee sur Internet.");
     }
 }

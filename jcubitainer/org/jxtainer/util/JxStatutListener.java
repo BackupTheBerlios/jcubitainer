@@ -52,9 +52,8 @@
 
 package org.jxtainer.util;
 
-
 public interface JxStatutListener {
 
-	public void newStatut();
+    public void newStatut(int statut);
 
 }

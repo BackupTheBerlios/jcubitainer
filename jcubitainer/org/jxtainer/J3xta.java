@@ -63,7 +63,7 @@ public class J3xta {
         JxStatutListener listener = null;
         while ( list.hasNext() ) {
             listener = (JxStatutListener) list.next();                
-            listener.newStatut();
+            listener.newStatut(i);
         }    
     }
 

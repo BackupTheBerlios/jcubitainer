@@ -33,9 +33,9 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.tools.Process;
-import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.Process;
+import org.jxtainer.util.ProcessMg;
 
 public class J3GroupRDV extends Process {
 
@@ -85,7 +85,7 @@ public class J3GroupRDV extends Process {
 
 			adv = peerGroup.getPeerGroupAdvertisement();
 
-			Log.debug("! Groupe cr�� :" + peerGroup.getPeerGroupName());
+			Log.debug("! Groupe cree :" + peerGroup.getPeerGroupName());
 
 		} catch (Exception e) {
 			System.err.println("! Group creation failed");

@@ -1,7 +1,7 @@
 /***********************************************************************
  * HelloChatWorld                                                      *
  * Version release date : March 22, 2005                               *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounes Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -24,25 +24,23 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.jxtainer.J3PeerManager;
+import org.jxtainer.J3Peer;
 import org.jxtainer.J3Pipe;
 import org.jxtainer.J3xta;
 import org.jxtainer.StartJXTA;
 import org.jxtainer.util.J3Message;
-import org.jxtainer.util.J3MessagePipe;
 import org.jxtainer.util.JxMessageListener;
 import org.jxtainer.util.JxPeerListener;
 import org.jxtainer.util.JxStatutListener;
 
 /**
  * 
- * Voici un exemple d'implémentation d'un espace de discution (chat) en utilisant
+ * Voici un exemple d'implementation d'un espace de discution (chat) en utilisant
  * la librairie JXtainer 1.0
  * 
  * @author Mounes Ronan
@@ -51,94 +49,90 @@ import org.jxtainer.util.JxStatutListener;
 
 public class HelloChatWorld {
 
-	// Pour les entrées au clavier :
-	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-	// Identifiant du chat sur le réseau JXTA :
-	static final String SUFFIX = "HelloChatWorldJXtainer";
-	// Fenêtre JXTA pour configurer un proxy :
-	static boolean firewall = false;
+    // Pour les entrees au clavier :
+    static BufferedReader in = new BufferedReader(new InputStreamReader(
+            System.in));
 
-	public static void main(String[] args) {
+    // Nom du groupe JXtainer :
+    static final String GROUPE = "HelloChatWorldJXtainer";
 
-		// Login par défaut :
-		String login = "Anonyme";
+    public static void main(String[] args) {
 
-		/** 
-		 * Si vous êtes derrière un proxy :
-		 * java HelloChatWorld --proxy --login Ronan 
-		 * Si vous êtes directement connecté à internet :
-		 * java HelloChatWorld --login Ronan
-		 */
-		for (int i = 0; i < args.length; i++) {
-			if ("--login".equals(args[i]) && ++i < args.length)
-				login = args[i];
-			if ("--proxy".equals(args[i]))
-				firewall = true;
-		}
+        // Login par defaut
+        String login = "Anonyme";
+        // Fenetre JXTA pour configurer un proxy
+        boolean proxy = false;
+        // Permet de stocker les messages a envoyer
+        String mes = null;
+        // Pipe du groupe
+        J3Pipe pipe = null;
 
-		// Evenement lorsque l'on reçoit un message du chat :
-		StartJXTA.addJxMessageListener(new JxMessageListener() {
-			public void receiveMessage() {
-				J3Message message = J3MessagePipe.drop();
-				consoleOut(message.getWho() + " a dit : " + message.getWhat());
-			}
-		});
-		// Evenement de connexion		
-		StartJXTA.addJxStatutListener(new JxStatutListener() {
-			public void newStatut() {
-				if (J3xta.JXTA_STATUT_ON == J3xta.getStatut())
-					consoleOut("Vous êtes sur le chat !");
-			}
-		});
-		// Evenement lorsqu'une nouvelle personne arrive sur le chat		
-		StartJXTA.addJxPeerListener(new JxPeerListener() {
-			public void newPeer() {
-				consoleOut(J3PeerManager.getLatest().getName() + " vient d'arriver sur le chat !");
-			}
-			public void deletePeer() {
-				consoleOut(J3PeerManager.getLatest_remove().getName() + " vient de partir du chat !");
-			}
-		});
+        /** 
+         * Si vous etes derriere un proxy :
+         * java HelloChatWorld --proxy --login Ronan 
+         * Si vous etes directement connecte a internet :
+         * java HelloChatWorld --login Ronan
+         */
+        for (int i = 0; i < args.length; i++) {
+            if ("--login".equals(args[i]) && ++i < args.length)
+                login = args[i];
+            if ("--proxy".equals(args[i]))
+                proxy = true;
+        }
 
-		// Démarrage du chat...
-		File home = null;
-		if ( !firewall ) {
-		    home = new File(System.getProperty("user.home") 
-                    + File.separator
-                    + ".jxtainer"); 
-		}
-		StartJXTA.wakeUp(login, SUFFIX, home, firewall);
+        // Evenement lorsque l'on re�oit un message du chat :
+        StartJXTA.addJxMessageListener(new JxMessageListener() {
+            public void receiveMessage(J3Message message) {
+                consoleOut(message.getWho() + " a dit : " + message.getWhat());
+            }
+        });
+        // Evenement de connexion		
+        StartJXTA.addJxStatutListener(new JxStatutListener() {
+            public void newStatut(int statut) {
+                if (J3xta.JXTA_STATUT_ON == statut)
+                    consoleOut("Vous etes sur le chat !");
+                if (J3xta.JXTA_STATUT_CONNECT == statut)
+                    consoleOut("Recherche du chat sur le r�seau...");
+            }
+        });
+        // Evenement lorsqu'une nouvelle personne arrive sur le chat		
+        StartJXTA.addJxPeerListener(new JxPeerListener() {
+            public void newPeer(J3Peer peer) {
+                consoleOut(peer.getName() + " vient d'arriver sur le chat !");
+            }
 
-		consoleOut("Recherche du chat sur le réseau...");
+            public void deletePeer(J3Peer peer) {
+                consoleOut(peer.getName() + " vient de partir du chat !");
+            }
+        });
 
-		try {
-			while (J3xta.JXTA_STATUT_ON != J3xta.getStatut()) {
-				Thread.sleep(100);
-			}
-		} catch (InterruptedException e) {
-			consoleOut("Impossible de se connecter : " + e.toString());
-			System.exit(0);
-		}
+        // Repertoire pour sauvegarder le cache JXTA ( non obligatoire ) :
+        File home_config = new File(System.getProperty("user.home")
+                + File.separator + ".jxtainer");
 
-		// Pipe pour envoyer les messages sur le chat :
-		J3Pipe pipe = StartJXTA.getPipe();
+        StartJXTA.wakeUp(login, GROUPE, home_config, proxy);
 
-		// On peut dialoguer !
-		while (true) {
-			pipe.sendMsg(consoleIn(":"));
-		}
-	}
+        // On peut dialoguer !
+        while (true) {
+            mes = consoleIn(">");
+            pipe = StartJXTA.getPipe();
+            if (pipe != null)
+                pipe.sendMsg(mes);
+            else
+                consoleOut("Pas encore connecte au chat !");
+        }
+    }
 
-	public static void consoleOut(String s) {
-		System.out.println(s);
-	}
+    public static void consoleOut(String s) {
+        System.out.println(s);
+    }
 
-	public static String consoleIn(String s) {
-		try {
-		    System.out.print(s);
-			return in.readLine();
-		} catch (IOException e) {
-			return "ERROR";
-		}
-	}
+    public static String consoleIn(String s) {
+        try {
+            System.out.print(s);
+            return in.readLine();
+        } catch (IOException e) {
+            return "ERROR";
+        }
+    }
 }

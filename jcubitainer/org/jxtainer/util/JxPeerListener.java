@@ -26,10 +26,12 @@
 
 package org.jxtainer.util;
 
+import org.jxtainer.J3Peer;
+
 public interface JxPeerListener {
 
-	public void newPeer();
-	
-	public void deletePeer();
-	
+    public void newPeer(J3Peer peer);
+
+    public void deletePeer(J3Peer peer);
+
 }

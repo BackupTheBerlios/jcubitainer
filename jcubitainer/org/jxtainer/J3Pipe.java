@@ -41,10 +41,10 @@ import net.jxta.pipe.PipeMsgListener;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
 
-import org.jcubitainer.tools.Process;
 import org.jxtainer.util.J3Message;
 import org.jxtainer.util.J3MessagePipe;
 import org.jxtainer.util.Log;
+import org.jxtainer.util.Process;
 
 public class J3Pipe extends Process implements PipeMsgListener {
 

@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -20,14 +20,41 @@
 
 /* History & changes **************************************************
  *                                                                     *
- ******** March 22, 2005 **************************************************
+ ******** May 5, 2004 **************************************************
  *   - First release                                                   *
  ***********************************************************************/
 
 package org.jxtainer.util;
 
-public interface JxMessageListener {
+public class ProcessMg {
 
-    public void receiveMessage(J3Message message);
+    Process process = null;
+
+    public ProcessMg(Process p) {
+        process = p;
+    }
+
+    private void start() {
+        if (!process.isStart())
+            process.start();
+        else
+            process.reStart();
+    }
+
+    public void pause() {
+        process.pause();
+    }
+
+    public boolean isStop() {
+        return process.isPause() || !process.isStart();
+    }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void wakeUp() {
+        if (isStop()) start();
+    }
 
 }
