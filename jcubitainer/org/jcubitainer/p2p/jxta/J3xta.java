@@ -30,4 +30,28 @@ public class J3xta {
 
     public static final String JXTA_ID = "J3xtainerV0_3#";
 
+    public static final int JXTA_STATUT_OFF = 0;
+
+    public static final int JXTA_STATUT_ON = 1;
+
+    public static final int JXTA_STATUT_ERROR = 2;
+
+    public static final int JXTA_STATUT_CONNECT = 3;
+
+    private static int statut = JXTA_STATUT_OFF;
+
+    /**
+     * @return
+     */
+    public static int getStatut() {
+        return statut;
+    }
+
+    /**
+     * @param i
+     */
+    public static void setStatut(int i) {
+        statut = i;
+    }
+
 }

@@ -48,14 +48,14 @@ public class J3GroupDiscoveryListener extends Process implements
      * 
      */
     public J3GroupDiscoveryListener(DiscoveryService ds, PeerGroup proot) {
-        super(5000);
+        super(10000);
         ds.addDiscoveryListener(this);
         discoveryService = ds;
         rootGroup = proot;
     }
 
     public void discoveryEvent(DiscoveryEvent ev) {
-        //		System.out.println("-");
+        //        System.out.println("DiscoveryEvent ! J3GroupDiscoveryListener");
         DiscoveryResponseMsg res = ev.getResponse();
         String aRes = res.getPeerAdv();
         DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
@@ -69,7 +69,7 @@ public class J3GroupDiscoveryListener extends Process implements
                 try {
                     adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
                             .nextElement();
-                    //System.out.println(" Peer Group = " + adv.getName());
+                    //                    System.out.println(" Peer Group = " + adv.getName());
                     if (adv.getName().startsWith(J3xta.JXTA_ID)) {
                         //						System.out.println(
                         //							"Peergroup à nous : " + adv.getName());

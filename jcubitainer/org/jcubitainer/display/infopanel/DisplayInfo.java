@@ -37,11 +37,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaInfo;
+import org.jcubitainer.p2p.StartJXTA;
+import org.jcubitainer.p2p.jxta.J3xta;
 import org.jcubitainer.tools.Messages;
+import org.jcubitainer.tools.Ressources;
 
 public class DisplayInfo extends JPanel implements ActionListener {
 
@@ -55,7 +59,13 @@ public class DisplayInfo extends JPanel implements ActionListener {
 
     InfoValue bonus_slow = null;
 
-    JButton button = null;
+    JButton start = null;
+
+    JButton network = null;
+
+    JButton connexion = null;
+
+    JToolBar toolbar = null;
 
     InfoLabel bonus = null;
 
@@ -81,16 +91,39 @@ public class DisplayInfo extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         //new InfoLabel("JCubitainer", this).setFont(Font.getFont("Verdana"));
         ii = new InfoImage(ThemeManager.getCurrent().getImage("ititle"), this); //$NON-NLS-1$
-        button = new JButton(Messages.getString("DisplayInfo.start")); //$NON-NLS-1$
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setBackground(Color.gray);
-        button.setForeground(Color.white);
-        // Seulement pour le JDK 1.4 :
-        //button.setFocusable(false);
-        button.addActionListener(this);
-        add(button);
 
-        //new InfoLabel("-----", this); //$NON-NLS-1$
+        start = new JButton(Messages.getString("DisplayInfo.start")); //$NON-NLS-1$
+        start.setAlignmentX(Component.CENTER_ALIGNMENT);
+        start.setBackground(Color.black);
+        start.setForeground(Color.white);
+        start.setIcon(Ressources.getImageIcon("/ressources/Play16.gif"));
+        start.addActionListener(this);
+
+        network = new JButton("Réseau"); //$NON-NLS-1$
+        network.setAlignmentX(Component.CENTER_ALIGNMENT);
+        network.setBackground(Color.black);
+        network.setForeground(Color.white);
+        network.setIcon(Ressources.getImageIcon("/ressources/Search16.gif"));
+        network.addActionListener(this);
+
+        // Bar pour le démarrage :
+        toolbar = new JToolBar();
+        toolbar.setBackground(Color.black);
+        toolbar.setForeground(Color.black);
+        toolbar.setFloatable(false);
+
+        toolbar.add(start);
+        toolbar.add(network);
+
+        add(toolbar);
+
+        connexion = new JButton("Connexion..."); //$NON-NLS-1$
+        connexion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        connexion.setBackground(Color.black);
+        connexion.setForeground(Color.white);
+        connexion.setVisible(false);
+        add(connexion);
+
         new InfoLabel(Messages.getString("DisplayInfo.score"), this); //$NON-NLS-1$
         score = new InfoValue("-", this); //$NON-NLS-1$
         new InfoLabel(Messages.getString("DisplayInfo.ligne"), this); //$NON-NLS-1$
@@ -162,7 +195,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        if (arg0.getSource() == button) {
+        if (arg0.getSource() == start) {
 
             String[] levels = { "1", "2", "3", "4", "5", "6", "7", "8", "9", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
                     "10"}; //$NON-NLS-1$
@@ -192,17 +225,54 @@ public class DisplayInfo extends JPanel implements ActionListener {
             mi.setGame_over(false);
             return;
         }
-        if (arg0.getSource() == button) {
-            Game.getGameService().pause();
-            System.exit(0);
+
+        if (arg0.getSource() == network) {
+            String s = (String) JOptionPane.showInputDialog(this.getParent(),
+                    "Votre nom", "...", JOptionPane.PLAIN_MESSAGE, null, null,
+                    "Player");
+
+            if ((s != null) && (s.length() > 0)) {
+                StartJXTA.wakeUp(s);
+            }
+
         }
     }
 
     public void setGameOverDisplay(boolean b) {
-        button.setVisible(b);
-        button.setEnabled(b);
+        toolbar.setVisible(b);
+        toolbar.setEnabled(b);
         if (!b) {
             hit.setBorder(BorderFactory.createEmptyBorder());
+        }
+    }
+
+    public void setNetwork(int i) {
+        boolean b = i == J3xta.JXTA_STATUT_ON || i == J3xta.JXTA_STATUT_CONNECT;
+        toolbar.setVisible(!b);
+        toolbar.setEnabled(!b);
+        connexion.setVisible(b);
+        connexion.setEnabled(b);
+        switch (i) {
+        case J3xta.JXTA_STATUT_ON:
+            connexion.setText("Connecté");
+            connexion
+                    .setIcon(Ressources.getImageIcon("/ressources/online.png"));
+            break;
+        case J3xta.JXTA_STATUT_OFF:
+            connexion.setText("Non connecté");
+            connexion.setIcon(Ressources
+                    .getImageIcon("/ressources/throbber-small.gif"));
+            break;
+        case J3xta.JXTA_STATUT_CONNECT:
+            connexion.setText("Connexion...");
+            connexion.setIcon(Ressources
+                    .getImageIcon("/ressources/throbber-small.gif"));
+            break;
+        case J3xta.JXTA_STATUT_ERROR:
+            connexion.setText("Erreur...");
+            connexion
+                    .setIcon(Ressources.getImageIcon("/ressources/Stop16.gif"));
+            break;
         }
     }
 

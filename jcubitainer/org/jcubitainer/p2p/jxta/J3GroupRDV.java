@@ -26,23 +26,21 @@
 
 package org.jcubitainer.p2p.jxta;
 
-import java.io.StringWriter;
-import java.util.Date;
-
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
 import net.jxta.discovery.DiscoveryService;
-import net.jxta.document.MimeMediaType;
 import net.jxta.document.StructuredDocument;
-import net.jxta.document.StructuredTextDocument;
 import net.jxta.membership.Authenticator;
 import net.jxta.membership.MembershipService;
 import net.jxta.peergroup.PeerGroup;
+import net.jxta.peergroup.PeerGroupID;
+import net.jxta.pipe.PipeService;
 import net.jxta.protocol.ModuleImplAdvertisement;
 
 import org.jcubitainer.tools.Process;
+import org.jcubitainer.tools.ProcessMg;
 
-public class J3GroupRDV extends Process implements Group {
+public class J3GroupRDV extends Process {
 
     public static final String NAME = "Partie#";
 
@@ -53,6 +51,8 @@ public class J3GroupRDV extends Process implements Group {
     private PeerGroup rootGroup = null;
 
     private DiscoveryService discoSvc = null;
+
+    private ProcessMg pipe = null;
 
     /**
      * 
@@ -66,8 +66,8 @@ public class J3GroupRDV extends Process implements Group {
         try {
             ModuleImplAdvertisement implAdv = rootGroup
                     .getAllPurposePeerGroupImplAdvertisement();
-            peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID + NAME
-                    + new Date(), DESCRIPTION);
+            peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID + NAME,
+                    DESCRIPTION);
 
             peerGroup.getRendezVousService().startRendezVous();
 
@@ -76,22 +76,18 @@ public class J3GroupRDV extends Process implements Group {
 
         } catch (Exception e) {
             System.err.println("Group creation failed");
-            System.err.println(e);
+            e.printStackTrace();
         }
 
     }
 
     public void publishGroup() {
-        // Publication du groupe.
+        //        System.out.println("Publication du groupe");
         try {
-            discoSvc.publish(peerGroup.getPeerGroupAdvertisement(),
-                    DiscoveryService.GROUP);
-            discoSvc.publish(peerGroup.getPeerAdvertisement(),
-                    DiscoveryService.PEER);
-            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement(),
-                    DiscoveryService.GROUP);
-            discoSvc.remotePublish(peerGroup.getPeerAdvertisement(),
-                    DiscoveryService.PEER);
+            discoSvc.publish(peerGroup.getPeerGroupAdvertisement());
+            discoSvc.publish(peerGroup.getPeerAdvertisement());
+            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
+            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
         } catch (Exception e) {
             System.out
                     .println("Failed to publish peer advertisement in the group ["
@@ -130,14 +126,14 @@ public class J3GroupRDV extends Process implements Group {
                         + peerGroup.getPeerGroupName());
 
                 // display the credential as a plain text document.
-                System.out.println("Credential: ");
-                StructuredTextDocument doc = (StructuredTextDocument) myCred
-                        .getDocument(new MimeMediaType("text/plain"));
-
-                StringWriter out = new StringWriter();
-                doc.sendToWriter(out);
-                System.out.println(out.toString());
-                out.close();
+                //                System.out.println("Credential: ");
+                //                StructuredTextDocument doc = (StructuredTextDocument) myCred
+                //                        .getDocument(new MimeMediaType("text/plain"));
+                //
+                //                StringWriter out = new StringWriter();
+                //                doc.sendToWriter(out);
+                //                System.out.println(out.toString());
+                //                out.close();
             } else {
                 System.out.println("Failure: unable to join group");
             }
@@ -147,4 +143,27 @@ public class J3GroupRDV extends Process implements Group {
 
     }
 
+    public DiscoveryService getDiscoveryService() {
+        return peerGroup.getDiscoveryService();
+    }
+
+    public PipeService getPipeService() {
+        return peerGroup.getPipeService();
+    }
+
+    public PeerGroupID getPeerGroupID() {
+        return peerGroup.getPeerGroupID();
+    }
+
+    public void createPipe() {
+        // Création d'un pipe :
+        pipe = new ProcessMg(new J3Pipe(this));
+        pipe.wakeUp();
+    }
+
+    public String toString() {
+
+        return peerGroup.getPeerGroupName();
+
+    }
 }

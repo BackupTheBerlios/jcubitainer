@@ -26,7 +26,6 @@
 
 package org.jcubitainer.p2p.jxta;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 import net.jxta.credential.AuthenticationCredential;
@@ -39,13 +38,14 @@ import net.jxta.membership.MembershipService;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
+import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.display.table.GroupTable;
 import org.jcubitainer.display.table.NetworkDisplayTable;
 import org.jcubitainer.tools.ProcessMg;
 
-public class J3Group implements Group {
+public class J3Group {
 
     private PeerGroup peerGroup = null;
 
@@ -59,7 +59,7 @@ public class J3Group implements Group {
 
     private Hashtable knowPeers = new Hashtable();
 
-    private GroupTable gt = null;
+    //    private GroupTable gt = null;
 
     private static ProcessMg peerDiscoveryServiceProcess = null;
 
@@ -92,7 +92,7 @@ public class J3Group implements Group {
                     .getNetworkDisplayForParties();
 
             GroupTable temp_gt = new GroupTable(pg, nd.getModel());
-            pg.setGroupTableForDisplay(temp_gt);
+            //            pg.setGroupTableForDisplay(temp_gt);
             nd.addGroupTable(temp_gt);
 
             // On veut trouver ses peers :
@@ -111,14 +111,10 @@ public class J3Group implements Group {
     public void publishGroup() {
         // Publication du groupe.
         try {
-            rootdiscoSvc.publish(peerGroup.getPeerGroupAdvertisement(),
-                    DiscoveryService.GROUP);
-            rootdiscoSvc.publish(peerGroup.getPeerAdvertisement(),
-                    DiscoveryService.PEER);
-            rootdiscoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement(),
-                    DiscoveryService.GROUP);
-            rootdiscoSvc.remotePublish(peerGroup.getPeerAdvertisement(),
-                    DiscoveryService.PEER);
+            rootdiscoSvc.publish(peerGroup.getPeerGroupAdvertisement());//,DiscoveryService.GROUP
+            rootdiscoSvc.publish(peerGroup.getPeerAdvertisement());
+            rootdiscoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
+            rootdiscoSvc.remotePublish(peerGroup.getPeerAdvertisement());
         } catch (Exception e) {
             System.out
                     .println("Failed to publish peer advertisement in the group ["
@@ -176,10 +172,15 @@ public class J3Group implements Group {
         return peerGroup.getDiscoveryService();
     }
 
+    public PipeService getPipeService() {
+        return peerGroup.getPipeService();
+    }
+
     public void addPeer(J3Peer peer) {
-        knowPeers.put(peer.getPeerID(), peer);
-        ArrayList al = new ArrayList(knowPeers.values());
-        getGroupTableForDisplay().setFils(al);
+        System.out.println(">>" + peer.getPeerID().toString());
+        knowPeers.put(peer.getPeerID().toString(), peer);
+        //        ArrayList al = new ArrayList(knowPeers.values());
+        //        getGroupTableForDisplay().setFils(al);
     }
 
     /**
@@ -187,22 +188,24 @@ public class J3Group implements Group {
      * @return
      */
     public boolean existePeer(PeerID peerID) {
-        return knowPeers.containsKey(peerID);
+        System.out.println("??" + peerID.toString() + " : "
+                + knowPeers.containsKey(peerID.toString()));
+        return knowPeers.containsKey(peerID.toString());
     }
 
     public String toString() {
 
-        return peerGroup.getPeerGroupName() + " (" + knowPeers.size() + ")";
+        return peerGroup.getPeerGroupName() + " (" + knowPeers + ")";
 
     }
 
-    public GroupTable getGroupTableForDisplay() {
-        return gt;
-    }
-
-    public void setGroupTableForDisplay(GroupTable p) {
-        gt = p;
-    }
+    //    public GroupTable getGroupTableForDisplay() {
+    //        return gt;
+    //    }
+    //
+    //    public void setGroupTableForDisplay(GroupTable p) {
+    //        gt = p;
+    //    }
 
     public PeerGroupID getPeerGroupID() {
         return peerGroup.getPeerGroupID();

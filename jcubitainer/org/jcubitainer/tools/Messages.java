@@ -26,8 +26,6 @@
 
 package org.jcubitainer.tools;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

@@ -45,13 +45,13 @@ public class J3AdvDiscoveryListener extends Process implements
      * 
      */
     public J3AdvDiscoveryListener(DiscoveryService ds) {
-        super(3000);
+        super(10000);
         ds.addDiscoveryListener(this);
         discoveryService = ds;
     }
 
     public void discoveryEvent(DiscoveryEvent ev) {
-        //		System.out.println("-");
+        //        System.out.println("discoveryEvent ! J3AdvDiscoveryListener");
         DiscoveryResponseMsg res = ev.getResponse();
         String aRes = res.getPeerAdv();
         DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
@@ -63,10 +63,10 @@ public class J3AdvDiscoveryListener extends Process implements
         if (null != theAdvertisementEnumeration) {
             while (theAdvertisementEnumeration.hasMoreElements()) {
                 try {
-                    adv = adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
+                    adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
                             .nextElement();
 
-                    //System.out.println(" Adv = " + adv.getName());
+                    //                    System.out.println(" Adv = " + adv.getName());
                 } catch (Exception e) {
                     //System.out.print("#");
                 }

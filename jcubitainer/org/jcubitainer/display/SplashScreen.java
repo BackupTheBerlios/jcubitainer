@@ -42,7 +42,7 @@ public class SplashScreen extends JWindow {
         ImageIcon icon = new ImageIcon(ThemeManager.getCurrent().getImage(
                 "isplash"));
         if (icon != null) {
-            getContentPane().add(new JLabel(icon, JLabel.CENTER));
+            //getContentPane().add(new JLabel(icon, JLabel.CENTER));
             Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
             setSize(icon.getIconWidth(), icon.getIconHeight());
             setLocation((screensize.width - icon.getIconWidth()) / 2,

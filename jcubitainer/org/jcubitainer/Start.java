@@ -46,15 +46,12 @@ import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
-import org.jcubitainer.p2p.jxta.J3xtaConnect;
+import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Messages;
-import org.jcubitainer.tools.logs.Logs;
 
 public class Start {
 
     static SplashScreen ss = null;
-
-    static J3xtaConnect connect = null;
 
     private static void createAndShowGUI() {
         try {
@@ -111,24 +108,9 @@ public class Start {
          * .getLocalGraphicsEnvironment() .getDefaultScreenDevice();
          */
         new Game(db, mi);
-        ss.hide(2000);
-        frame.setVisible(true);
-
-        //        JFrame frame2 = new JFrame("J3XTainer Network 0.3");
-        //        frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        //        NetworkDisplay nd = new NetworkDisplay();
-        //        frame2.getContentPane().add(nd);
-        //        frame2.setResizable(false);
-        //        frame2.pack();
-        //        frame2.setVisible(true);
-
-        //NetworkDisplayTable parties = NetworkDisplayTable
-        //        .getNetworkDisplayForParties();
-        // Démarrage de JXTA :
-        // connect = new J3xtaConnect();
-        // Pour être à l'écoute des autres :
-        // connect.addGroupListener();
-
+        ss.hide(1);
+        //frame.setVisible(true);
+        StartJXTA.wakeUp("e" + Math.random());
         // PUB : Affichage de l'url du site.
         mb.getTexte().setTexte("http://jcubitainer.berlios.de");
     }
@@ -139,7 +121,7 @@ public class Start {
             // Chargement du fichier de configuration s'il existe :
             new Configuration();
 
-            new Logs();
+            //new Logs();
 
             // Chargement du thème par défaut :
             new ThemeManager();
@@ -151,10 +133,11 @@ public class Start {
         ss.setVisible(true);
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        //javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        //	public void run() {
-        createAndShowGUI();
-        //	}
-        //});
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                createAndShowGUI();
+            }
+        });
     }
 }

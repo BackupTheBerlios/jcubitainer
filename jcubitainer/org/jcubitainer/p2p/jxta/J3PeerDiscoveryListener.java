@@ -54,7 +54,7 @@ public class J3PeerDiscoveryListener extends Process implements
     }
 
     public void discoveryEvent(DiscoveryEvent ev) {
-        //		System.out.println("-");
+        //        System.out.println("discoveryEvent : J3PeerDiscoveryListener");
         //		DiscoveryResponseMsg res = ev.getResponse();
         //		String aRes = res.getPeerAdv();
         DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
@@ -72,10 +72,13 @@ public class J3PeerDiscoveryListener extends Process implements
                             && adv.getPeerGroupID().equals(
                                     group.getPeerGroupID())) {
 
-                        J3Peer peer = new J3Peer(adv);
+                        J3Peer peer = new J3Peer(adv, group);
                         group.addPeer(peer);
                         System.out.println("Découverte du Peer = "
                                 + adv.getName() + "/" + adv.getPeerID());
+                        // On va maintenant se connecter au peer avec Pipe :
+                        peer.createPipeListener();
+
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();

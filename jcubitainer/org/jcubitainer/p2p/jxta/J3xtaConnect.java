@@ -35,14 +35,6 @@ import org.jcubitainer.tools.ProcessMg;
 
 public class J3xtaConnect {
 
-    public static final int JXTA_STATUT_OFF = 0;
-
-    public static final int JXTA_STATUT_ON = 1;
-
-    public static final int JXTA_STATUT_ERROR = 2;
-
-    private int statut = JXTA_STATUT_OFF;
-
     private PeerGroup root = null;
 
     private DiscoveryService rootDiscoveryService = null;
@@ -60,35 +52,24 @@ public class J3xtaConnect {
 
     public J3xtaConnect() {
         try {
+            J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
+            System.out.println("Connexion à JXTA !");
             root = PeerGroupFactory.newNetPeerGroup();
             rootDiscoveryService = root.getDiscoveryService();
             System.out.println("Connecté à JXTA !");
             //			j3root = J3Group.getInstance(root.getPeerGroupAdvertisement(),root,rootDiscoveryService);
             //			j3root.joinThisGroup();
-            setStatut(JXTA_STATUT_ON);
+            J3xta.setStatut(J3xta.JXTA_STATUT_ON);
         } catch (PeerGroupException e) {
             System.out.println("fatal error : group creation failure");
             e.printStackTrace();
-            setStatut(JXTA_STATUT_ERROR);
+            J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
         }
-    }
-
-    /**
-     * @return
-     */
-    public int getStatut() {
-        return statut;
-    }
-
-    /**
-     * @param i
-     */
-    public void setStatut(int i) {
-        statut = i;
     }
 
     public void addGroupListener() {
 
+        // On lance le service qui va devoir trouver les groupes :
         groupDiscoveryServiceProcess = new ProcessMg(
                 new J3GroupDiscoveryListener(rootDiscoveryService, root));
         groupDiscoveryServiceProcess.wakeUp();
@@ -97,18 +78,25 @@ public class J3xtaConnect {
         //			new ProcessMg(new J3PeerDiscoveryListener(rootDiscoveryService));
         //		peerDiscoveryServiceProcess.wakeUp();
 
+        // On lance le service qui va devoir trouver les advs :
         advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
                 rootDiscoveryService));
         advDiscoveryServiceProcess.wakeUp();
 
-        //		group = new ProcessMg(new J3GroupRDV(root, rootDiscoveryService));
-        //		group.wakeUp();
+        J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
+        group = new ProcessMg(rdv);
+        group.wakeUp();
         //		try {
         //			Thread.sleep(2000);
         //		} catch (InterruptedException e) {
         //			e.printStackTrace();
         //		}
         //System.out.println("On veut joindre le groupe créé.");
-        //((J3GroupRDV) group.getProcess()).joinThisGroup();
+
+        // On veut se connecter sans le forcer !!
+        //        ((J3GroupRDV) group.getProcess()).joinThisGroup();
+
+        // Ouverture du pipe :
+        rdv.createPipe();
     }
 }

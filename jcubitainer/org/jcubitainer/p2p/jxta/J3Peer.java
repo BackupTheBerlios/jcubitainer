@@ -26,6 +26,8 @@
 
 package org.jcubitainer.p2p.jxta;
 
+import org.jcubitainer.tools.ProcessMg;
+
 import net.jxta.peer.PeerID;
 import net.jxta.protocol.PeerAdvertisement;
 
@@ -33,11 +35,16 @@ public class J3Peer {
 
     PeerAdvertisement adv = null;
 
+    J3Group group = null;
+
+    ProcessMg listener = null;
+
     /**
      * @param adv
      */
-    public J3Peer(PeerAdvertisement padv) {
+    public J3Peer(PeerAdvertisement padv, J3Group g) {
         adv = padv;
+        group = g;
     }
 
     public PeerID getPeerID() {
@@ -46,6 +53,11 @@ public class J3Peer {
 
     public String toString() {
         return adv.getName();
+    }
+
+    public void createPipeListener() {
+        listener = new ProcessMg(new J3PipeListener(group));
+        listener.wakeUp();
     }
 
 }

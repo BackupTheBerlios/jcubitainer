@@ -26,9 +26,6 @@
 
 package org.jcubitainer.sound;
 
-import java.applet.AudioClip;
-import java.util.Hashtable;
-
 import org.jcubitainer.display.theme.ThemeManager;
 
 import sun.applet.AppletAudioClip;
@@ -37,7 +34,7 @@ import sun.applet.AppletAudioClip;
  * 
  * http://forum.java.sun.com/thread.jsp?forum=31&thread=420688
  * 
- * 
+ *  
  */
 public class Sons {
 
