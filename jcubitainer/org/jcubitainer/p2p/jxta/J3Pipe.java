@@ -156,6 +156,8 @@ public class J3Pipe extends Process implements PipeMsgListener {
     public void pipeMsgEvent(PipeMsgEvent event) {
         J3Message mes = new J3Message(event.getMessage());
 
+        System.out.println("! Message reçu de " + mes.getWho() + " de : " + mes.getWhat());
+        
         if (mes.isSystem()) {
             if (MESSAGE_PING.equals(mes.getWhat())
                     /*&& !StartJXTA.name.equals(mes.getWho())*/) {

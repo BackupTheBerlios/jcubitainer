@@ -35,7 +35,7 @@ public class ErrorPrintStream extends PrintStream {
 
     Object[] options = { Messages.getString("ErrorPrintStream.continuer"),
             Messages.getString("ErrorPrintStream.plus_prevenir"),
-            Messages.getString("ErrorPrintStream.quitter")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            Messages.getString("ErrorPrintStream.quitter") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // Pour avoir une seule fenêtre ouverte :
     boolean open = false;
@@ -47,15 +47,21 @@ public class ErrorPrintStream extends PrintStream {
         super(new ErrorOutputStream());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.io.PrintStream#print(java.lang.Object)
-     */
     public void print(Object obj) {
         super.print(obj);
 
         if (!open) {
+            if (obj instanceof Exception) {
+                Exception e = (Exception) obj;
+                StackTraceElement[] stack = e.getStackTrace();
+                for (int i = 0; i < stack.length; i++) {
+                    StackTraceElement element = stack[i];
+                    if (element.toString().indexOf("org.jcubitainer") == -1){
+                        return;
+                    }
+                }
+            }
+
             open = true;
             String message = obj.toString();
             int n = JOptionPane.showOptionDialog(null, Messages
@@ -64,9 +70,9 @@ public class ErrorPrintStream extends PrintStream {
                     .getString("ErrorPrintStream.titre_erreur"), //$NON-NLS-1$ //$NON-NLS-2$
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.ERROR_MESSAGE, null, options, options[0]);
-            open = false;
-            if (n == 1) open = true;
-            if (n == 2) System.exit(1);
+            open = n == 1;
+            if (n == 2)
+                System.exit(1);
 
         }
     }

@@ -107,14 +107,15 @@ public class NetworkDisplayTable extends JPanel {
                         break;
                 }
                 data.add(i, value);
-                fireTableRowsInserted(i, 0);
+                fireTableRowsInserted(i, data.size());
             }
         }
 
         public void remove(Comparable value) {
             synchronized (data) {
+                int pos = data.indexOf(value);
                 data.remove(value);
-                fireTableRowsDeleted(data.size() - 1, 0);
+                fireTableRowsDeleted(pos, data.size());
             }
         }
 
