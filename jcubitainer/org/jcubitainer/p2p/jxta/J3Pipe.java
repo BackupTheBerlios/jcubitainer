@@ -158,12 +158,12 @@ public class J3Pipe extends Process implements PipeMsgListener {
 
         if (mes.isSystem()) {
             if (MESSAGE_PING.equals(mes.getWhat())
-                    && !StartJXTA.name.equals(mes.getWho())) {
+                    /*&& !StartJXTA.name.equals(mes.getWho())*/) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 J3PeerManager.addPeer(peer);
             }
             if (MESSAGE_REMOVE.equals(mes.getWhat())
-                    && !StartJXTA.name.equals(mes.getWho())) {
+                    && !StartJXTA.peer_ID.equals(mes.getPeer_id())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 System.out.println("! Demande de suppression de : " + peer.getName());
                 J3PeerManager.remove(peer);

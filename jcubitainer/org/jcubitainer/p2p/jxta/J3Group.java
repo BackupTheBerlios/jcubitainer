@@ -40,6 +40,7 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
+import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3Group {
@@ -85,7 +86,7 @@ public class J3Group {
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
 			System.out.println("! Groupe trouvé : " + groupAdv.getName());
-
+			StartJXTA.peer_ID = pg.getPeerID().toString();
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
 			System.out.println("! Impossible de créé le groupe : "

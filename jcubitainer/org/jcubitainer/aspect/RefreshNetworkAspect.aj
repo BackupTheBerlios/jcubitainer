@@ -87,7 +87,7 @@ public aspect RefreshNetworkAspect {
 	        }
 	        else	     
 	       // gestion des bonus :
-	    if (!StartJXTA.name.equals(message.getWho()) ){
+	    if (!StartJXTA.peer_ID.equals(message.getPeer_id()) ){
 	        // On ne veut pas recevoir ces propres messages !
 	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
 	                message.getWho() + ":" + message.getWhat());
@@ -105,7 +105,7 @@ public aspect RefreshNetworkAspect {
 	pointcut endGame() : call(void J3PeerManager.remove(..));
 
 	after() : endGame() {
-	    if( J3PeerManager.size() == 0) {
+	    if( J3PeerManager.size() < 2) {
 	        NetworkManager.endGame();
 	        DisplayInfo.getThis().setRechercheVisible(true);
 	    }
@@ -125,10 +125,12 @@ public aspect RefreshNetworkAspect {
 	        peers.put(peer.getPeerID(),pc);
 	    }
 	    NetworkDisplay.getTable().addData(pc);
-        NetworkManager.startGame();
-	    DisplayInfo di = DisplayInfo.getThis();
-        di.setRechercheVisible(false);
-        di.setHitDisplayWithNoBorder(di.getMetaInfo().getHit());
+	    if( J3PeerManager.size() > 1) {
+	        NetworkManager.startGame();
+	        DisplayInfo di = DisplayInfo.getThis();
+	        di.setRechercheVisible(false);
+	        di.setHitDisplayWithNoBorder(di.getMetaInfo().getHit());
+	    }
 	}
 
 	pointcut envoyerMalusPiece() : call(void Bonus.deletePiece());

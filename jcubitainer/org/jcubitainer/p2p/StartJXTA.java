@@ -22,7 +22,7 @@ public class StartJXTA extends Process {
 
     static public String name = null;
 
-    //    private JFrame frame2 = null;
+    static public String peer_ID = null;
 
     private static ProcessMg manager = new ProcessMg(new StartJXTA());
 
