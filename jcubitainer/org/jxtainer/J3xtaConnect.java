@@ -35,6 +35,7 @@ import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
 
 import org.jcubitainer.tools.ProcessMg;
+import org.jxtainer.util.Log;
 
 public class J3xtaConnect {
 
@@ -53,7 +54,7 @@ public class J3xtaConnect {
     public J3xtaConnect(File configuration) {
         try {
             J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
-            System.out.println("! Connexion � JXTA !");
+            Log.debug("! Connexion � JXTA !");
 
             // Configuration automatique :
             if (configuration != null)
@@ -86,9 +87,9 @@ public class J3xtaConnect {
             rdv_root = root.getRendezVousService();
 
             // Wait until we connect to a rendezvous peer
-            System.out.print("! On recherche un rendezvous");
+            Log.debug("! On recherche un rendezvous");
 
-            int boucle = 30 /*1 minute*/* 4;
+            int boucle = 5 /*1 minute*/* 4;
 
             while (!rdv_root.isConnectedToRendezVous() && boucle-- > 0) {
                 try {
@@ -98,14 +99,14 @@ public class J3xtaConnect {
             }
 
             if (rdv_root.isConnectedToRendezVous())
-                System.out.println("! Peer Rendez-vous trouv�.");
+                Log.debug("! Peer Rendez-vous trouv�.");
             else
-                System.out.println("! Peer Rendez-vous non trouv�.");
+                Log.debug("! Peer Rendez-vous non trouv�.");
 
-            System.out.println("! Connect� � JXTA.");
+            Log.debug("! Connect� � JXTA.");
 
         } catch (Exception e) {
-            System.out.println("! fatal error : group creation failure");
+            Log.debug("! fatal error : group creation failure");
             e.printStackTrace();
             J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
         }
@@ -126,23 +127,23 @@ public class J3xtaConnect {
 
         // On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
-        System.out.print("! On va essay� de trouver une partie.");
+        Log.debug("! On va essay� de trouver une partie.");
         try {
             int boucle = 60 * 5; // 5 minutes
             while (!J3Group.isConnectToGroup() && --boucle > 0) {
                 Thread.sleep(1000);
-                System.out.print(".");
+                Log.debug(".");
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         if (!J3Group.isConnectToGroup()) {
-            System.out.println("! Pas de groupe trouv� :-(");
+            Log.debug("! Pas de groupe trouv� :-(");
             J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
             group = new ProcessMg(rdv);
             group.wakeUp();
         } else
-            System.out.println("! Une partie trouv�e sur Internet.");
+            Log.debug("! Une partie trouv�e sur Internet.");
     }
 }

@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.jcubitainer.manager.Configuration;
 import org.jxtainer.J3PeerManager;
 import org.jxtainer.J3Pipe;
 import org.jxtainer.J3xta;
@@ -113,7 +112,7 @@ public class HelloChatWorld {
 		consoleOut("Recherche du chat sur le réseau...");
 
 		try {
-			while (J3xta.JXTA_STATUT_ON == J3xta.getStatut()) {
+			while (J3xta.JXTA_STATUT_ON != J3xta.getStatut()) {
 				Thread.sleep(100);
 			}
 		} catch (InterruptedException e) {
@@ -136,6 +135,7 @@ public class HelloChatWorld {
 
 	public static String consoleIn(String s) {
 		try {
+		    System.out.print(s);
 			return in.readLine();
 		} catch (IOException e) {
 			return "ERROR";

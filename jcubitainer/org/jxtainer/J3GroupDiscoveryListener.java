@@ -36,6 +36,7 @@ import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.tools.Process;
+import org.jxtainer.util.Log;
 
 public class J3GroupDiscoveryListener extends Process implements
 		DiscoveryListener {
@@ -76,7 +77,7 @@ public class J3GroupDiscoveryListener extends Process implements
 							if (true)//j3g.isRendezvous()
 								j3g.joinThisGroup();
 							else
-								System.out.println("! Not RDV PeerGroup");
+							    Log.debug("! Not RDV PeerGroup");
 						}
 					}
 				} catch (Exception e) {

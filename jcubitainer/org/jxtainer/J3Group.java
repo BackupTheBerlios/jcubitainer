@@ -41,6 +41,7 @@ import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.tools.ProcessMg;
+import org.jxtainer.util.Log;
 
 public class J3Group {
 
@@ -84,11 +85,11 @@ public class J3Group {
 			pg = new J3Group(peerGroup_temp, proot, pdiscoSvc);
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
-			System.out.println("! Groupe trouv� : " + groupAdv.getName());
+			Log.debug("! Groupe trouv� : " + groupAdv.getName());
 			StartJXTA.setPeer_ID(pg.getPeerID().toString());
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
-			System.out.println("! Impossible de cr�� le groupe : "
+			Log.debug("! Impossible de cr�� le groupe : "
 					+ groupAdv.getName());
 		}
 		return pg;
@@ -111,7 +112,6 @@ public class J3Group {
 		if (joinPeerGroups.containsKey(peerGroup.getPeerGroupID()))
 			return;
 
-		//System.out.println("Joining peer group...");
 
 		// On ne peut joindre un seul groupe pour l'instant !
 
@@ -133,7 +133,7 @@ public class J3Group {
 			if (auth.isReadyForJoin()) {
 				Credential myCred = membership.join(auth);
 
-				System.out.println("! Successfully joined group "
+				Log.debug("! Successfully joined group "
 						+ peerGroup.getPeerGroupName());
 
 				joinPeerGroups.put(peerGroup.getPeerGroupID(), peerGroup);
@@ -147,10 +147,10 @@ public class J3Group {
 				createPipeListener();
 
 			} else {
-				System.out.println("! Failure: unable to join group");
+			    Log.debug("! Failure: unable to join group");
 			}
 		} catch (Exception e) {
-			System.out.println("! Failure in authentication." + e);
+		    Log.debug("! Failure in authentication." + e);
 		}
 	}
 
@@ -210,8 +210,8 @@ public class J3Group {
     }
     
     public void quitGroup(){
-        System.out.print("! On quitte le r�seau, ");
+        Log.debug("! On quitte le r�seau, ");
         pipe.sendMsg(J3Pipe.MESSAGE_REMOVE,true);
-        System.out.println(" message envoy�.");
+        Log.debug(" message envoy�.");
     }
 }

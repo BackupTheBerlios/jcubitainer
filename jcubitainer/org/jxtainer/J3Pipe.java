@@ -44,6 +44,7 @@ import net.jxta.protocol.PipeAdvertisement;
 import org.jcubitainer.tools.Process;
 import org.jxtainer.util.J3Message;
 import org.jxtainer.util.J3MessagePipe;
+import org.jxtainer.util.Log;
 
 public class J3Pipe extends Process implements PipeMsgListener {
 
@@ -164,14 +165,14 @@ public class J3Pipe extends Process implements PipeMsgListener {
             if (MESSAGE_REMOVE.equals(mes.getWhat())
                     && !StartJXTA.getPeer_ID().equals(mes.getPeer_id())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
-                System.out.println("! Demande de suppression de : "
+                Log.debug("! Demande de suppression de : "
                         + peer.getName());
                 J3PeerManager.remove(peer);
             }
         } else {
             // On veut recevoir les messages que des peers connus :
             if (J3PeerManager.existPeer(mes.getPeer_id())) {
-                System.out.println("! Message re�u de " + mes.getWho()
+                Log.debug("! Message re�u de " + mes.getWho()
                         + " de : " + mes.getWhat());
                 J3MessagePipe.put(mes);
             }

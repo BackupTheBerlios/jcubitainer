@@ -33,6 +33,7 @@ import java.util.Iterator;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
 import org.jxtainer.util.JxPeerListener;
+import org.jxtainer.util.Log;
 
 public class J3PeerManager extends Process {
 
@@ -58,7 +59,7 @@ public class J3PeerManager extends Process {
                 J3Peer peer = getPeer(peer_id);
                 int nb = getInt(peer);
                 if (nb < 1) {
-                    System.out.println("! Suppression du peer non actif : "
+                    Log.debug("! Suppression du peer non actif : "
                             + peer.getName());
                     remove(peer);
                 } else
@@ -71,7 +72,7 @@ public class J3PeerManager extends Process {
         manager.wakeUp();
         int nb = getInt(peer);
         if (nb == 0) {
-            System.out.println("! Nouveau Peer actif : " + peer.getName());
+            Log.debug("! Nouveau Peer actif : " + peer.getName());
             put(peer, String.valueOf(3));
             // Listener :
             Iterator list = StartJXTA.jxPeerListenerList.iterator();
