@@ -39,7 +39,13 @@ public class ChuteProcess extends Process {
 
     MoveBoard dbox = null;
 
-    boolean slow = false;
+    public final static int SPEED_SLOW = 0;
+
+    public final static int SPEED_NORMAL = 1;
+
+    public final static int SPEED_FAST = 2;
+
+    private static int speed = SPEED_NORMAL;
 
     int boucle = 0;
 
@@ -47,7 +53,7 @@ public class ChuteProcess extends Process {
      *  
      */
     public ChuteProcess(MoveBoard pb) {
-        super(1800);
+        super(900);//1800
         metabox = pb.getMetabox();
         dbox = pb;
         setPriority(MAX_PRIORITY);
@@ -60,26 +66,59 @@ public class ChuteProcess extends Process {
      */
     public void action() throws InterruptedException {
 
-        if (slow) {
+        boolean descendre = true;
+
+        switch (speed) {
+        case SPEED_SLOW:
+            // Descendre 1 temps sur 4
             boucle--;
             if (boucle < 0) {
-                slow = false;
+                speed = SPEED_NORMAL;
+                Game.getGameService().getBonus().stopSlow();
+                boucle = 0;
+            } else
+                descendre = boucle % 4 == 0;
+            break;
+        case SPEED_FAST:
+            // Descendre à chaque fois
+            boucle--;
+            if (boucle < 0) {
+                speed = SPEED_NORMAL;
                 Game.getGameService().getBonus().stopSlow();
                 boucle = 0;
             }
+            break;
+        default:
+            // Descendre une fois sur deux
+            descendre = boucle % 2 == 0;
+            boucle--;
+            if (boucle < 0)
+                boucle = 1;
+            break;
         }
+
         dbox.getMetaInfo().addScore(1);
 
         synchronized (metabox.getPieces_mouvantes()) {
             List liste = metabox.getPieces_mouvantes();
-            ((MoveBoard) dbox).getMovepiece().downPieces(liste, boucle);
+            ((MoveBoard) dbox).getMovepiece().downPieces(liste, descendre);
         }
         //dbox.repaint();
     }
 
     public void setSlow() {
-        slow = true;
+        speed = SPEED_SLOW;
+        boucle = boucle + 120;
+    }
+
+    public void setFast() {
+        speed = SPEED_FAST;
         boucle = boucle + 60;
+    }
+
+    public void setNormal() {
+        speed = SPEED_NORMAL;
+        boucle = 0;
     }
 
 }

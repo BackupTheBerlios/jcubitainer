@@ -78,6 +78,7 @@ public class Game {
             ((MoveBoard) db).getMetabox().createEmptyBoard();
             //dinfo.repaint();
         }
+        ((ChuteProcess)timer.getProcess()).setNormal();
         dinfo.setPause(false);
         ((MoveBoard) db).setCheckMove(true);
         levelmanager.setLevel((ChuteProcess) timer.getProcess());

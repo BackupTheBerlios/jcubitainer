@@ -36,6 +36,7 @@ import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.*;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.p2p.jxta.util.*;
+import org.jcubitainer.manager.process.*;
 
 public aspect RefreshNetworkAspect {
 
@@ -58,7 +59,7 @@ public aspect RefreshNetworkAspect {
 	after() : showMessage() {
 	    J3Message message = J3MessagePipe.drop();
 	    if ( message != null && !StartJXTA.name.equals(message.getWho()) ){
-	        // On ne veut recevoir ces propres messages !
+	        // On ne veut pas recevoir ces propres messages !
 	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
 	                message.getWho() + ":" + message.getWhat());
 	        if ( MALUS_PIECE.equals(message.getWhat()))
@@ -68,7 +69,7 @@ public aspect RefreshNetworkAspect {
 	            ((MoveBoard)DisplayBoard.getThis()).newLine();
 	        }
 	        if ( MALUS_SPEED.equals(message.getWhat()))
-	            ((MoveBoard)DisplayBoard.getThis()).newPiece();
+                ((ChuteProcess)Game.getGameService().getTimer().getProcess()).setFast();
 	    }
 	}
 

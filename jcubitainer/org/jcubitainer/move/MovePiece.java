@@ -204,7 +204,7 @@ public class MovePiece {
             if ((retour = checkCollision(mp)) != COLLISION_NO)
                 mp.setPosition_y(mp.getPosition_y() - 1);
             else {
-                if (slow) mp.setPosition_y(mp.getPosition_y() - 1);
+                if (!slow) mp.setPosition_y(mp.getPosition_y() - 1);
             }
             return retour == COLLISION_PIECE_FIXE;
         }
@@ -260,7 +260,7 @@ public class MovePiece {
      * @param liste
      * @return
      */
-    public int downPieces(List liste, int boucle) {
+    public int downPieces(List liste, boolean descendre) {
         Collections.sort(liste, new PieceComparator());
         ChuteProcess cs = (ChuteProcess) Game.getGameService().getTimer()
                 .getProcess();
@@ -271,7 +271,7 @@ public class MovePiece {
         for (int pos = 0; pos < liste.size(); pos++) {
             MetaPiece mp = (MetaPiece) liste.get(pos);
             int y = mp.getPosition_y();
-            if (((MoveBoard) movebox).getMovepiece().down(mp, boucle % 2 == 1)) {
+            if (((MoveBoard) movebox).getMovepiece().down(mp, descendre)) {
                 // On fige la pièce :
                 //System.out.println("*******");
                 metabox.removePiece(mp);
@@ -327,7 +327,7 @@ public class MovePiece {
         liste.add(mp);
         int hauteur = mp.getPosition_y();
         while (liste.size() > 0) {
-            downPieces(liste, 0);
+            downPieces(liste, true);
             if (hauteur == mp.getPosition_y())
             // Une pièce sur le passage, on ne peut pas descendre
                     // plus bas !

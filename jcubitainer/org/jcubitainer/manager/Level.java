@@ -68,51 +68,51 @@ public class Level {
         int level = mi.getNiveau();
         PieceProcess ps = PieceProcess.getPieceService();
         if (level == 1) {
-            cs.setWait(1800);
+            cs.setWait(900);
             ps.setWait(5000);
             return;
         }
         if (level == 2) {
-            cs.setWait(1500);
+            cs.setWait(750);
             ps.setWait(4500);
             return;
         }
         if (level == 3) {
-            cs.setWait(1100);
+            cs.setWait(550);
             ps.setWait(4000);
             return;
         }
         if (level == 4) {
-            cs.setWait(800);
+            cs.setWait(400);
             ps.setWait(3500);
             return;
         }
         if (level == 5) {
-            cs.setWait(700);
+            cs.setWait(350);
             ps.setWait(3000);
             return;
         }
         if (level == 6) {
-            cs.setWait(600);
+            cs.setWait(300);
             ps.setWait(2500);
             return;
         }
         if (level == 7) {
-            cs.setWait(550);
+            cs.setWait(275);
             ps.setWait(2000);
             return;
         }
         if (level == 8) {
-            cs.setWait(500);
+            cs.setWait(250);
             ps.setWait(1500);
             return;
         }
         if (level == 9) {
-            cs.setWait(400);
+            cs.setWait(200);
             ps.setWait(1500);
             return;
         } else {
-            cs.setWait(300);
+            cs.setWait(150);
             ps.setWait(1000);
             return;
         }

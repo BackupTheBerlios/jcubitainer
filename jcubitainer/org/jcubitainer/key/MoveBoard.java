@@ -261,7 +261,7 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                         if (mp != null) {
                             List liste = new ArrayList();
                             liste.add(mp);
-                            movepiece.downPieces(liste, 0);
+                            movepiece.downPieces(liste, true);
                         }
                     }
                 }
@@ -308,8 +308,8 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                         }
                     }
                 }
-            }
 
+            }
             try {
                 Thread.sleep(KEY_DELAY);
             } catch (InterruptedException e) {
@@ -388,7 +388,7 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
     public void newLine() {
         synchronized (getMetabox().getPieces_mouvantes()) {
             // On mettre 1 car on ne veut pas que les pièces descendent.
-            movepiece.downPieces(getMetabox().getPieces_mouvantes(), 1);
+            movepiece.downPieces(getMetabox().getPieces_mouvantes(), false);
             getMetabox().upLines();
         }
     }
