@@ -88,8 +88,10 @@ public class InterfaceMusique {
 
         public void pause() {
             super.pause();
-            Musique m = (Musique) play.getProcess();
-            m.pause();
+            if (play != null) {
+                Musique m = (Musique) play.getProcess();
+                m.pause();
+            }
             //            plg.getProcess().interrupted();
         }
 

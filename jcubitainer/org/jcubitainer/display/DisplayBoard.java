@@ -68,15 +68,20 @@ public class DisplayBoard extends JPanel {
     // Font :
     private String family = "Serif";
 
+    private String family_small = "Dialog";
+
     private int style = Font.BOLD;
+
+    private int style_small = Font.PLAIN;
 
     private int size = 22;
 
+    private int size_small = 15;
+
     private Font FONT = new Font(family, style, size);
 
-    /**
-     *  
-     */
+    private Font FONT_SMALL = new Font(family_small, style_small, size_small);
+
     public DisplayBoard(MetaBoard pmetabox, MetaInfo pmi) {
         super();
         metabox = pmetabox;
@@ -172,8 +177,15 @@ public class DisplayBoard extends JPanel {
             String texte = mt.getTexte();
 
             // Calcule de la position :
+            g2.setFont(FONT);
             int x = (getWidth() - g2.getFontMetrics().stringWidth(texte)) / 2;
+            // Si le texte est trop grand, on réduit la police :
             int y = 230;
+            if (x < 0) {
+                g2.setFont(FONT_SMALL);
+                // On recalcule la nouvelle position :
+                x = (getWidth() - g2.getFontMetrics().stringWidth(texte)) / 2;
+            }
 
             g2.drawString(texte, x, y);
             g2.setComposite(c);

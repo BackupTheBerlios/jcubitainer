@@ -126,6 +126,9 @@ public class Start {
         // connect = new J3xtaConnect();
         // Pour être à l'écoute des autres :
         // connect.addGroupListener();
+
+        // PUB : Affichage de l'url du site.
+        mb.getTexte().setTexte("http://jcubitainer.berlios.de");
     }
 
     public static void main(String[] args) {

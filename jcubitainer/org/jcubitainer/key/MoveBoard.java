@@ -24,6 +24,8 @@
  *   - First release                                                   *
  ******** May 6, 2004 **************************************************
  *   - Ajout du drage'n'drop pour les thèmes                           *
+ ******** May 12, 2004 **************************************************
+ *   - Amélioration de la gestion des touches                          *
  ***********************************************************************/
 
 package org.jcubitainer.key;
@@ -51,11 +53,19 @@ import org.jcubitainer.move.MovePiece;
 import org.jcubitainer.sound.InterfaceMusique;
 
 public class MoveBoard extends DisplayBoard implements MouseListener,
-        KeyListener {
+        KeyListener, Runnable {
+
+    // http://forum.java.sun.com/thread.jsp?forum=406&thread=478606
+
+    private final long KEY_DELAY = 70;
 
     private MovePiece movepiece = null;
 
     private boolean checkMove = false;
+
+    Thread thread = null;
+
+    int keys[] = new int[256];
 
     /**
      * @param pmetabox
@@ -66,6 +76,9 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
         movepiece = new MovePiece(this);
         DropTarget dropTarget = new DropTarget(this,
                 new DragAndDropBoardListener());
+        thread = new Thread(this);
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
     }
 
     /*
@@ -112,157 +125,205 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
     public void mouseReleased(MouseEvent arg0) {
     }
 
+    public void keyPressed(KeyEvent e) {
+        keys[e.getKeyCode() & 0xff] = 1;
+    }
+
     /*
      * (non-Javadoc)
      *  
      */
-    public void keyPressed(KeyEvent arg0) {
+    public void run() {
 
-        int keyCode = arg0.getKeyCode();
+        while (true) {
 
-        if (keyCode == KeyEvent.VK_T) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                try {
-                    ThemeManager.swithTheme();
-                } catch (ThemeError e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-        }
-
-        if (keyCode == KeyEvent.VK_P && !getMetaInfo().isGame_over()) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                Game gs = Game.getGameService();
-                if (gs.isPause())
-                    gs.start();
-                else {
-                    gs.pause();
-                    getMetabox().getTexte().setTexte("Pause");
-                }
-            }
-        }
-
-        if (!checkMove) return; // jeu en pause;
-
-        if (keyCode == KeyEvent.VK_M && !getMetaInfo().isGame_over()) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                InterfaceMusique.switchPlayMusic();
-                return;
-            }
-        }
-        if (keyCode == KeyEvent.VK_R) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                Game gs = Game.getGameService();
-                Bonus bonus = gs.getBonus();
-                MetaBoard mb = getMetabox();
-                if (bonus.canDeleteLine()) {
-                    bonus.deleteLine();
-                    mb.removeLastLines();
-                }
-                return;
-            }
-        } else if (keyCode == KeyEvent.VK_S) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                Game gs = Game.getGameService();
-                Bonus bonus = gs.getBonus();
-                MetaBoard mb = getMetabox();
-                if (bonus.canSlow()) {
-                    bonus.slow();
-                    ((ChuteProcess) gs.getTimer().getProcess()).setSlow();
-                }
-                return;
-            }
-        } else if (keyCode == KeyEvent.VK_D) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                Game gs = Game.getGameService();
-                Bonus bonus = gs.getBonus();
-                MetaBoard mb = getMetabox();
-                if (bonus.canDeletePiece()) {
-                    MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                    if (mp != null) {
-                        bonus.deletePiece();
-                        mb.removePiece(mp);
+            if (isDown(KeyEvent.VK_T)) {
+                up(KeyEvent.VK_T);
+                synchronized (getMetabox().getPieces_mouvantes()) {
+                    try {
+                        ThemeManager.swithTheme();
+                    } catch (ThemeError e) {
+                        e.printStackTrace();
                     }
                 }
-                return;
             }
-        } else if (keyCode == KeyEvent.VK_N) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                PieceFactory dps = PieceFactory.getInstance();
-                if (!movepiece.forceAddPiece(dps.getDisplayPiece(getMetaInfo()
-                        .getNiveau()))) {
-                    //System.out.println(
-                    //	"Impossible de forcer l'ajout d'une pièce !");
+
+            if (isDown(KeyEvent.VK_P) && !getMetaInfo().isGame_over()) {
+                up(KeyEvent.VK_P);
+                synchronized (getMetabox().getPieces_mouvantes()) {
+                    Game gs = Game.getGameService();
+                    if (gs.isPause())
+                        gs.start();
+                    else {
+                        gs.pause();
+                        getMetabox().getTexte().setTexte("Pause");
+                    }
                 }
             }
-        } else if (keyCode == KeyEvent.VK_J) {
-            getMetabox().getTexte().setTexte(
-                    "J3itainer" + Configuration.VERSION);
-        } else if (keyCode == KeyEvent.VK_L) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                // On mettre 1 car on ne veut pas que les pièces descendent.
-                movepiece.downPieces(getMetabox().getPieces_mouvantes(), 1);
-                getMetabox().upLines();
+
+            if (checkMove) {
+
+                if (isDown(KeyEvent.VK_M) && !getMetaInfo().isGame_over()) {
+                    up(KeyEvent.VK_M);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        InterfaceMusique.switchPlayMusic();
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_R)) {
+                    up(KeyEvent.VK_R);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        Game gs = Game.getGameService();
+                        Bonus bonus = gs.getBonus();
+                        MetaBoard mb = getMetabox();
+                        if (bonus.canDeleteLine()) {
+                            bonus.deleteLine();
+                            mb.removeLastLines();
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_S)) {
+                    up(KeyEvent.VK_S);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        Game gs = Game.getGameService();
+                        Bonus bonus = gs.getBonus();
+                        MetaBoard mb = getMetabox();
+                        if (bonus.canSlow()) {
+                            bonus.slow();
+                            ((ChuteProcess) gs.getTimer().getProcess())
+                                    .setSlow();
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_D)) {
+                    up(KeyEvent.VK_D);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        Game gs = Game.getGameService();
+                        Bonus bonus = gs.getBonus();
+                        MetaBoard mb = getMetabox();
+                        if (bonus.canDeletePiece()) {
+                            MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                            if (mp != null) {
+                                bonus.deletePiece();
+                                mb.removePiece(mp);
+                            }
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_N)) {
+                    up(KeyEvent.VK_N);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        PieceFactory dps = PieceFactory.getInstance();
+                        if (!movepiece.forceAddPiece(dps
+                                .getDisplayPiece(getMetaInfo().getNiveau()))) {
+                            //System.out.println(
+                            //	"Impossible de forcer l'ajout d'une pièce !");
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_J)) {
+                    up(KeyEvent.VK_J);
+                    getMetabox().getTexte().setTexte(
+                            "J3itainer" + Configuration.VERSION);
+                }
+
+                if (isDown(KeyEvent.VK_L)) {
+                    up(KeyEvent.VK_L);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        // On mettre 1 car on ne veut pas que les pièces descendent.
+                        movepiece.downPieces(
+                                getMetabox().getPieces_mouvantes(), 1);
+                        getMetabox().upLines();
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_RIGHT)) {
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) movepiece.right(mp);
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_LEFT)) {
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) movepiece.left(mp);
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_UP)) {
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) movepiece.up(mp);
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_DOWN)) {
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) {
+                            List liste = new ArrayList();
+                            liste.add(mp);
+                            movepiece.downPieces(liste, 0);
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_ENTER)) {
+                    up(KeyEvent.VK_ENTER);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) movepiece.forceDownPiece(mp);
+
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_SPACE)) {
+                    up(KeyEvent.VK_SPACE);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaBoard mb = getMetabox();
+                        MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
+                        if (mp != null) movepiece.rotation(mp);
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_C)) {
+                    up(KeyEvent.VK_C);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaPiece old_dp = (MetaPiece) getMetabox()
+                                .getCurrentPiece();
+                        if (old_dp != null) {
+                            MetaPiece new_dp = (MetaPiece) getMetabox()
+                                    .changeCurrentPiece(true);
+                        }
+                    }
+                }
+
+                if (isDown(KeyEvent.VK_V)) {
+                    up(KeyEvent.VK_V);
+                    synchronized (getMetabox().getPieces_mouvantes()) {
+                        MetaPiece old_dp = (MetaPiece) getMetabox()
+                                .getCurrentPiece();
+                        if (old_dp != null) {
+                            MetaPiece new_dp = (MetaPiece) getMetabox()
+                                    .changeCurrentPiece(false);
+                        }
+                    }
+                }
             }
-        } else if (keyCode == KeyEvent.VK_RIGHT) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                movepiece.right(mp);
-            }
-        } else if (keyCode == KeyEvent.VK_LEFT) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                movepiece.left(mp);
-            }
-        } else if (keyCode == KeyEvent.VK_UP) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                movepiece.up(mp);
-            }
-        } else if (keyCode == KeyEvent.VK_DOWN) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                List liste = new ArrayList();
-                liste.add(mp);
-                movepiece.downPieces(liste, 0);
-            }
-        } else if (keyCode == KeyEvent.VK_ENTER) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                movepiece.forceDownPiece(mp);
-                return;
-            }
-        } else if (keyCode == KeyEvent.VK_SPACE) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaBoard mb = getMetabox();
-                MetaPiece mp = (MetaPiece) mb.getCurrentPiece();
-                if (mp == null) return;
-                movepiece.rotation(mp);
-            }
-        } else if (keyCode == KeyEvent.VK_C) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaPiece old_dp = (MetaPiece) getMetabox().getCurrentPiece();
-                if (old_dp == null) return;
-                MetaPiece new_dp = (MetaPiece) getMetabox().changeCurrentPiece(
-                        true);
-            }
-        } else if (keyCode == KeyEvent.VK_V) {
-            synchronized (getMetabox().getPieces_mouvantes()) {
-                MetaPiece old_dp = (MetaPiece) getMetabox().getCurrentPiece();
-                if (old_dp == null) return;
-                MetaPiece new_dp = (MetaPiece) getMetabox().changeCurrentPiece(
-                        false);
+
+            try {
+                Thread.sleep(KEY_DELAY);
+            } catch (InterruptedException e) {
             }
         }
     }
@@ -272,7 +333,9 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
      * 
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
-    public void keyReleased(KeyEvent arg0) {
+    public void keyReleased(KeyEvent e) {
+
+        keys[e.getKeyCode() & 0xff] = 0;
 
     }
 
@@ -297,6 +360,20 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
      */
     public void setCheckMove(boolean b) {
         checkMove = b;
+        if (true) {
+            // Pour être sûr :
+            for (int i = 0; i < keys.length; keys[i++] = 0) {
+            }
+            this.requestFocus();
+        }
+    }
+
+    protected boolean isDown(int key) {
+        return (keys[key & 0xff] != 0);
+    }
+
+    protected void up(int key) {
+        keys[key & 0xff] = 0;
     }
 
 }
