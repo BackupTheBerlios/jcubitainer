@@ -26,13 +26,11 @@
 
 package org.jcubitainer.manager.process;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaBoard;
-import org.jcubitainer.tools.PieceComparator;
 import org.jcubitainer.tools.Process;
 
 public class ChuteProcess extends Process {
@@ -74,7 +72,6 @@ public class ChuteProcess extends Process {
 
         synchronized (metabox.getPieces_mouvantes()) {
             List liste = metabox.getPieces_mouvantes();
-            Collections.sort(liste, new PieceComparator());
             ((MoveBoard) dbox).getMovepiece().downPieces(liste, boucle);
         }
         //dbox.repaint();
@@ -82,7 +79,7 @@ public class ChuteProcess extends Process {
 
     public void setSlow() {
         slow = true;
-        boucle = 60;
+        boucle = boucle + 60;
     }
 
 }

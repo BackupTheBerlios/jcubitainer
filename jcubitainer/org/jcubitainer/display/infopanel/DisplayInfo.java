@@ -49,6 +49,8 @@ import org.jcubitainer.tools.Ressources;
 
 public class DisplayInfo extends JPanel implements ActionListener {
 
+    InfoLabel recherche = null;
+
     InfoValue score = null;
 
     InfoValue ligne = null;
@@ -124,6 +126,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
         connexion.setVisible(false);
         add(connexion);
 
+        recherche = new InfoLabel("Recherche de joueurs...", this);
+        recherche.setVisible(false);
         new InfoLabel(Messages.getString("DisplayInfo.score"), this); //$NON-NLS-1$
         score = new InfoValue("-", this); //$NON-NLS-1$
         new InfoLabel(Messages.getString("DisplayInfo.ligne"), this); //$NON-NLS-1$
@@ -246,6 +250,10 @@ public class DisplayInfo extends JPanel implements ActionListener {
         }
     }
 
+    public void setRechercheVisible(boolean b) {
+        recherche.setVisible(b);
+    }
+
     public void setNetwork(int i) {
         boolean b = i == J3xta.JXTA_STATUT_ON || i == J3xta.JXTA_STATUT_CONNECT;
         toolbar.setVisible(!b);
@@ -257,6 +265,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
             connexion.setText("Connecté");
             connexion
                     .setIcon(Ressources.getImageIcon("/ressources/images/online.png"));
+            setRechercheVisible(true);
             break;
         case J3xta.JXTA_STATUT_OFF:
             connexion.setText("Non connecté");

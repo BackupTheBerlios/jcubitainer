@@ -63,20 +63,29 @@ public aspect RefreshNetworkAspect {
 	                message.getWho() + ":" + message.getWhat());
 	        if ( MALUS_PIECE.equals(message.getWhat()))
 	            ((MoveBoard)DisplayBoard.getThis()).newPiece();
+	        if ( MALUS_LINE.equals(message.getWhat())) {
+	            ((MoveBoard)DisplayBoard.getThis()).newLine();
+	            ((MoveBoard)DisplayBoard.getThis()).newLine();
+	        }
+	        if ( MALUS_SPEED.equals(message.getWhat()))
+	            ((MoveBoard)DisplayBoard.getThis()).newPiece();
 	    }
 	}
 
 	pointcut endGame() : call(void J3PeerManager.remove(..));
 
 	after() : endGame() {
-	    if( J3PeerManager.size() == 0)
-	        NetworkManager.endGame();	        
+	    if( J3PeerManager.size() == 0) {
+	        NetworkManager.endGame();
+	        DisplayInfo.getThis().setRechercheVisible(true);
+	    }
 	}
 
 	pointcut newGame() : call(void J3PeerManager.addPeer(..));
 
 	after() : newGame() {
         NetworkManager.startGame();
+        DisplayInfo.getThis().setRechercheVisible(false);
 	}
 
 	pointcut envoyerMalusPiece() : call(void Bonus.deletePiece());

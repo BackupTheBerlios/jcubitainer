@@ -230,16 +230,6 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                             "J3itainer" + Configuration.VERSION); //$NON-NLS-1$
                 }
 
-                if (isDown(KeyEvent.VK_L)) {
-                    up(KeyEvent.VK_L);
-                    synchronized (getMetabox().getPieces_mouvantes()) {
-                        // On mettre 1 car on ne veut pas que les pièces descendent.
-                        movepiece.downPieces(
-                                getMetabox().getPieces_mouvantes(), 1);
-                        getMetabox().upLines();
-                    }
-                }
-
                 if (isDown(KeyEvent.VK_RIGHT)) {
                     synchronized (getMetabox().getPieces_mouvantes()) {
                         MetaBoard mb = getMetabox();
@@ -392,6 +382,14 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
             if (!movepiece.forceAddPiece(dps
                     .getDisplayPiece(getMetaInfo().getNiveau()))) {
             }
+        }
+    }
+    
+    public void newLine() {
+        synchronized (getMetabox().getPieces_mouvantes()) {
+            // On mettre 1 car on ne veut pas que les pièces descendent.
+            movepiece.downPieces(getMetabox().getPieces_mouvantes(), 1);
+            getMetabox().upLines();
         }
     }
     

@@ -27,6 +27,7 @@
 package org.jcubitainer.move;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.manager.process.ChuteProcess;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaPiece;
+import org.jcubitainer.tools.PieceComparator;
 
 public class MovePiece {
 
@@ -259,6 +261,7 @@ public class MovePiece {
      * @return
      */
     public int downPieces(List liste, int boucle) {
+        Collections.sort(liste, new PieceComparator());
         ChuteProcess cs = (ChuteProcess) Game.getGameService().getTimer()
                 .getProcess();
         int min_hauteur = 6;
