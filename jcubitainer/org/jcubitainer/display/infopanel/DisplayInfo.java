@@ -186,6 +186,11 @@ public class DisplayInfo extends JPanel implements ActionListener {
         hit.setBorder(BorderFactory.createLineBorder(Color.green));
     }
 
+    public void setHitDisplayWithNoBorder(int l) {
+        hit.setText(String.valueOf(l));
+        hit.setBorder(BorderFactory.createEmptyBorder());
+    }
+
     public void clearHit() {
         hit.setText("-");
         hit.setBorder(BorderFactory.createEmptyBorder());

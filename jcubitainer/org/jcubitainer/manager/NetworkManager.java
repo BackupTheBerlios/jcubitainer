@@ -40,8 +40,8 @@ public class NetworkManager {
     		DisplayInfo di = DisplayInfo.getThis();
     		MetaInfo mi = di.getMetaInfo();
             mi.setNiveau(2);
-            DisplayBoard.getThis().getMetabox().getTexte().setTexte("Go !");
             Game.getGameService().start();
+            DisplayBoard.getThis().getMetabox().getTexte().setTexte("Go !");
         }
     }
 
