@@ -91,12 +91,17 @@ public class Theme {
                     dezippe.put(ze.getName(), data);
                 }
             }
-            //zis.closeEntry();
+            zis.closeEntry();
         } catch (IOException e) {
             e.printStackTrace();
             throw new ThemeError("Impossible de lire le fichier zip :"
                     + e.toString());
         } finally {
+            try {
+                is.close();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
         }
         // Recherche du fichier theme.properties :
         byte[] ze1 = (byte[]) dezippe.get("theme.properties");

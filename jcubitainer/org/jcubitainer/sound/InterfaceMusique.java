@@ -58,21 +58,23 @@ public class InterfaceMusique {
         public void action() throws InterruptedException {
             try {
                 List playlist = ThemeManager.getCurrent().getMusiques();
-                int pos = 0;
-                if (play != null) {
-                    pos = playlist.indexOf(play) + 1;
-                    if (pos > 0 && pos < playlist.size()) {
-                    } else
-                        pos = 0;
-                }
-                play = (ProcessMg) playlist.get(pos);
-                play.wakeUp();
-                synchronized (((Musique) play.getProcess())) {
-                    while (true)
-                        if (!((Musique) play.getProcess()).isPause())
-                            ((Musique) play.getProcess()).wait(500);
-                        else
-                            break;
+                if (playlist.size() > 0) {
+                    int pos = 0;
+                    if (play != null) {
+                        pos = playlist.indexOf(play) + 1;
+                        if (pos > 0 && pos < playlist.size()) {
+                        } else
+                            pos = 0;
+                    }
+                    play = (ProcessMg) playlist.get(pos);
+                    play.wakeUp();
+                    synchronized (((Musique) play.getProcess())) {
+                        while (true)
+                            if (!((Musique) play.getProcess()).isPause())
+                                ((Musique) play.getProcess()).wait(500);
+                            else
+                                break;
+                    }
                 }
             } catch (InterruptedException e) {
             } catch (Exception e) {

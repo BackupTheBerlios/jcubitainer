@@ -51,4 +51,5 @@ public class ThemeLoaderFromJar implements ThemeLoader {
     public String getID() {
         return id;
     }
+
 }

@@ -62,7 +62,7 @@ public aspect SonAspect {
 			InterfaceMusique.START_musique();
 	}
 	
-	pointcut refreshTheme() : call(void ThemeManager.swithTheme(..));
+	pointcut refreshTheme() : call(boolean ThemeManager.swithTheme(..));
 
 	after() : refreshTheme() {
         if (InterfaceMusique.STOP_musique())

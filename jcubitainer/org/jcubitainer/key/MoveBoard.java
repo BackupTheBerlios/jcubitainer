@@ -22,10 +22,13 @@
  *                                                                     *
  ******** May 5, 2004 **************************************************
  *   - First release                                                   *
+ ******** May 6, 2004 **************************************************
+ *   - Ajout du drage'n'drop pour les thèmes                           *
  ***********************************************************************/
 
 package org.jcubitainer.key;
 
+import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -61,6 +64,8 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
         super(pmetabox, pmi);
         addKeyListener(this);
         movepiece = new MovePiece(this);
+        DropTarget dropTarget = new DropTarget(this,
+                new DragAndDropBoardListener());
     }
 
     /*

@@ -56,7 +56,7 @@ public aspect RefreshDisplayAspect {
 		//System.out.println("RefreshDisplayAspect from : " + thisJoinPoint);
 	}
 
-	pointcut refreshTheme() : call(void ThemeManager.swithTheme(..));
+	pointcut refreshTheme() : call(boolean ThemeManager.swithTheme(..));
 
 	before() : refreshTheme() {
         DisplayBoard.getThis().getMetabox().getTexte().setTexte(
