@@ -106,14 +106,17 @@ public class Game {
     public void endGame() {
         pause();
         db.getMetabox().fixAll();
-        dinfo.setGame_over(true);
         dinfo.setPause(false);
-        db.getMetabox().getTexte().setTexte(
-                Messages.getString("Game.game_over")); //$NON-NLS-1$
-        // Vérification du hit score :
-        int score = dinfo.getScore();
-        int hit = dinfo.getHit();
-        if (score > hit) dinfo.setHit(score);
+        if (!NetworkManager.isNetworkOn()) {
+            dinfo.setGame_over(true);
+            db.getMetabox().getTexte().setTexte(
+                    Messages.getString("Game.game_over")); //$NON-NLS-1$
+            // Vérification du hit score :
+            int score = dinfo.getScore();
+            int hit = dinfo.getHit();
+            if (score > hit)
+                dinfo.setHit(score);
+        }
     }
 
     /**

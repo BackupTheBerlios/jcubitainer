@@ -74,6 +74,8 @@ public class J3Pipe extends Process implements PipeMsgListener {
 
     private static final String MESSAGE_PING = "ping";
 
+    private static final String MESSAGE_REMOVE = "remove";
+
     /**
      * the thread which creates (resolves) the output pipe and sends a message
      * once it's resolved
@@ -122,14 +124,14 @@ public class J3Pipe extends Process implements PipeMsgListener {
     /**
      * Enqueue messages
      * 
-     * @param gram
+     * @param message
      *            message to send
      */
-    private void sendMsg(String gram, boolean system) {
+    private void sendMsg(String message, boolean system) {
         try {
             Message msg = new Message();
             msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
-                    gram, null));
+                    message, null));
             msg.addMessageElement(null, new StringMessageElement(SENDERNAME,
                     StartJXTA.name, null));
             msg.addMessageElement(null, new StringMessageElement(
@@ -147,12 +149,16 @@ public class J3Pipe extends Process implements PipeMsgListener {
 
     }
 
+    public void sendMsg(String message) {
+        sendMsg(message, false);
+    }
+
     public void pipeMsgEvent(PipeMsgEvent event) {
         J3Message mes = new J3Message(event.getMessage());
 
         if (mes.isSystem()) {
             if (MESSAGE_PING.equals(mes.getWhat())
-                    && !StartJXTA.name.equals(mes.getWho())) {                
+                    && !StartJXTA.name.equals(mes.getWho())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 J3PeerManager.addPeer(peer);
             }

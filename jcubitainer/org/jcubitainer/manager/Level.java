@@ -54,7 +54,8 @@ public class Level {
         PieceProcess ps = PieceProcess.getPieceService();
         if (score > mi.getNiveauSuivant()) {
             // Pas de changement de niveau la première fois :
-            if (mi.getNiveauSuivant() != 0) mi.setNiveau(mi.getNiveau() + 1);
+            if (mi.getNiveauSuivant() != 0 && !NetworkManager.isNetworkOn())
+                mi.setNiveau(mi.getNiveau() + 1);
             mi.setNiveauSuivant(mi.getNiveauSuivant() + 2000);
             mt.setTexte(Messages.getString("Level.niveau") + mi.getNiveau()
                     + " !"); //$NON-NLS-1$ //$NON-NLS-2$

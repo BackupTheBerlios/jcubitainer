@@ -25,6 +25,7 @@
 
 package org.jcubitainer.p2p.jxta;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.jxta.credential.AuthenticationCredential;
@@ -58,6 +59,8 @@ public class J3Group {
 	ProcessMg pipe_listener = null;
 	
 	private boolean rendezvous = false;
+	
+	J3Pipe pipe = null;
 
 	/**
 	 *  
@@ -69,10 +72,6 @@ public class J3Group {
 		rootdiscoSvc = pdiscoSvcPere;
 		peerGroup = this_;
 		rendezvous = peerGroup.isRendezvous();
-	}
-
-	protected static J3Group getInstance(PeerGroupAdvertisement groupAdv) {
-		return (J3Group) knowPeerGroups.get(groupAdv.getPeerGroupID());
 	}
 
 	protected static J3Group getInstance(PeerGroupAdvertisement groupAdv,
@@ -181,7 +180,9 @@ public class J3Group {
 
 	public void createPipeListener() {
 		// On veut écouter l'arrivé des pipes
-		pipe_listener = new ProcessMg(new J3Pipe(this));
+	    
+	    pipe = new J3Pipe(this);	    
+		pipe_listener = new ProcessMg(pipe);
 		pipe_listener.wakeUp();
 	}
 
@@ -199,4 +200,12 @@ public class J3Group {
 	public boolean isRendezvous() {
 		return rendezvous;
 	}
+
+    public J3Pipe getPipe() {
+        return pipe;
+    }
+    
+    public static Enumeration getJ3Groups() {
+        return knowPeerGroups.elements();
+    }
 }

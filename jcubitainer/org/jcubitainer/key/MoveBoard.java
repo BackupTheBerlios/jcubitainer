@@ -224,18 +224,6 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                     }
                 }
 
-                if (isDown(KeyEvent.VK_N)) {
-                    up(KeyEvent.VK_N);
-                    synchronized (getMetabox().getPieces_mouvantes()) {
-                        PieceFactory dps = PieceFactory.getInstance();
-                        if (!movepiece.forceAddPiece(dps
-                                .getDisplayPiece(getMetaInfo().getNiveau()))) {
-                            //System.out.println(
-                            //	"Impossible de forcer l'ajout d'une pièce !");
-                        }
-                    }
-                }
-
                 if (isDown(KeyEvent.VK_J)) {
                     up(KeyEvent.VK_J);
                     getMetabox().getTexte().setTexte(
@@ -398,4 +386,13 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
         keys[key & 0xff] = TOUCHE_NON_ACTIVE;
     }
 
+    public void newPiece() {
+        synchronized (getMetabox().getPieces_mouvantes()) {
+            PieceFactory dps = PieceFactory.getInstance();
+            if (!movepiece.forceAddPiece(dps
+                    .getDisplayPiece(getMetaInfo().getNiveau()))) {
+            }
+        }
+    }
+    
 }

@@ -1,24 +1,46 @@
-/*
- * Created on 25 mai 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.aspect;
 
+import java.util.Enumeration;
+
+import org.jcubitainer.key.MoveBoard;
+import org.jcubitainer.manager.NetworkManager;
+import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.p2p.jxta.*;
 import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.*;
+import org.jcubitainer.manager.*;
 import org.jcubitainer.p2p.jxta.util.*;
 
-/**
- * @author mounes
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 public aspect RefreshNetworkAspect {
 
+    public static String MALUS_PIECE = "MALUS!PIECE";
+    
 	pointcut showStatut() : call(void J3xta.setStatut(..));
 
 	after() : showStatut() {
@@ -31,22 +53,41 @@ public aspect RefreshNetworkAspect {
 
 	after() : showMessage() {
 	    J3Message message = J3MessagePipe.drop();
-	    if ( message != null ) 	        
+	    if ( message != null && !StartJXTA.name.equals(message.getWho()) ){
+	        // On ne veut recevoir ces propres messages !
 	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
 	                message.getWho() + ":" + message.getWhat());
+	        if ( MALUS_PIECE.equals(message.getWhat()))
+	            ((MoveBoard)DisplayBoard.getThis()).newPiece();
+	    }
 	}
 
 	pointcut endGame() : call(void J3PeerManager.remove(..));
 
 	after() : endGame() {
 	    if( J3PeerManager.size() == 0)
-	        DisplayBoard.getThis().getMetabox().getTexte().setTexte("Personne !");
+	        NetworkManager.endGame();	        
 	}
 
-	pointcut newGame() : call(void J3PeerManager.put(..));
+	pointcut newGame() : call(void J3PeerManager.addPeer(..));
 
 	after() : newGame() {
-	    if( J3PeerManager.size() != 0)
-	        DisplayBoard.getThis().getMetabox().getTexte().setTexte("Game OK !");
+        NetworkManager.startGame();
+	}
+
+	pointcut envoyerMalusPiece() : call(void Bonus.deletePiece());
+
+	after() : envoyerMalusPiece() {
+        if (NetworkManager.isNetworkOn()) {
+            Enumeration liste = J3Group.getJ3Groups();
+            J3Pipe pipe = null;
+            if (liste != null) 
+                if(liste.hasMoreElements()){
+                    J3Group group = (J3Group)liste.nextElement();
+                    pipe = group.getPipe();
+                }
+            if ( pipe != null ) 
+                pipe.sendMsg(MALUS_PIECE);
+        }                    
 	}
 }
