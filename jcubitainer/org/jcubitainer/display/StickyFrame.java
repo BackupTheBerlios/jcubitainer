@@ -24,7 +24,7 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.display.table;
+package org.jcubitainer.display;
 
 import java.awt.Dimension;
 import java.awt.Point;

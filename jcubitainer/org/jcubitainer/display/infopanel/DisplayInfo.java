@@ -42,9 +42,9 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.jcubitainer.display.JCubitainerFrame;
+import org.jcubitainer.display.StickyFrame;
 import org.jcubitainer.display.dialog.DisplayLogin;
 import org.jcubitainer.display.table.NetworkDisplay;
-import org.jcubitainer.display.table.StickyFrame;
 import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.manager.Game;
