@@ -25,13 +25,18 @@
 
 package org.jcubitainer.p2p.jxta;
 
+import java.io.File;
+
 import net.jxta.discovery.DiscoveryService;
+import net.jxta.exception.ConfiguratorException;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
+import net.jxta.ext.config.Configurator;
 
 import org.jcubitainer.tools.ProcessMg;
+import org.jcubitainer.p2p.StartJXTA;
 
 public class J3xtaConnect {
 
@@ -54,6 +59,22 @@ public class J3xtaConnect {
 		try {
 			J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
 			System.out.println("Connexion à JXTA !");
+
+			// Configuration automatique :
+			File config_jxta = new File(Configurator.getHome(), "PlatformConfig").getAbsoluteFile();
+
+			if ( !config_jxta.exists() ) {
+		        try {
+					System.out.println("Création du fichier de configuration JXTA.");
+					String name = StartJXTA.name;
+					Configurator config = new Configurator(name, "JXTAConfiguration", name, "monmotdepasse2005");
+					config.save();
+		        } catch (ConfiguratorException ce) {
+					System.out.println("Création du fichier de configuration JXTA impossible.");
+					// Impossible de faire une configuration automatique !
+			    }
+			}
+
 			root = PeerGroupFactory.newNetPeerGroup();
 			rootDiscoveryService = root.getDiscoveryService();
 
@@ -96,7 +117,7 @@ public class J3xtaConnect {
 
 		System.out.print("On va essayé de trouver une partie.");
 		try {
-			int boucle = 60 * 1; // 5 minutes
+			int boucle = 60 * 5; // 5 minutes
 			while (!J3Group.isConnectToGroup() && --boucle > 0) {
 				Thread.sleep(1000);
 				System.out.print(".");

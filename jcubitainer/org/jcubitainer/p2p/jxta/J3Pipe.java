@@ -72,9 +72,9 @@ public class J3Pipe extends Process implements PipeMsgListener {
 
     private int ping_id = 0;
 
-    private static final String MESSAGE_PING = "ping";
+    protected static final String MESSAGE_PING = "ping";
 
-    private static final String MESSAGE_REMOVE = "remove";
+    protected static final String MESSAGE_REMOVE = "remove";
 
     /**
      * the thread which creates (resolves) the output pipe and sends a message
@@ -127,7 +127,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
      * @param message
      *            message to send
      */
-    private void sendMsg(String message, boolean system) {
+    protected void sendMsg(String message, boolean system) {
         try {
             Message msg = new Message();
             msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
@@ -161,6 +161,12 @@ public class J3Pipe extends Process implements PipeMsgListener {
                     && !StartJXTA.name.equals(mes.getWho())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 J3PeerManager.addPeer(peer);
+            }
+            if (MESSAGE_REMOVE.equals(mes.getWhat())
+                    && !StartJXTA.name.equals(mes.getWho())) {
+                J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
+                System.out.println("! Demande de suppression de : " + peer.getName());
+                J3PeerManager.remove(peer);
             }
         } else
             J3MessagePipe.put(mes);

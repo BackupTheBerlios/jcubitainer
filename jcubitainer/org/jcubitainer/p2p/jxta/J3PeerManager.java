@@ -86,7 +86,7 @@ public class J3PeerManager extends Process {
         return nb;
     }
 
-    private static void remove(J3Peer peer) {
+    protected static void remove(J3Peer peer) {
         peers_int.remove(peer.toString());
         peers_name.remove(peer.toString());
         latest_remove = peer;

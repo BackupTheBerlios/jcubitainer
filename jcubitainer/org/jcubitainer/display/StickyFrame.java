@@ -36,14 +36,16 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import org.jcubitainer.display.theme.ThemeManager;
+
 public class StickyFrame extends JFrame {
 
 	JFrame parent = null;
 	StickyFrame this_ = null;
 	Rectangle current_rec = null;
 
-	public StickyFrame(JFrame pparent) {
-		super();
+	public StickyFrame(JFrame pparent, String name) {
+		super(name);
 		parent = pparent;
 		this_ = this;
 		parent.addWindowListener(new WindowListener() {
@@ -79,6 +81,8 @@ public class StickyFrame extends JFrame {
 				this_.stickyIt();
 			}
 		});
+		
+		setIconImage(ThemeManager.getCurrent().getImage("ilogo"));
 	}
 
 	public void pack() {

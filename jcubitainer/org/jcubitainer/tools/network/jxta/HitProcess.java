@@ -1,4 +1,4 @@
-package org.jcubitainer.manager.process;
+package org.jcubitainer.tools.network.jxta;
 
 import org.jcubitainer.display.infopanel.DisplayInfo;
 import org.jcubitainer.meta.MetaInfo;

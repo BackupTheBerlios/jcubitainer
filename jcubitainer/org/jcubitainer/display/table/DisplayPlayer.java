@@ -15,7 +15,7 @@ public class DisplayPlayer implements Comparable {
 		int temp = ((DisplayPlayer) o).getHit();
 		if (temp == getHit())
 			return 0;
-		return temp > getHit() ? -1 : 1;
+		return temp > getHit() ? 1 : -1;
 	}
 
 	public String toString() {

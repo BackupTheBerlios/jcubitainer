@@ -168,4 +168,18 @@ public aspect RefreshNetworkAspect {
                 pipe.sendMsg(malus);
         }                    
 	}
+	
+	pointcut quiteJXtainer() : call(void Configuration.save());
+
+	before() : quiteJXtainer() {
+        if (NetworkManager.isNetworkOn()) {
+            Enumeration liste = J3Group.getJ3Groups();
+            J3Pipe pipe = null;
+            if (liste != null) 
+                if(liste.hasMoreElements()){
+                    J3Group group = (J3Group)liste.nextElement();
+                    group.quitGroup();
+                }
+        }                    
+	}
 }

@@ -1,4 +1,4 @@
-package org.jcubitainer.tools;
+package org.jcubitainer.tools.network.jxta;
 
 import org.jcubitainer.display.table.DisplayPlayer;
 import org.jcubitainer.p2p.jxta.J3Peer;

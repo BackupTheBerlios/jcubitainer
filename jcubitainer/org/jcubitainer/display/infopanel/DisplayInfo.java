@@ -41,7 +41,6 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.jcubitainer.display.JCubitainerFrame;
-import org.jcubitainer.display.table.DisplayPlayer;
 import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.display.table.StickyFrame;
 import org.jcubitainer.display.theme.ThemeManager;
@@ -253,7 +252,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
             if ((s != null) && (s.length() > 0)) {
                 StartJXTA.wakeUp(s);
                 clearHit();
-        		StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame());
+        		StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame(),s);
         		frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         		NetworkDisplay nd = new NetworkDisplay();
         		frame2.getContentPane().add(nd);

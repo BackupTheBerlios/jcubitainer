@@ -208,4 +208,10 @@ public class J3Group {
     public static Enumeration getJ3Groups() {
         return knowPeerGroups.elements();
     }
+    
+    public void quitGroup(){
+        System.out.print("On quitte le réseau, ");
+        pipe.sendMsg(J3Pipe.MESSAGE_REMOVE,true);
+        System.out.println(" message envoyé.");
+    }
 }
