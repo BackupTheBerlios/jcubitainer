@@ -83,7 +83,7 @@ public class HelloChatWorld {
                 if (statut == J3xta.JXTA_STATUT_ON)
                     consoleOut("Vous venez d'arriver sur le chat !");
                 else if (statut == J3xta.JXTA_STATUT_CONNECT)
-                    consoleOut("Recherche du chat sur le réseau...");
+                    consoleOut("Recherche du chat sur le réseau (5 minutes environ) ...");
             }
         });
         // Evenement lorsqu'une nouvelle personne arrive sur le chat		
@@ -97,8 +97,7 @@ public class HelloChatWorld {
             }
         });
         // Repertoire pour sauvegarder le cache JXTA ( non obligatoire )
-        File home_config = new File(System.getProperty("user.home")
-                + File.separator + ".jxtainer");
+        File home_config = new File(System.getProperty("user.home") + File.separator + ".jxtainer");
         // On se connecte sur JXtainer
         StartJXTA.wakeUp(login, GROUPE, home_config, proxy);
         // On peut dialoguer !

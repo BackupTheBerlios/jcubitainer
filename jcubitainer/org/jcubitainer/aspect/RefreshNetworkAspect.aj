@@ -38,7 +38,6 @@ import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.tools.network.jxta.*;
 import org.jcubitainer.manager.process.*;
-import org.jcubitainer.tools.*;
 
 public aspect RefreshNetworkAspect {
     
@@ -51,7 +50,7 @@ public aspect RefreshNetworkAspect {
 
     public static String MSG_HIT = "HIT!";
 
-    public static ProcessMg hitprocess = new ProcessMg ( new HitProcess());
+    public static org.jcubitainer.tools.ProcessMg hitprocess = new org.jcubitainer.tools.ProcessMg ( new HitProcess());
     
     pointcut showStatut() : call(void J3xta.setStatut(..));
 
