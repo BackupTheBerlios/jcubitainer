@@ -88,9 +88,9 @@ public class DisplayInfo extends JPanel implements ActionListener {
 
     private static DisplayInfo this_ = null;
 
-    private static final String NL = "\n";
+    private static final String NL = "\n"; //$NON-NLS-1$
 
-    private static final String SUFFIX = "V0_1_7_";
+    private static final String SUFFIX = "V0_1_7_"; //$NON-NLS-1$
 
     /**
      *  
@@ -109,7 +109,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
         start.setAlignmentX(Component.CENTER_ALIGNMENT);
         start.setBackground(Color.black);
         start.setForeground(Color.white);
-        start.setIcon(Ressources.getImageIcon("/ressources/images/Play16.gif"));
+        start.setIcon(Ressources.getImageIcon("/ressources/images/Play16.gif")); //$NON-NLS-1$
         start.addActionListener(this);
 
         network = new JButton("Réseau"); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
         network.setBackground(Color.black);
         network.setForeground(Color.white);
         network.setIcon(Ressources
-                .getImageIcon("/ressources/images/Search16.gif"));
+                .getImageIcon("/ressources/images/Search16.gif")); //$NON-NLS-1$
         network.addActionListener(this);
 
         // Bar pour le démarrage :
@@ -138,7 +138,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
         connexion.setVisible(false);
         add(connexion);
 
-        recherche = new InfoLabel("Recherche de joueurs...", this);
+        recherche = new InfoLabel(
+                Messages.getString("DisplayInfo.recherche"), this); //$NON-NLS-1$
         recherche.setVisible(false);
         new InfoLabel(Messages.getString("DisplayInfo.score"), this); //$NON-NLS-1$
         score = new InfoValue("-", this); //$NON-NLS-1$
@@ -265,27 +266,32 @@ public class DisplayInfo extends JPanel implements ActionListener {
             JOptionPane
                     .showMessageDialog(
                             this.getParent(),
-                            "Attention ! La connexion sur le réseau 'peer to peer'"
+                            Messages.getString("DisplayInfo.jxta_attention") //$NON-NLS-1$
                                     + NL
-                                    + " JXTA peut prendre 5 à 10 minutes environ.",
-                            "Information JXTA", JOptionPane.WARNING_MESSAGE);
+                                    + Messages
+                                            .getString("DisplayInfo.jxta_minute"), //$NON-NLS-1$
+                            Messages.getString("DisplayInfo.jxta_information"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 
             JOptionPane
                     .showMessageDialog(
                             this.getParent(),
-                            "L'utilisation d'un Bonus se transforme en Malus "
+                            Messages.getString("DisplayInfo.jxta_malus") //$NON-NLS-1$
                                     + NL
-                                    + "sur les autres joueurs de la partie. Par exemple,"
+                                    + Messages
+                                            .getString("DisplayInfo.jxta_partie") //$NON-NLS-1$
                                     + NL
-                                    + " le Bonus 'Une pièce supprimée' va devenir"
-                                    + NL + " le Malus 'Une pièce ajoutée'.",
-                            "Règle du jeu", JOptionPane.INFORMATION_MESSAGE);
+                                    + Messages
+                                            .getString("DisplayInfo.jxta_supprimee") //$NON-NLS-1$
+                                    + NL
+                                    + Messages
+                                            .getString("DisplayInfo.jxta_ajoutee"), //$NON-NLS-1$
+                            Messages.getString("DisplayInfo.jxta_regle"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$
 
             File home = null;
-            if (!"OUI".equals(Configuration.getProperties("DEBUG"))) {
-                home = new File(System.getProperty("user.home")
+            if (!"OUI".equals(Configuration.getProperties("DEBUG"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                home = new File(System.getProperty("user.home") //$NON-NLS-1$
                         + File.separator + Configuration.DIR + File.separator
-                        + ".jxtainer");
+                        + ".jxtainer"); //$NON-NLS-1$
                 home.mkdirs();
             }
             StartJXTA.wakeUp(s, SUFFIX, home);
@@ -321,25 +327,26 @@ public class DisplayInfo extends JPanel implements ActionListener {
         connexion.setEnabled(b);
         switch (i) {
         case J3xta.JXTA_STATUT_ON:
-            connexion.setText("Connecté");
+            connexion.setText(Messages.getString("DisplayInfo.jxta_connecte")); //$NON-NLS-1$
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/images/online.png"));
+                    .getImageIcon("/ressources/images/online.png")); //$NON-NLS-1$
             setRechercheVisible(true);
             break;
         case J3xta.JXTA_STATUT_OFF:
-            connexion.setText("Non connecté");
+            connexion.setText(Messages
+                    .getString("DisplayInfo.jxta_nonconnecte")); //$NON-NLS-1$
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/images/throbber-small.gif"));
+                    .getImageIcon("/ressources/images/throbber-small.gif")); //$NON-NLS-1$
             break;
         case J3xta.JXTA_STATUT_CONNECT:
-            connexion.setText("Connexion...");
+            connexion.setText(Messages.getString("DisplayInfo.connexion")); //$NON-NLS-1$
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/images/throbber-small.gif"));
+                    .getImageIcon("/ressources/images/throbber-small.gif")); //$NON-NLS-1$
             break;
         case J3xta.JXTA_STATUT_ERROR:
-            connexion.setText("Erreur...");
+            connexion.setText(Messages.getString("DisplayInfo.jxta_erreur")); //$NON-NLS-1$
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/images/Stop16.gif"));
+                    .getImageIcon("/ressources/images/Stop16.gif")); //$NON-NLS-1$
             break;
         }
     }

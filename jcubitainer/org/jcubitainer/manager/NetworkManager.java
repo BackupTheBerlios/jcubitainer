@@ -29,6 +29,7 @@ package org.jcubitainer.manager;
 import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.DisplayInfo;
 import org.jcubitainer.meta.MetaInfo;
+import org.jcubitainer.tools.Messages;
 
 public class NetworkManager {
 
@@ -37,18 +38,20 @@ public class NetworkManager {
     public synchronized static void startGame() {
         if (!network || Game.getGameService().isPause()) {
             network = true;
-    		DisplayInfo di = DisplayInfo.getThis();
-    		MetaInfo mi = di.getMetaInfo();
+            DisplayInfo di = DisplayInfo.getThis();
+            MetaInfo mi = di.getMetaInfo();
             mi.setNiveau(2);
             Game.getGameService().start();
-            DisplayBoard.getThis().getMetabox().getTexte().setTexte("Go !");
+            DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+                    Messages.getString("NetworkManager.go")); //$NON-NLS-1$
         }
     }
 
     public synchronized static void endGame() {
         Game.getGameService().endGame();
         network = false;
-        DisplayBoard.getThis().getMetabox().getTexte().setTexte("Perdu !");
+        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+                Messages.getString("NetworkManager.perdu")); //$NON-NLS-1$
     }
 
     public static boolean isNetworkOn() {

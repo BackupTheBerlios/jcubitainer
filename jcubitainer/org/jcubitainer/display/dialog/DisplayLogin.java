@@ -40,6 +40,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.jcubitainer.tools.Messages;
+
 public class DisplayLogin extends JDialog implements ActionListener,
         PropertyChangeListener {
 
@@ -51,9 +53,9 @@ public class DisplayLogin extends JDialog implements ActionListener,
 
     private JOptionPane fenetre;
 
-    Object[] options_on = { "Go !" };
+    Object[] options_on = { Messages.getString("DisplayLogin.go") }; //$NON-NLS-1$
 
-    Object[] options_off = { "X" };
+    Object[] options_off = { "X" }; //$NON-NLS-1$
 
     public DisplayLogin(JFrame frame, String old) {
 
@@ -61,7 +63,7 @@ public class DisplayLogin extends JDialog implements ActionListener,
 
         champ = new JTextField(old, MAX);
 
-        Object[] tableau = { "Entrez votre nom ( moins de 10 caractères )",
+        Object[] tableau = { Messages.getString("DisplayLogin.nom"), //$NON-NLS-1$
                 champ };
 
         fenetre = new JOptionPane(tableau, JOptionPane.QUESTION_MESSAGE,

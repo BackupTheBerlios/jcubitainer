@@ -13,11 +13,14 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
+import org.jcubitainer.tools.Messages;
+
 public class NetworkDisplayTable extends JPanel {
 
     private SimpleTableModel model = null;
 
-    private String title = "Joueurs en ligne";
+    private String title = Messages
+            .getString("NetworkDisplayTable.joueurs_en_ligne"); //$NON-NLS-1$
 
     public NetworkDisplayTable(int largeur, int hauteur) {
 
@@ -40,12 +43,12 @@ public class NetworkDisplayTable extends JPanel {
         table.setCellSelectionEnabled(false);
         table.setGridColor(Color.black);
         table.setShowGrid(false);
-		table.getTableHeader().setFont(new Font("Courier", Font.BOLD, 13)); //$NON-NLS-1$
-		table.getTableHeader().setBackground(Color.black);
-		table.getTableHeader().setForeground(Color.yellow);
-		table.getTableHeader().setReorderingAllowed(false);
-		table.getTableHeader().setResizingAllowed(false);
-		table.setFont(new Font("Helvetica", Font.BOLD, 12)); //$NON-NLS-1$
+        table.getTableHeader().setFont(new Font("Courier", Font.BOLD, 13)); //$NON-NLS-1$
+        table.getTableHeader().setBackground(Color.black);
+        table.getTableHeader().setForeground(Color.yellow);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        table.setFont(new Font("Helvetica", Font.BOLD, 12)); //$NON-NLS-1$
 
         table.setRequestFocusEnabled(false);
 
@@ -63,7 +66,7 @@ public class NetworkDisplayTable extends JPanel {
 
     protected class SimpleTableModel extends AbstractTableModel {
 
-        private String[] columnNames = {title};
+        private String[] columnNames = { title };
 
         private ArrayList data = new ArrayList();
 
