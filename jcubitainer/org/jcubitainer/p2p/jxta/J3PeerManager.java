@@ -39,6 +39,10 @@ public class J3PeerManager extends Process {
     static Hashtable peers_name = new Hashtable(20);
 
     static ProcessMg manager = new ProcessMg(new J3PeerManager());
+    
+    static J3Peer latest = null;
+
+    static J3Peer latest_remove = null;
 
     public J3PeerManager() {
         super(15 * 1000);
@@ -69,6 +73,7 @@ public class J3PeerManager extends Process {
             put(peer, String.valueOf(3));
         } else if (nb < 11)
             put(peer, String.valueOf(nb + 1));
+        latest = peer;
     }
 
     private static int getInt(J3Peer p) {
@@ -84,6 +89,7 @@ public class J3PeerManager extends Process {
     private static void remove(J3Peer peer) {
         peers_int.remove(peer.toString());
         peers_name.remove(peer.toString());
+        latest_remove = peer;
     }
 
     private static void put(J3Peer peer, String s) {
@@ -101,5 +107,11 @@ public class J3PeerManager extends Process {
 
     public static Enumeration getAll() {
         return peers_name.elements();
+    }
+    public static J3Peer getLatest() {
+        return latest;
+    }
+    public static J3Peer getLatest_remove() {
+        return latest_remove;
     }
 }

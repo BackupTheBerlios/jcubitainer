@@ -41,6 +41,8 @@ public class JCubitainerFrame extends JFrame {
 
     final static Color fg = Color.black;
 
+    private static JCubitainerFrame this_ = null;
+
     /**
      * @param string
      * @param db
@@ -49,6 +51,7 @@ public class JCubitainerFrame extends JFrame {
         super(string);
         mb = p;
         init();
+        this_ = this;
     }
 
     public void init() {
@@ -65,4 +68,7 @@ public class JCubitainerFrame extends JFrame {
         super.paint(arg0);
     }
 
+    public static JCubitainerFrame getFrame() {
+        return this_;
+    }
 }

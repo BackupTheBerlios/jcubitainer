@@ -34,11 +34,17 @@ import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.p2p.jxta.*;
 import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.*;
+import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.p2p.jxta.util.*;
+import org.jcubitainer.tools.PeerContainer;
 import org.jcubitainer.manager.process.*;
+import java.util.*;
+import org.jcubitainer.tools.*;
 
 public aspect RefreshNetworkAspect {
+    
+    private static Hashtable peers = new Hashtable ();
 
     public static String MALUS_PIECE = "MALUS!PIECE";
     
@@ -46,6 +52,10 @@ public aspect RefreshNetworkAspect {
 
     public static String MALUS_SPEED = "MALUS!SPEED";
 
+    public static String MSG_HIT = "HIT!";
+
+    public static ProcessMg hitprocess = new ProcessMg ( new HitProcess());
+    
     pointcut showStatut() : call(void J3xta.setStatut(..));
 
 	after() : showStatut() {
@@ -58,7 +68,26 @@ public aspect RefreshNetworkAspect {
 
 	after() : showMessage() {
 	    J3Message message = J3MessagePipe.drop();
-	    if ( message != null && !StartJXTA.name.equals(message.getWho()) ){
+	    if ( message == null ) return;
+	    else
+	        // Gestion des hits :
+	        if ( message.getWhat() != null && message.getWhat().startsWith(MSG_HIT)) {
+	            String shit = message.getWhat().substring(MSG_HIT.length());
+	            int hit = -1;
+	            try {
+                    hit = Integer.parseInt(shit);
+                } catch (NumberFormatException e) {
+                }
+        	    PeerContainer pc = (PeerContainer)peers.get(message.getPeer_id());
+        	    if ( pc != null) {
+        	        pc.setHit(hit);
+        	        NetworkDisplay.getTable().addData(pc);
+        	    }
+        	    return;
+	        }
+	        else	     
+	       // gestion des bonus :
+	    if (!StartJXTA.name.equals(message.getWho()) ){
 	        // On ne veut pas recevoir ces propres messages !
 	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
 	                message.getWho() + ":" + message.getWhat());
@@ -80,11 +109,22 @@ public aspect RefreshNetworkAspect {
 	        NetworkManager.endGame();
 	        DisplayInfo.getThis().setRechercheVisible(true);
 	    }
+	    J3Peer peer = J3PeerManager.getLatest_remove();
+	    PeerContainer pc = (PeerContainer)peers.get(peer.getPeerID());
+	    NetworkDisplay.getTable().removeData(pc);
 	}
 
-	pointcut newGame() : call(void J3PeerManager.addPeer(..));
-
+	pointcut newGame() :  call(void J3PeerManager.addPeer(..));
+	
 	after() : newGame() {
+	    hitprocess.wakeUp();
+	    J3Peer peer = J3PeerManager.getLatest();
+	    PeerContainer pc = (PeerContainer)peers.get(peer.getPeerID());
+	    if ( pc == null ) {
+	        pc = new PeerContainer (peer);
+	        peers.put(peer.getPeerID(),pc);
+	    }
+	    NetworkDisplay.getTable().addData(pc);
         NetworkManager.startGame();
 	    DisplayInfo di = DisplayInfo.getThis();
         di.setRechercheVisible(false);
@@ -109,6 +149,12 @@ public aspect RefreshNetworkAspect {
 	    sendMsg(MALUS_SPEED);
 	}
 	
+	pointcut envoyerHit() : call(void HitProcess.setMax(..));
+
+	after() : envoyerHit() {
+	    sendMsg(MSG_HIT + HitProcess.getMax());
+	}
+
 	public static void sendMsg(String malus) {
         if (NetworkManager.isNetworkOn()) {
             Enumeration liste = J3Group.getJ3Groups();
