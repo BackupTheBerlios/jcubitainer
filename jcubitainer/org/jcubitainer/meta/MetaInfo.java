@@ -27,6 +27,7 @@
 package org.jcubitainer.meta;
 
 import org.jcubitainer.manager.Configuration;
+import org.jcubitainer.manager.NetworkManager;
 
 public class MetaInfo {
 
@@ -47,6 +48,10 @@ public class MetaInfo {
     boolean game_over = true;
 
     boolean pause = false;
+    
+    private static final String HIT_STANDARD = "hit";
+
+    private static final String HIT_NETWORK = "hit_network";
 
     /**
      * @return
@@ -95,7 +100,19 @@ public class MetaInfo {
      */
     public void setHit(int i) {
         // On stocke directement dans le fichier de configuration :
-        Configuration.setPropertie("hit", String.valueOf(i));
+        Configuration.setPropertie(getHitKey(), String.valueOf(i));
+    }
+
+    public int getHit() {
+        try {            
+            return Integer.parseInt(Configuration.getProperties(getHitKey()));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+    
+    private String getHitKey() {
+        return NetworkManager.isNetworkOn()?HIT_NETWORK:HIT_STANDARD;
     }
 
     /**
@@ -103,14 +120,6 @@ public class MetaInfo {
      */
     public int getBonus_des() {
         return bonus_des;
-    }
-
-    public int getHit() {
-        try {
-            return Integer.parseInt(Configuration.getProperties("hit"));
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 
     /**

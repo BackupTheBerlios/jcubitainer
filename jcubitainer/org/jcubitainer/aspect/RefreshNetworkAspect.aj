@@ -86,7 +86,9 @@ public aspect RefreshNetworkAspect {
 
 	after() : newGame() {
         NetworkManager.startGame();
-        DisplayInfo.getThis().setRechercheVisible(false);
+	    DisplayInfo di = DisplayInfo.getThis();
+        di.setRechercheVisible(false);
+        di.setHitDisplay(di.getMetaInfo().getHit());
 	}
 
 	pointcut envoyerMalusPiece() : call(void Bonus.deletePiece());

@@ -112,12 +112,12 @@ public class Game {
             dinfo.setGame_over(true);
             db.getMetabox().getTexte().setTexte(
                     Messages.getString("Game.game_over")); //$NON-NLS-1$
-            // Vérification du hit score :
-            int score = dinfo.getScore();
-            int hit = dinfo.getHit();
-            if (score > hit)
-                dinfo.setHit(score);
         }
+        // Vérification du hit score :
+        int score = dinfo.getScore();
+        int hit = dinfo.getHit();
+        if (score > hit)
+            dinfo.setHit(score);
     }
 
     /**

@@ -28,6 +28,7 @@ package org.jcubitainer.manager;
 
 import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.DisplayInfo;
+import org.jcubitainer.meta.MetaInfo;
 
 public class NetworkManager {
 
@@ -36,7 +37,10 @@ public class NetworkManager {
     public synchronized static void startGame() {
         if (!network || Game.getGameService().isPause()) {
             network = true;
-            DisplayInfo.getThis().getMetaInfo().setNiveau(2);
+    		DisplayInfo di = DisplayInfo.getThis();
+    		MetaInfo mi = di.getMetaInfo();
+            mi.setNiveau(2);
+            DisplayBoard.getThis().getMetabox().getTexte().setTexte("Go !");
             Game.getGameService().start();
         }
     }

@@ -186,6 +186,11 @@ public class DisplayInfo extends JPanel implements ActionListener {
         hit.setBorder(BorderFactory.createLineBorder(Color.green));
     }
 
+    public void clearHit() {
+        hit.setText("-");
+        hit.setBorder(BorderFactory.createEmptyBorder());
+    }
+
     public void activeSlowDisplay(boolean b) {
         if (b)
             bonus.setForeground(Color.cyan);
@@ -237,6 +242,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
 
             if ((s != null) && (s.length() > 0)) {
                 StartJXTA.wakeUp(s);
+                clearHit();
             }
 
         }

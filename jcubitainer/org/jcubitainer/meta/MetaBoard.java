@@ -66,6 +66,7 @@ public class MetaBoard {
     public void createEmptyBoard() {
         pieces_mortes = new int[hauteur][largeur];
         pieces_mouvantes.clear();
+        current = null;
     }
 
     /**
