@@ -145,6 +145,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
             outputpipe.send(msg);
         } catch (Exception ex) {
             ex.printStackTrace();
+            Log.debug("! Erreur a l'envoie d'une message.");
         }
 
     }

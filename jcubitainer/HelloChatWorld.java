@@ -85,9 +85,13 @@ public class HelloChatWorld {
         StartJXTA.addJxStatutListener(new JxStatutListener() {
             public void newStatut(int statut) {
                 if (statut == J3xta.JXTA_STATUT_ON)
-                    consoleOut("Vous venez d'arriver sur le chat !");
+                    consoleOut("Vous venez d'arriver sur le chat, vous pouvez taper vos message.");
                 else if (statut == J3xta.JXTA_STATUT_CONNECT)
                     consoleOut("Recherche du chat sur le réseau (5 minutes environ) ...");
+                else if (statut == J3xta.JXTA_STATUT_ERROR) {
+                    consoleOut("Impossible de se connecter sur le reseau JXTA !");
+                    System.exit(1);
+                }
             }
         });
         // Evenement lorsque l'on reçoit un message du chat
@@ -111,6 +115,7 @@ public class HelloChatWorld {
          *        Etape n°2 :      *
          *  Se connecter sur JXTA  *
          ***************************/
+
         // Repertoire pour sauvegarder le cache JXTA ( non obligatoire )
         File home_config = new File(System.getProperty("user.home") + File.separator + ".jxtainer");
         // On se connecte sur JXtainer
@@ -120,8 +125,9 @@ public class HelloChatWorld {
          *        Etape n°3 :      *
          *Dialoguer avec les autres*
          ***************************/
+
         // On boucle jusqu'a la commande "quit"
-        while (!(mes = consoleIn(">")).equals("quit"))
+        while (!"quit".equals(mes = consoleIn()))
             if ((pipe = StartJXTA.getPipe()) != null)
                 pipe.sendMsg(mes);
             else
@@ -136,9 +142,8 @@ public class HelloChatWorld {
         System.out.println(s);
     }
 
-    public static String consoleIn(String s) {
+    public static String consoleIn() {
         try {
-            System.out.print(s);
             return in.readLine();
         } catch (IOException e) {
             return "ERROR";

@@ -98,11 +98,6 @@ public class J3GroupDiscoveryListener extends Process implements
 			discoveryService.getLocalAdvertisements(DiscoveryService.GROUP,
 					"Name", J3xta.getJXTA_ID() + "*");
 
-			//			discoveryService.getLocalAdvertisements(
-			//				DiscoveryService.GROUP,
-			//				null,
-			//				null);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

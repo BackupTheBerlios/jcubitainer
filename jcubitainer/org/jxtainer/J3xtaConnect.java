@@ -28,7 +28,6 @@ package org.jxtainer;
 import java.io.File;
 
 import net.jxta.discovery.DiscoveryService;
-import net.jxta.exception.ConfiguratorException;
 import net.jxta.ext.config.Configurator;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
@@ -58,22 +57,18 @@ public class J3xtaConnect {
 
             // Configuration automatique :
             if (configuration != null)
-                System
-                        .setProperty("JXTA_HOME", configuration
-                                .getAbsolutePath());
+                System.setProperty("JXTA_HOME", configuration.getAbsolutePath());
 
-            File config_jxta = new File(Configurator.getHome(),
-                    "PlatformConfig").getAbsoluteFile();
+            File config_jxta = new File(Configurator.getHome(), "PlatformConfig").getAbsoluteFile();
 
             if (!proxy && !config_jxta.exists()) {
                 try {
                     Log.debug("! Creation du fichier de configuration JXTA.");
                     String name = StartJXTA.getPeerName();
-                    Configurator config = new Configurator(name,
-                            "JXTAConfiguration", name, "monmotdepasse2005");
+                    Configurator config = new Configurator(name, "JXTAConfiguration", name, "monmotdepasse2005");
                     config.save();
-                    
-                } catch (ConfiguratorException ce) {
+
+                } catch (Exception ce) {
                     Log.debug("! Creation du fichier de configuration JXTA impossible.");
                     // Impossible de faire une configuration automatique !
                 }
@@ -88,7 +83,7 @@ public class J3xtaConnect {
             // Wait until we connect to a rendezvous peer
             Log.debug("! On recherche un rendezvous");
 
-            int boucle = 10 /*1 minute*/* 4;
+            int boucle = 30 /*1 minute*/;
 
             while (!rdv_root.isConnectedToRendezVous() && boucle-- > 0) {
                 try {
@@ -113,9 +108,13 @@ public class J3xtaConnect {
 
     public void addGroupListener() {
 
+        if (root == null) {
+            Log.debug("! Pas de peer Root !");
+            return;
+        }
+
         // On lance le service qui va devoir trouver les groupes :
-        groupDiscoveryServiceProcess = new ProcessMg(
-                new J3GroupDiscoveryListener(rootDiscoveryService, root));
+        groupDiscoveryServiceProcess = new ProcessMg(new J3GroupDiscoveryListener(rootDiscoveryService, root));
         groupDiscoveryServiceProcess.wakeUp();
 
         // On va attendre 1 minute pour essayer de trouver un groupe JXtainer
