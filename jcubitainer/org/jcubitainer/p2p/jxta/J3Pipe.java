@@ -109,7 +109,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
                 .newAdvertisement(PipeAdvertisement.getAdvertisementType());
 
         pipeAdv.setPipeID(getUniquePipeID());
-        pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.getPeerName());
+        pipeAdv.setName(J3xta.getJXTA_ID() + "PIPE" + StartJXTA.getPeerName());
         pipeAdv.setType(PipeService.PropagateType);
 
         try {

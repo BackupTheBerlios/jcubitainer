@@ -39,12 +39,10 @@ import org.jcubitainer.manager.*;
 import org.jcubitainer.p2p.jxta.util.*;
 import org.jcubitainer.tools.network.jxta.*;
 import org.jcubitainer.manager.process.*;
-import java.util.*;
 import org.jcubitainer.tools.*;
 
 public aspect RefreshNetworkAspect {
     
-    private static Hashtable peers = new Hashtable ();
 
     public static String MALUS_PIECE = "MALUS!PIECE";
     
@@ -78,7 +76,7 @@ public aspect RefreshNetworkAspect {
                     hit = Integer.parseInt(shit);
                 } catch (NumberFormatException e) {
                 }
-        	    PeerContainer pc = (PeerContainer)peers.get(message.getPeer_id());
+        	    PeerContainer pc = PeersManager.getPeers(message.getPeer_id());
         	    if ( pc != null) {
         	        pc.setHit(hit);
         	        NetworkDisplay.getTable().addData(pc);
@@ -110,7 +108,7 @@ public aspect RefreshNetworkAspect {
 	        DisplayInfo.getThis().setRechercheVisible(true);
 	    }
 	    J3Peer peer = J3PeerManager.getLatest_remove();
-	    PeerContainer pc = (PeerContainer)peers.get(peer.getPeerID());
+	    PeerContainer pc = PeersManager.getPeers(peer.getPeerID());
 	    NetworkDisplay.getTable().removeData(pc);
 	}
 
@@ -119,11 +117,7 @@ public aspect RefreshNetworkAspect {
 	after() : newGame() {
 	    hitprocess.wakeUp();
 	    J3Peer peer = J3PeerManager.getLatest();
-	    PeerContainer pc = (PeerContainer)peers.get(peer.getPeerID());
-	    if ( pc == null ) {
-	        pc = new PeerContainer (peer);
-	        peers.put(peer.getPeerID(),pc);
-	    }
+	    PeerContainer pc = PeersManager.getPeers(peer);
 	    NetworkDisplay.getTable().addData(pc);
 	    if( J3PeerManager.size() > 1) {
 	        NetworkManager.startGame();
@@ -181,6 +175,10 @@ public aspect RefreshNetworkAspect {
                 if(liste.hasMoreElements()){
                     J3Group group = (J3Group)liste.nextElement();
                     group.quitGroup();
+                    try{
+                        Thread.sleep(1000);
+                    }catch(Exception e){
+                    }
                 }
         }                    
 	}

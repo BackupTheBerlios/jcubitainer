@@ -70,7 +70,7 @@ public class J3GroupDiscoveryListener extends Process implements
 							.nextElement();
 
 					if (knowsPeers.add(adv.getID())) {
-						if (adv.getName().startsWith(J3xta.JXTA_ID)) {
+						if (adv.getName().startsWith(J3xta.getJXTA_ID())) {
 							J3Group j3g = J3Group.getInstance(adv, rootGroup,
 									discoveryService);
 							if (true)//j3g.isRendezvous()
@@ -91,11 +91,11 @@ public class J3GroupDiscoveryListener extends Process implements
 			discoveryService.addDiscoveryListener(this);
 
 			discoveryService.getRemoteAdvertisements(null,
-					DiscoveryService.GROUP, "Name", J3xta.JXTA_ID + "*", 50,
+					DiscoveryService.GROUP, "Name", J3xta.getJXTA_ID() + "*", 50,
 					null);
 
 			discoveryService.getLocalAdvertisements(DiscoveryService.GROUP,
-					"Name", J3xta.JXTA_ID + "*");
+					"Name", J3xta.getJXTA_ID() + "*");
 
 			//			discoveryService.getLocalAdvertisements(
 			//				DiscoveryService.GROUP,

@@ -108,7 +108,7 @@ public class Start {
          * .getLocalGraphicsEnvironment() .getDefaultScreenDevice();
          */
         new Game(db, mi);
-        ss.hide(1);
+        ss.hide(1000);
         frame.setVisible(true);
         mb.getTexte().setTexte("http://jcubitainer.berlios.de");
     }

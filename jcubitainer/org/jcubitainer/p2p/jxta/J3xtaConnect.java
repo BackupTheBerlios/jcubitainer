@@ -30,108 +30,114 @@ import java.io.File;
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.exception.ConfiguratorException;
 import net.jxta.exception.PeerGroupException;
+import net.jxta.ext.config.Configurator;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
-import net.jxta.ext.config.Configurator;
 
-import org.jcubitainer.tools.ProcessMg;
 import org.jcubitainer.p2p.StartJXTA;
+import org.jcubitainer.tools.ProcessMg;
 
 public class J3xtaConnect {
 
-	private PeerGroup root = null;
+    private PeerGroup root = null;
 
-	private DiscoveryService rootDiscoveryService = null;
+    private DiscoveryService rootDiscoveryService = null;
 
-	private ProcessMg groupDiscoveryServiceProcess = null;
+    private ProcessMg groupDiscoveryServiceProcess = null;
 
-	//	private ProcessMg peerDiscoveryServiceProcess = null;
-	private ProcessMg advDiscoveryServiceProcess = null;
+    private J3Group j3root = null;
 
-	private J3Group j3root = null;
+    private ProcessMg group = null;
 
-	private ProcessMg group = null;
+    private RendezVousService rdv_root;
 
-	private RendezVousService rdv_root;
+    public J3xtaConnect(File configuration) {
+        try {
+            J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
+            System.out.println("! Connexion à JXTA !");
 
-	public J3xtaConnect() {
-		try {
-			J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
-			System.out.println("! Connexion à JXTA !");
+            // Configuration automatique :
+            if (configuration != null)
+                System
+                        .setProperty("JXTA_HOME", configuration
+                                .getAbsolutePath());
 
-			// Configuration automatique :
-			File config_jxta = new File(Configurator.getHome(), "PlatformConfig").getAbsoluteFile();
+            File config_jxta = new File(Configurator.getHome(),
+                    "PlatformConfig").getAbsoluteFile();
 
-			if ( !config_jxta.exists() ) {
-		        try {
-					System.out.println("! Création du fichier de configuration JXTA.");
-					String name = StartJXTA.getPeerName();
-					Configurator config = new Configurator(name, "JXTAConfiguration", name, "monmotdepasse2005");
-					config.save();
-		        } catch (ConfiguratorException ce) {
-					System.out.println("! Création du fichier de configuration JXTA impossible.");
-					// Impossible de faire une configuration automatique !
-			    }
-			}
+            if (!config_jxta.exists()) {
+                try {
+                    System.out
+                            .println("! Création du fichier de configuration JXTA.");
+                    String name = StartJXTA.getPeerName();
+                    Configurator config = new Configurator(name,
+                            "JXTAConfiguration", name, "monmotdepasse2005");
+                    config.save();
+                } catch (ConfiguratorException ce) {
+                    System.out
+                            .println("! Création du fichier de configuration JXTA impossible.");
+                    // Impossible de faire une configuration automatique !
+                }
+            }
 
-			root = PeerGroupFactory.newNetPeerGroup();
-			rootDiscoveryService = root.getDiscoveryService();
+            root = PeerGroupFactory.newNetPeerGroup();
+            rootDiscoveryService = root.getDiscoveryService();
 
-			//          Extract the discovery and rendezvous services from our peer group
-			rdv_root = root.getRendezVousService();
+            //          Extract the discovery and rendezvous services from our peer group
+            rdv_root = root.getRendezVousService();
 
-			// Wait until we connect to a rendezvous peer
-			System.out.print("! On se connecte à un rendezvous");
-			while (!rdv_root.isConnectedToRendezVous()) {
-				try {
-					Thread.sleep(2000);
-					System.out.print(".");
-				} catch (InterruptedException ex) {
-				}
-			}
+            // Wait until we connect to a rendezvous peer
+            System.out.print("! On se connecte à un rendezvous");
+            while (!rdv_root.isConnectedToRendezVous()) {
+                try {
+                    Thread.sleep(2000);
+                    System.out.print(".");
+                } catch (InterruptedException ex) {
+                }
+            }
 
-			System.out.println("! Connecté à JXTA.");
+            System.out.println("! Connecté à JXTA.");
 
-		} catch (PeerGroupException e) {
-			System.out.println("! fatal error : group creation failure");
-			e.printStackTrace();
-			J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
-		}
-	}
+        } catch (PeerGroupException e) {
+            System.out.println("! fatal error : group creation failure");
+            e.printStackTrace();
+            J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
+        }
+    }
 
-	public void addGroupListener() {
+    public void addGroupListener() {
 
-		// On lance le service qui va devoir trouver les groupes :
-		groupDiscoveryServiceProcess = new ProcessMg(
-				new J3GroupDiscoveryListener(rootDiscoveryService, root));
-		groupDiscoveryServiceProcess.wakeUp();
+        // On lance le service qui va devoir trouver les groupes :
+        groupDiscoveryServiceProcess = new ProcessMg(
+                new J3GroupDiscoveryListener(rootDiscoveryService, root));
+        groupDiscoveryServiceProcess.wakeUp();
 
-		// On lance le service qui va devoir trouver les advs :
-		//		advDiscoveryServiceProcess = new ProcessMg(new
-		// J3AdvDiscoveryListener(
-		//				rootDiscoveryService));
-		//		advDiscoveryServiceProcess.wakeUp();
+        // On lance le service qui va devoir trouver les advs :
+        //		advDiscoveryServiceProcess = new ProcessMg(new
+        // J3AdvDiscoveryListener(
+        //				rootDiscoveryService));
+        //		advDiscoveryServiceProcess.wakeUp();
 
-		// On va attendre 1 minute pour essayer de trouver un groupe JXtainer
+        // On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
-		System.out.print("! On va essayé de trouver une partie.");
-		try {
-			int boucle = 60 * 5; // 5 minutes
-			while (!J3Group.isConnectToGroup() && --boucle > 0) {
-				Thread.sleep(1000);
-				System.out.print(".");
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+        System.out.print("! On va essayé de trouver une partie.");
+        try {
+            int boucle = 60 * 5; // 5 minutes
+            while (!J3Group.isConnectToGroup() && --boucle > 0) {
+                Thread.sleep(1000);
+                System.out.print(".");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-		if (!J3Group.isConnectToGroup()) {
-			System.out.println("! Pas de groupe trouvé :-(");
-			J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
-			group = new ProcessMg(rdv);
-			group.wakeUp();
-		} else
-			System.out.println("! Une partie trouvée sur Internet.");
-	}
+        if (!J3Group.isConnectToGroup()) {
+            System.out.println("! Pas de groupe trouvé :-(");
+            J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
+            group = new ProcessMg(rdv);
+            group.wakeUp();
+        } else
+            System.out.println("! Une partie trouvée sur Internet.");
+    }
 }

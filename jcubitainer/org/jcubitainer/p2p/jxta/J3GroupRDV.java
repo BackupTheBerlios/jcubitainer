@@ -59,7 +59,7 @@ public class J3GroupRDV extends Process {
 	public J3GroupRDV(PeerGroup proot, DiscoveryService pdiscoSvc) {
 		super(3 * 60 * 1000);
 
-		String group_name = J3xta.JXTA_ID + NAME + StartJXTA.getPeerName();
+		String group_name = J3xta.getJXTA_ID() + NAME + StartJXTA.getPeerName();
 
 		rootGroup = proot;
 		discoSvc = pdiscoSvc;

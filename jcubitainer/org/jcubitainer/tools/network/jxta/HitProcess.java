@@ -28,11 +28,11 @@ public class HitProcess extends Process {
 
     public void action() throws InterruptedException {
         score = mi.getScore();
-        hit = mi.getHit();
-        if (hit > score)
-            setMax(hit);
-        else
-            setMax(score);
+        //        hit = mi.getHit();
+        //        if (hit > score)
+        //            setMax(hit);
+        //        else
+        setMax(score);
     }
 
 }

@@ -24,43 +24,27 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jcubitainer.tools.network.jxta;
 
-public class J3xta {
+import java.util.Hashtable;
 
-    private static final String JXTA_ID = "J3xtainer";
-    
-    private static String suffix = "";
+import org.jcubitainer.p2p.jxta.J3Peer;
 
-    public static final int JXTA_STATUT_OFF = 0;
+public class PeersManager {
 
-    public static final int JXTA_STATUT_ON = 1;
+    private static Hashtable peers = new Hashtable();
 
-    public static final int JXTA_STATUT_ERROR = 2;
-
-    public static final int JXTA_STATUT_CONNECT = 3;
-
-    private static int statut = JXTA_STATUT_OFF;
-
-    /**
-     * @return
-     */
-    public static int getStatut() {
-        return statut;
+    public static PeerContainer getPeers(String peer_id) {
+        return (PeerContainer) peers.get(peer_id);
     }
 
-    /**
-     * @param i
-     */
-    public static void setStatut(int i) {
-        statut = i;
+    public static PeerContainer getPeers(J3Peer peer) {
+        PeerContainer pc = getPeers(peer.getPeerID());
+        if (pc == null) {
+            pc = new PeerContainer(peer);
+            peers.put(peer.getPeerID(), pc);
+        }
+        return pc;
     }
 
-    public static void setSuffix(String suffix) {
-        J3xta.suffix = suffix;
-    }
-
-    public static String getJXTA_ID() {
-        return JXTA_ID + suffix;
-    }
 }

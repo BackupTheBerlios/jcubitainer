@@ -30,6 +30,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -88,6 +89,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
     private static DisplayInfo this_ = null;
 
     private static final String NL = "\n";
+
+    private static final String SUFFIX = "V0_1_7_";
 
     /**
      *  
@@ -254,7 +257,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
             DisplayLogin customDialog = new DisplayLogin(JCubitainerFrame
                     .getFrame(), Configuration.getProperties("login"));
             customDialog.pack();
-            customDialog.setLocationRelativeTo(this);
+            customDialog.setLocationRelativeTo(this.getParent());
             customDialog.setVisible(true);
             String s = customDialog.getLogin();
             Configuration.setPropertie("login", s);
@@ -278,7 +281,14 @@ public class DisplayInfo extends JPanel implements ActionListener {
                                     + NL + " le Malus 'Une pièce ajoutée'.",
                             "Règle du jeu", JOptionPane.INFORMATION_MESSAGE);
 
-            StartJXTA.wakeUp(s);
+            File home = null;
+            if (!"OUI".equals(Configuration.getProperties("DEBUG"))) {
+                home = new File(System.getProperty("user.home")
+                        + File.separator + Configuration.DIR + File.separator
+                        + ".jxtainer");
+                home.mkdirs();
+            }
+            StartJXTA.wakeUp(s, SUFFIX, home);
             clearHit();
             StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame(), s);
             frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
