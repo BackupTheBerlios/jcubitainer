@@ -66,7 +66,7 @@ public class J3xtaConnect {
 			if ( !config_jxta.exists() ) {
 		        try {
 					System.out.println("! Création du fichier de configuration JXTA.");
-					String name = StartJXTA.name;
+					String name = StartJXTA.getPeerName();
 					Configurator config = new Configurator(name, "JXTAConfiguration", name, "monmotdepasse2005");
 					config.save();
 		        } catch (ConfiguratorException ce) {

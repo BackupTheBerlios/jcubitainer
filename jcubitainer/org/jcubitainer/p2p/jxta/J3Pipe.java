@@ -109,7 +109,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
                 .newAdvertisement(PipeAdvertisement.getAdvertisementType());
 
         pipeAdv.setPipeID(getUniquePipeID());
-        pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.name);
+        pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.getPeerName());
         pipeAdv.setType(PipeService.PropagateType);
 
         try {
@@ -133,7 +133,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
             msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
                     message, null));
             msg.addMessageElement(null, new StringMessageElement(SENDERNAME,
-                    StartJXTA.name, null));
+                    StartJXTA.getPeerName(), null));
             msg.addMessageElement(null, new StringMessageElement(
                     SENDERGROUPNAME, group.toString(), null));
             msg.addMessageElement(null, new StringMessageElement(PEERID, group
@@ -163,7 +163,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
                 J3PeerManager.addPeer(peer);
             }
             if (MESSAGE_REMOVE.equals(mes.getWhat())
-                    && !StartJXTA.peer_ID.equals(mes.getPeer_id())) {
+                    && !StartJXTA.getPeer_ID().equals(mes.getPeer_id())) {
                 J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
                 System.out.println("! Demande de suppression de : " + peer.getName());
                 J3PeerManager.remove(peer);

@@ -86,7 +86,7 @@ public class J3Group {
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
 			System.out.println("! Groupe trouvé : " + groupAdv.getName());
-			StartJXTA.peer_ID = pg.getPeerID().toString();
+			StartJXTA.setPeer_ID(pg.getPeerID().toString());
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
 			System.out.println("! Impossible de créé le groupe : "

@@ -87,7 +87,7 @@ public aspect RefreshNetworkAspect {
 	        }
 	        else	     
 	       // gestion des bonus :
-	    if (!StartJXTA.peer_ID.equals(message.getPeer_id()) ){
+	    if (!StartJXTA.getPeer_ID().equals(message.getPeer_id()) ){
 	        // On ne veut pas recevoir ces propres messages !
 	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
 	                message.getWho() + ":" + message.getWhat());
