@@ -59,11 +59,12 @@ public class StickyFrame extends JFrame {
 			}
 
 			public void windowIconified(WindowEvent e) {
-				this_.show(false);
+				this_.setVisible(false);
 			}
 
 			public void windowDeiconified(WindowEvent e) {
-				this_.show(true);
+				this_.setVisible(true);
+				this_.toFront();
 			}
 
 			public void windowActivated(WindowEvent e) {
