@@ -18,11 +18,10 @@
  *                                                                     *
  ***********************************************************************/
 
-/* History & changes **************************************************
- *                                                                     *
- ******** May 5, 2004 **************************************************
- *   - First release                                                   *
- ***********************************************************************/
+/*******************************************************************************
+ * History & changes * ******* May 5, 2004
+ * ************************************************** - First release *
+ ******************************************************************************/
 
 package org.jcubitainer.p2p.jxta;
 
@@ -38,67 +37,65 @@ import net.jxta.protocol.PeerGroupAdvertisement;
 import org.jcubitainer.tools.Process;
 
 public class J3GroupDiscoveryListener extends Process implements
-        DiscoveryListener {
+		DiscoveryListener {
 
-    DiscoveryService discoveryService = null;
+	DiscoveryService discoveryService = null;
 
-    private PeerGroup rootGroup = null;
+	private PeerGroup rootGroup = null;
 
-    /**
-     * 
-     */
-    public J3GroupDiscoveryListener(DiscoveryService ds, PeerGroup proot) {
-        super(10000);
-        ds.addDiscoveryListener(this);
-        discoveryService = ds;
-        rootGroup = proot;
-    }
+	/**
+	 *  
+	 */
+	public J3GroupDiscoveryListener(DiscoveryService ds, PeerGroup proot) {
+		super(10000);
+		discoveryService = ds;
+		rootGroup = proot;
+	}
 
-    public void discoveryEvent(DiscoveryEvent ev) {
+	public void discoveryEvent(DiscoveryEvent ev) {
 
-    	DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
+		DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
 
-        PeerGroupAdvertisement adv = null;
-        Enumeration theAdvertisementEnumeration = theDiscoveryResponseMsg
-                .getAdvertisements();
+		PeerGroupAdvertisement adv = null;
+		Enumeration theAdvertisementEnumeration = theDiscoveryResponseMsg
+				.getAdvertisements();
 
-        if (null != theAdvertisementEnumeration) {
-            while (theAdvertisementEnumeration.hasMoreElements()) {
-                try {
-                    adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
-                            .nextElement();
-                    //                    System.out.println(" Peer Group = " + adv.getName());
-                    if (adv.getName().startsWith(J3xta.JXTA_ID)) {
-                        //						System.out.println(
-                        //							"Peergroup à nous : " + adv.getName());
+		if (null != theAdvertisementEnumeration) {
+			while (theAdvertisementEnumeration.hasMoreElements()) {
+				try {
+					adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
+							.nextElement();
+					                    System.out.println(" Peer Group = " + adv.getName());
+					if (adv.getName().startsWith(J3xta.JXTA_ID)) {
+//						System.out.println("Peergroup à nous : "
+//								+ adv.getName());
+						J3Group J3g = J3Group.getInstance(adv, rootGroup,
+								discoveryService);
 
-                        J3Group J3g = J3Group.getInstance(adv, rootGroup,
-                                discoveryService);
+						J3g.joinThisGroup();
+					}
+				} catch (Exception e) {
+				}
+			}
+		}
 
-                        //J3g.joinThisGroup();
-                    }
-                } catch (Exception e) {
-                    //System.out.print("#");
-                }
-            }
-        }
+	}
 
-    }
+	public void action() {
+		try {
+			discoveryService.addDiscoveryListener(this);
+			//System.out.println("Sending a Discovery Message");
+			// look for any peer group
+			discoveryService.getRemoteAdvertisements(null,
+					DiscoveryService.GROUP, null, null, 5);
 
-    public void action() {
-        try {
-            //System.out.println("Sending a Discovery Message");
-            // look for any peer group
-            discoveryService.getRemoteAdvertisements(null,
-                    DiscoveryService.GROUP, null, null, 5, null);
+			//			discoveryService.getLocalAdvertisements(
+			//				DiscoveryService.GROUP,
+			//				null,
+			//				null);
 
-            //			discoveryService.getLocalAdvertisements(
-            //				DiscoveryService.GROUP,
-            //				null,
-            //				null);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

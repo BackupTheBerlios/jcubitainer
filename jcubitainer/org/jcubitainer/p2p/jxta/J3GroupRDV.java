@@ -36,6 +36,7 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.ModuleImplAdvertisement;
+import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
@@ -54,6 +55,8 @@ public class J3GroupRDV extends Process {
 
     private ProcessMg pipe = null;
 
+    private PeerGroupAdvertisement adv = null;
+    
     /**
      * 
      */
@@ -69,8 +72,10 @@ public class J3GroupRDV extends Process {
             peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID + NAME,
                     DESCRIPTION);
 
-            peerGroup.getRendezVousService().startRendezVous();
+            //peerGroup.getRendezVousService().startRendezVous();
 
+            adv = peerGroup.getPeerGroupAdvertisement(); 
+            
             System.out.println("Groupe créé :" + peerGroup.getPeerGroupName());
             //System.out.println("Groupe détail :" + peerGroup.toString());
 
@@ -84,10 +89,9 @@ public class J3GroupRDV extends Process {
     public void publishGroup() {
         //        System.out.println("Publication du groupe");
         try {
-            discoSvc.publish(peerGroup.getPeerGroupAdvertisement());
-            discoSvc.publish(peerGroup.getPeerAdvertisement());
-            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
-            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
+//            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
+            discoSvc.remotePublish(adv);
+//            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
         } catch (Exception e) {
             System.out
                     .println("Failed to publish peer advertisement in the group ["

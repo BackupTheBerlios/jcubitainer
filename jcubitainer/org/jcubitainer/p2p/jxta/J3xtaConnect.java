@@ -18,11 +18,10 @@
  *                                                                     *
  ***********************************************************************/
 
-/* History & changes **************************************************
- *                                                                     *
- ******** May 5, 2004 **************************************************
- *   - First release                                                   *
- ***********************************************************************/
+/*******************************************************************************
+ * History & changes * ******* May 5, 2004
+ * ************************************************** - First release *
+ ******************************************************************************/
 
 package org.jcubitainer.p2p.jxta;
 
@@ -30,73 +29,84 @@ import net.jxta.discovery.DiscoveryService;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
+import net.jxta.rendezvous.RendezVousService;
 
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3xtaConnect {
 
-    private PeerGroup root = null;
+	private PeerGroup root = null;
 
-    private DiscoveryService rootDiscoveryService = null;
+	private DiscoveryService rootDiscoveryService = null;
 
-    private ProcessMg groupDiscoveryServiceProcess = null;
+	private ProcessMg groupDiscoveryServiceProcess = null;
 
-    //	private ProcessMg peerDiscoveryServiceProcess = null;
-    private ProcessMg advDiscoveryServiceProcess = null;
+	//	private ProcessMg peerDiscoveryServiceProcess = null;
+	private ProcessMg advDiscoveryServiceProcess = null;
 
-    private J3Group j3root = null;
+	private J3Group j3root = null;
 
-    private ProcessMg group = null;
+	private ProcessMg group = null;
 
-    //private J3GroupDiscoveryListener groupDiscoveryListener = null;
+	private RendezVousService rdv;
 
-    public J3xtaConnect() {
-        try {
-            J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
-            System.out.println("Connexion à JXTA !");
-            root = PeerGroupFactory.newNetPeerGroup();
-            rootDiscoveryService = root.getDiscoveryService();
-            System.out.println("Connecté à JXTA !");
-            //			j3root = J3Group.getInstance(root.getPeerGroupAdvertisement(),root,rootDiscoveryService);
-            //			j3root.joinThisGroup();
-            J3xta.setStatut(J3xta.JXTA_STATUT_ON);
-        } catch (PeerGroupException e) {
-            System.out.println("fatal error : group creation failure");
-            e.printStackTrace();
-            J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
-        }
-    }
+	public J3xtaConnect() {
+		try {
+			J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
+			System.out.println("Connexion à JXTA !");
+			root = PeerGroupFactory.newNetPeerGroup();
+			rootDiscoveryService = root.getDiscoveryService();
 
-    public void addGroupListener() {
+			//          Extract the discovery and rendezvous services from our peer group
+			rdv = root.getRendezVousService();
 
-        // On lance le service qui va devoir trouver les groupes :
-        groupDiscoveryServiceProcess = new ProcessMg(
-                new J3GroupDiscoveryListener(rootDiscoveryService, root));
-        groupDiscoveryServiceProcess.wakeUp();
+			// Wait until we connect to a rendezvous peer
+			System.out.print("On se connecte à un rendezvous...");
+			while (!rdv.isConnectedToRendezVous()) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException ex) {
+				}
+			}
 
-        //		peerDiscoveryServiceProcess =
-        //			new ProcessMg(new J3PeerDiscoveryListener(rootDiscoveryService));
-        //		peerDiscoveryServiceProcess.wakeUp();
+			System.out.println("Connecté à JXTA !");
+			//			j3root =
+			// J3Group.getInstance(root.getPeerGroupAdvertisement(),root,rootDiscoveryService);
+			//			j3root.joinThisGroup();
+			J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+		} catch (PeerGroupException e) {
+			System.out.println("fatal error : group creation failure");
+			e.printStackTrace();
+			J3xta.setStatut(J3xta.JXTA_STATUT_ERROR);
+		}
+	}
 
-        // On lance le service qui va devoir trouver les advs :
-        advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
-                rootDiscoveryService));
-        advDiscoveryServiceProcess.wakeUp();
+	public void addGroupListener() {
 
-        J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
-        group = new ProcessMg(rdv);
-        group.wakeUp();
-        //		try {
-        //			Thread.sleep(2000);
-        //		} catch (InterruptedException e) {
-        //			e.printStackTrace();
-        //		}
-        //System.out.println("On veut joindre le groupe créé.");
+		// On lance le service qui va devoir trouver les groupes :
+		groupDiscoveryServiceProcess = new ProcessMg(
+				new J3GroupDiscoveryListener(rootDiscoveryService, root));
+		groupDiscoveryServiceProcess.wakeUp();
 
-        // On veut se connecter sans le forcer !!
-        //        ((J3GroupRDV) group.getProcess()).joinThisGroup();
+		// On lance le service qui va devoir trouver les advs :
+		advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
+				rootDiscoveryService));
+		advDiscoveryServiceProcess.wakeUp();
 
-        // Ouverture du pipe :
-        rdv.createPipe();
-    }
+		// On va attendre 1 minute pour essayer de trouver un groupe JXtainer
+
+		System.out.println("On va essayé de trouver une partie.");
+		try {
+			Thread.sleep(1 * 60 * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (!J3Group.isConnectToGroup()) {
+			System.out.println("Pas de groupe trouvé :-(");
+			J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
+			group = new ProcessMg(rdv);
+			group.wakeUp();
+		}
+	}
 }

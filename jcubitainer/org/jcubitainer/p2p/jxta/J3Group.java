@@ -41,8 +41,6 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.display.table.GroupTable;
-import org.jcubitainer.display.table.NetworkDisplayTable;
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3Group {
@@ -87,13 +85,6 @@ public class J3Group {
             pg.publishGroup();
             knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
             System.out.println("Groupe trouvé : " + groupAdv.getName());
-
-            NetworkDisplayTable nd = NetworkDisplayTable
-                    .getNetworkDisplayForParties();
-
-            GroupTable temp_gt = new GroupTable(pg, nd.getModel());
-            //            pg.setGroupTableForDisplay(temp_gt);
-            nd.addGroupTable(temp_gt);
 
             // On veut trouver ses peers :
             peerDiscoveryServiceProcess = new ProcessMg(
@@ -209,6 +200,10 @@ public class J3Group {
 
     public PeerGroupID getPeerGroupID() {
         return peerGroup.getPeerGroupID();
+    }
+    
+    public static boolean isConnectToGroup() {
+    	return !knowPeerGroups.isEmpty();
     }
 
 }
