@@ -107,7 +107,7 @@ public class HelloChatWorld {
                 pipe.sendMsg(mes);
             else
                 consoleOut("Pas encore connecte au chat !");
-        System.exit(1);
+        System.exit(0);
     }
 
     public static void consoleOut(String s) {
