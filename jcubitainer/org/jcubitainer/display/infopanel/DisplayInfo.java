@@ -112,7 +112,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
         start.setIcon(Ressources.getImageIcon("/ressources/images/Play16.gif")); //$NON-NLS-1$
         start.addActionListener(this);
 
-        network = new JButton("Réseau"); //$NON-NLS-1$
+        network = new JButton("Network"); //$NON-NLS-1$
         network.setAlignmentX(Component.CENTER_ALIGNMENT);
         network.setBackground(Color.black);
         network.setForeground(Color.white);
