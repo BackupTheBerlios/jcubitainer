@@ -48,6 +48,7 @@ import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Messages;
+import org.jcubitainer.tools.logs.Logs;
 
 public class Start {
 
@@ -121,7 +122,7 @@ public class Start {
             // Chargement du fichier de configuration s'il existe :
             new Configuration();
 
-            //new Logs();
+            new Logs();
 
             // Chargement du thème par défaut :
             new ThemeManager();
