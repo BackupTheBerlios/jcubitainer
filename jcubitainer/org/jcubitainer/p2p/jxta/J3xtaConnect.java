@@ -30,7 +30,6 @@ import net.jxta.exception.PeerGroupException;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
-import net.jxta.rendezvous.RendezvousListener;
 
 import org.jcubitainer.tools.ProcessMg;
 
@@ -62,10 +61,11 @@ public class J3xtaConnect {
 			rdv_root = root.getRendezVousService();
 
 			// Wait until we connect to a rendezvous peer
-			System.out.print("On se connecte à un rendezvous...");
+			System.out.print("On se connecte à un rendezvous");
 			while (!rdv_root.isConnectedToRendezVous()) {
 				try {
 					Thread.sleep(2000);
+					System.out.print(".");
 				} catch (InterruptedException ex) {
 				}
 			}
@@ -87,15 +87,20 @@ public class J3xtaConnect {
 		groupDiscoveryServiceProcess.wakeUp();
 
 		// On lance le service qui va devoir trouver les advs :
-//		advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
-//				rootDiscoveryService));
-//		advDiscoveryServiceProcess.wakeUp();
+		//		advDiscoveryServiceProcess = new ProcessMg(new
+		// J3AdvDiscoveryListener(
+		//				rootDiscoveryService));
+		//		advDiscoveryServiceProcess.wakeUp();
 
 		// On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
-		System.out.println("On va essayé de trouver une partie.");
+		System.out.print("On va essayé de trouver une partie.");
 		try {
-			Thread.sleep(1 * 60 * 1000);
+			int boucle = 60 * 5; // 5 minutes
+			while (!J3Group.isConnectToGroup() && --boucle > 0) {
+				Thread.sleep(1000);
+				System.out.print(".");
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -105,8 +110,7 @@ public class J3xtaConnect {
 			J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
 			group = new ProcessMg(rdv);
 			group.wakeUp();
-		}
-		else 
+		} else
 			System.out.println("Une partie trouvée sur Internet ! Bravo !");
 	}
 }

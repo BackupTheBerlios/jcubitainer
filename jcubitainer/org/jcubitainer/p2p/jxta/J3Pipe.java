@@ -1,143 +1,219 @@
 package org.jcubitainer.p2p.jxta;
 
 import java.io.IOException;
-import java.util.Date;
+import java.io.InputStream;
 
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.endpoint.Message;
+import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.id.IDFactory;
-import net.jxta.peergroup.PeerGroupID;
+import net.jxta.pipe.InputPipe;
 import net.jxta.pipe.OutputPipe;
-import net.jxta.pipe.OutputPipeEvent;
-import net.jxta.pipe.OutputPipeListener;
+import net.jxta.pipe.PipeID;
+import net.jxta.pipe.PipeMsgEvent;
+import net.jxta.pipe.PipeMsgListener;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
-import net.jxta.rendezvous.RendezvousEvent;
-import net.jxta.rendezvous.RendezvousListener;
 
 import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Process;
 
 /**
- *  This exapmle illustrates how to use the OutputPipeListener interface
- *
+ * This exapmle illustrates how to use the OutputPipeListener interface
+ *  
  */
 
-public class J3Pipe extends Process implements OutputPipeListener,
-        RendezvousListener {
+public class J3Pipe extends Process implements PipeMsgListener {
 
-    private final static String SenderMessage = "PipeListenerMsg";
+	private final static String SENDERNAME = "JxtaTalkSenderName";
 
-    private PipeService pipe;
+	private final static String SENDERGROUPNAME = "GrpName";
 
-    private DiscoveryService discovery;
+	private final static String SENDERMESSAGE = "JxtaTalkSenderMessage";
 
-    private PipeAdvertisement pipeAdv;
+	private InputPipe inputpipe;
 
-    private J3GroupRDV group;
+	private OutputPipe outputpipe;
 
-    private int ping_id = 0;
+	private PipeService pipe;
 
-    //    private RendezVousService rendezvous;
+	private DiscoveryService discovery;
 
-    /**
-     *  the thread which creates (resolves) the output pipe
-     *  and sends a message once it's resolved
-     */
+	private PipeAdvertisement pipeAdv;
 
-    public void action() {
-        try {
-            // this step helps when running standalone (local sub-net without any redezvous setup)
-            discovery.getRemoteAdvertisements(null, DiscoveryService.ADV, null,
-                    null, 1, null);
-            // create output pipe with asynchronously
-            // Send out the first pipe resolve call
-            //            System.out.println("Attempting to create a OutputPipe");
-            pipe.createOutputPipe(pipeAdv, this);
-            // send out a second pipe resolution after we connect
-            // to a rendezvous
-            if (false) {//!rendezvous.isConnectedToRendezVous()) {
-                System.out.println("Waiting for Rendezvous Connection");
-                try {
-                    wait();
-                    System.out
-                            .println("Connected to Rendezvous, attempting to create a OutputPipe");
-                    pipe.createOutputPipe(pipeAdv, this);
-                } catch (InterruptedException e) {
-                    // got our notification
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("OutputPipe creation failure");
-            e.printStackTrace();
-        }
-    }
+	private J3Group group;
 
-    /**
-     *  by implementing OutputPipeListener we must define this method which
-     *  is called when the output pipe is created
-     *
-     *@param  event  event object from which to get output pipe object
-     */
+	private int ping_id = 0;
 
-    public void outputPipeEvent(OutputPipeEvent event) {
+	/**
+	 * the thread which creates (resolves) the output pipe and sends a message
+	 * once it's resolved
+	 */
 
-        //        System.out.println(" Got an output pipe event");
-        OutputPipe op = event.getOutputPipe();
-        Message msg = null;
+	public void action() {
+		try {
 
-        try {
-            msg = new Message();
-            Date date = new Date(System.currentTimeMillis());
-            StringMessageElement sme = new StringMessageElement(SenderMessage,
-                    ping_id + "ping de (" + StartJXTA.name + " ) : "
-                            + date.toString(), null);
-            System.out.println(ping_id + "ping de (" + StartJXTA.name + " ) : "
-                    + date.toString());
-            ping_id++;
-            msg.addMessageElement(null, sme);
-            op.send(msg);
-        } catch (IOException e) {
-            System.out.println("failed to send message");
-            e.printStackTrace();
-        }
-        op.close();
-        //pause();
-        //        System.out.println("message sent");
-    }
+			discovery.publish(pipeAdv);
+			sendMsg("ping");
+			System.out.print("|");
 
-    /**
-     *  rendezvousEvent the rendezvous event
-     *
-     *@param  event   rendezvousEvent
-     */
-    public synchronized void rendezvousEvent(RendezvousEvent event) {
-        if (event.getType() == RendezvousEvent.RDVCONNECT) {
-            notify();
-        }
-    }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     *  Starts jxta, and get the pipe, and discovery service
-     */
-    public J3Pipe(J3GroupRDV g) {
-        super(10000);
+	/**
+	 * Starts jxta, and get the pipe, and discovery service
+	 */
+	public J3Pipe(J3Group g) {
+		super(10000);
 
-        group = g;
-        // get the pipe service, and discovery
-        pipe = group.getPipeService();
-        discovery = group.getDiscoveryService();
+		group = g;
 
-        pipeAdv = (PipeAdvertisement) AdvertisementFactory
-                .newAdvertisement("jxta:PipeAdvertisement");
-        pipeAdv.setPipeID(IDFactory.newPipeID((PeerGroupID) group
-                .getPeerGroupID(), "foo".getBytes()));
-        pipeAdv.setName(J3xta.JXTA_ID + "partie.");
+		pipe = g.getPipeService();
 
-        pipeAdv.setType(PipeService.PropagateType);
+		// get the pipe service, and discovery
+		discovery = group.getDiscoveryService();
 
-    }
+		pipeAdv = (PipeAdvertisement) AdvertisementFactory
+				.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+
+		pipeAdv.setPipeID(getUniquePipeID());
+		pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.name);
+		pipeAdv.setType(PipeService.PropagateType);
+
+		try {
+			inputpipe = pipe.createInputPipe(pipeAdv, this);
+			outputpipe = pipe.createOutputPipe(pipeAdv, 100);
+
+			sendMsg("*** has joined " + group.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Enqueue messages
+	 * 
+	 * @param gram
+	 *            message to send
+	 */
+	public void sendMsg(String gram) {
+		try {
+			Message msg = new Message();
+			msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
+					gram, null));
+			msg.addMessageElement(null, new StringMessageElement(SENDERNAME,
+					StartJXTA.name, null));
+			msg.addMessageElement(null, new StringMessageElement(
+					SENDERGROUPNAME, group.toString(), null));
+			outputpipe.send(msg);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	public void pipeMsgEvent(PipeMsgEvent event) {
+		Message msg = event.getMessage();
+		try {
+			String sender = getTagString(msg, SENDERNAME, "anonymous");
+			String groupname = getTagString(msg, SENDERGROUPNAME, "unknown");
+			String senderMessage = getTagString(msg, SENDERMESSAGE, null);
+			String msgstr;
+			if (groupname.equals(group.toString())) {
+				//message is from this group
+				msgstr = sender + "> " + senderMessage;
+			} else {
+				msgstr = sender + "@" + groupname + "> " + senderMessage;
+				//                return;
+			}
+
+			System.out.println("PIPEIN:" + msgstr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Retrieves the content of the message labeled by tag
+	 * 
+	 * @param msg
+	 *            the message to retrieve the data from
+	 * @param tag
+	 *            the identifying tag for the message
+	 * @return a byte array containg the content
+	 * @throws Exception
+	 *             if the data could not be retrieved
+	 */
+	protected byte[] getTagValue(Message msg, String tag) throws Exception {
+
+		byte[] buffer = null;
+		MessageElement elem = msg.getMessageElement(null, tag);
+		// Remove the element from the message
+		if (elem != null) {
+			msg.removeMessageElement(elem);
+			InputStream ip = elem.getStream();
+			if (ip != null) {
+				buffer = new byte[ip.available()];
+				ip.read(buffer);
+			}
+			return buffer;
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * Retrieves the content of the message labeled by tag
+	 * 
+	 * @param msg
+	 *            the message to retrieve the data from
+	 * @param tag
+	 *            the identifying tag for the message
+	 * @param defaultValue
+	 *            the default value to return if no data are found
+	 * @return the value of the indicated tag or the default value
+	 * @throws Exception
+	 *             if the data could not be retrieved
+	 */
+	protected String getTagString(Message msg, String tag, String defaultValue)
+			throws Exception {
+		byte[] buffer = getTagValue(msg, tag);
+		String result;
+
+		if (buffer != null) {
+			result = new String(buffer);
+		} else {
+			result = defaultValue;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Generate uniquePipeID that is independantly unique within a group
+	 * 
+	 * @return The uniquePipeID value
+	 */
+	private PipeID getUniquePipeID() {
+
+		byte[] preCookedPID = { (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1 };
+
+		PipeID id = (PipeID) IDFactory.newPipeID(group.getPeerGroupID(),
+				preCookedPID);
+
+		return id;
+
+	}
+	
 }
 

@@ -25,18 +25,11 @@
 
 package org.jcubitainer.p2p.jxta;
 
-import net.jxta.credential.AuthenticationCredential;
-import net.jxta.credential.Credential;
 import net.jxta.discovery.DiscoveryService;
-import net.jxta.document.Advertisement;
 import net.jxta.document.AdvertisementFactory;
-import net.jxta.document.StructuredDocument;
 import net.jxta.id.IDFactory;
-import net.jxta.membership.Authenticator;
-import net.jxta.membership.MembershipService;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
-import net.jxta.pipe.PipeService;
 import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
@@ -48,7 +41,7 @@ public class J3GroupRDV extends Process {
 
 	public static final String NAME = "Partie_";
 
-	public static final String DESCRIPTION = "J3xtainer Groupe V0.3";
+	public static final String DESCRIPTION = "J3xtainer Groupe";
 
 	private PeerGroup peerGroup = null;
 
@@ -70,14 +63,11 @@ public class J3GroupRDV extends Process {
 
 		rootGroup = proot;
 		discoSvc = pdiscoSvc;
-		//		PeerGroupID peerGroupID = net.jxta.id.IDFactory.newPeerGroupID();
 
 		try {
 			ModuleImplAdvertisement implAdv = rootGroup
 					.getAllPurposePeerGroupImplAdvertisement();
-			//			peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID +
-			// NAME
-			//					+ StartJXTA.name, DESCRIPTION);
+
 
 			PeerGroupAdvertisement newPGAdv = (PeerGroupAdvertisement) AdvertisementFactory
 					.newAdvertisement(PeerGroupAdvertisement
@@ -97,7 +87,6 @@ public class J3GroupRDV extends Process {
 			adv = peerGroup.getPeerGroupAdvertisement();
 
 			System.out.println("Groupe créé :" + peerGroup.getPeerGroupName());
-			//System.out.println("Groupe détail :" + peerGroup.toString());
 
 		} catch (Exception e) {
 			System.err.println("Group creation failed");
@@ -110,12 +99,8 @@ public class J3GroupRDV extends Process {
 		System.out.println("Publication du groupe : " +
 		 peerGroup.getPeerGroupName());
 		try {
-			//            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
 			discoSvc.publish(adv, PeerGroup.DEFAULT_LIFETIME,
 					PeerGroup.DEFAULT_EXPIRATION);
-			discoSvc.publish(adv, PeerGroup.DEFAULT_LIFETIME,
-					PeerGroup.DEFAULT_EXPIRATION);
-			//            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
 		} catch (Exception e) {
 			System.out
 					.println("Failed to publish peer advertisement in the group ["
@@ -134,18 +119,9 @@ public class J3GroupRDV extends Process {
 		return peerGroup.getDiscoveryService();
 	}
 
-	public PipeService getPipeService() {
-		return peerGroup.getPipeService();
-	}
 
 	public PeerGroupID getPeerGroupID() {
 		return peerGroup.getPeerGroupID();
-	}
-
-	public void createPipe() {
-		// Création d'un pipe :
-		pipe = new ProcessMg(new J3Pipe(this));
-		pipe.wakeUp();
 	}
 
 	public String toString() {
