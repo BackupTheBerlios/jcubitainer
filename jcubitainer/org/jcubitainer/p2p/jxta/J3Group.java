@@ -140,6 +140,10 @@ public class J3Group {
 
 				// Connection Ready !
 				J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+				
+				// Rendez-vous service ?
+				peerGroup.getRendezVousService().setAutoStart(true,120000);
+				
 				createPipeListener();
 
 			} else {

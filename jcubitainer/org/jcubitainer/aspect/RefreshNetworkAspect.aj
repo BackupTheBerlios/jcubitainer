@@ -6,8 +6,10 @@
  */
 package org.jcubitainer.aspect;
 
-import org.jcubitainer.p2p.jxta.J3xta;
+import org.jcubitainer.p2p.jxta.*;
+import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.*;
+import org.jcubitainer.p2p.jxta.util.*;
 
 /**
  * @author mounes
@@ -23,6 +25,15 @@ public aspect RefreshNetworkAspect {
 	    int s = J3xta.getStatut();
 	    DisplayInfo di = DisplayInfo.getThis();
 	    di.setNetwork(s);
+	}
+	
+	pointcut showMessage() : call(void J3MessagePipe.put(..));
+
+	after() : showMessage() {
+	    J3Message message = J3MessagePipe.drop();
+	    if ( message != null ) 	        
+	        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+	                message.getWho() + ":" + message.getWhat());
 	}
 
 }

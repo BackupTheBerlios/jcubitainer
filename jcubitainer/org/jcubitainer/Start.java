@@ -46,7 +46,6 @@ import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
-import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Messages;
 import org.jcubitainer.tools.logs.Logs;
 
@@ -111,8 +110,6 @@ public class Start {
         new Game(db, mi);
         ss.hide(1);
         frame.setVisible(true);
-        //StartJXTA.wakeUp("e" + Math.random());
-        // PUB : Affichage de l'url du site.
         mb.getTexte().setTexte("http://jcubitainer.berlios.de");
     }
 

@@ -1,3 +1,29 @@
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** December 12, 2004 ********************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.p2p.jxta;
 
 import java.io.IOException;
@@ -17,185 +43,135 @@ import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
 
 import org.jcubitainer.p2p.StartJXTA;
+import org.jcubitainer.p2p.jxta.util.J3Message;
+import org.jcubitainer.p2p.jxta.util.J3MessagePipe;
 import org.jcubitainer.tools.Process;
-
-/**
- * This exapmle illustrates how to use the OutputPipeListener interface
- *  
- */
 
 public class J3Pipe extends Process implements PipeMsgListener {
 
-	private final static String SENDERNAME = "JxtaTalkSenderName";
+    private final static String SENDERNAME = "JxtaTalkSenderName";
 
-	private final static String SENDERGROUPNAME = "GrpName";
+    private final static String SENDERGROUPNAME = "GrpName";
 
-	private final static String SENDERMESSAGE = "JxtaTalkSenderMessage";
+    private final static String SENDERMESSAGE = "JxtaTalkSenderMessage";
 
-	private InputPipe inputpipe;
+    private InputPipe inputpipe;
 
-	private OutputPipe outputpipe;
+    private OutputPipe outputpipe;
 
-	private PipeService pipe;
+    private PipeService pipe;
 
-	private DiscoveryService discovery;
+    private DiscoveryService discovery;
 
-	private PipeAdvertisement pipeAdv;
+    private PipeAdvertisement pipeAdv;
 
-	private J3Group group;
+    private J3Group group;
 
-	private int ping_id = 0;
+    private int ping_id = 0;
+    
+    /**
+     * the thread which creates (resolves) the output pipe and sends a message
+     * once it's resolved
+     */
 
-	/**
-	 * the thread which creates (resolves) the output pipe and sends a message
-	 * once it's resolved
-	 */
+    public void action() {
+        try {
 
-	public void action() {
-		try {
+            discovery.publish(pipeAdv);
+            sendMsg("ping");
 
-			discovery.publish(pipeAdv);
-			sendMsg("ping");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Starts jxta, and get the pipe, and discovery service
+     */
+    public J3Pipe(J3Group g) {
+        super(10000);
 
-	/**
-	 * Starts jxta, and get the pipe, and discovery service
-	 */
-	public J3Pipe(J3Group g) {
-		super(10000);
+        group = g;
 
-		group = g;
+        pipe = g.getPipeService();
 
-		pipe = g.getPipeService();
+        // get the pipe service, and discovery
+        discovery = group.getDiscoveryService();
 
-		// get the pipe service, and discovery
-		discovery = group.getDiscoveryService();
+        pipeAdv = (PipeAdvertisement) AdvertisementFactory
+                .newAdvertisement(PipeAdvertisement.getAdvertisementType());
 
-		pipeAdv = (PipeAdvertisement) AdvertisementFactory
-				.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+        pipeAdv.setPipeID(getUniquePipeID());
+        pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.name);
+        pipeAdv.setType(PipeService.PropagateType);
 
-		pipeAdv.setPipeID(getUniquePipeID());
-		pipeAdv.setName(J3xta.JXTA_ID + "PIPE" + StartJXTA.name);
-		pipeAdv.setType(PipeService.PropagateType);
+        try {
+            inputpipe = pipe.createInputPipe(pipeAdv, this);
+            outputpipe = pipe.createOutputPipe(pipeAdv, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		try {
-			inputpipe = pipe.createInputPipe(pipeAdv, this);
-			outputpipe = pipe.createOutputPipe(pipeAdv, 100);
+    }
 
-			sendMsg("*** has joined " + group.toString());
+    /**
+     * Enqueue messages
+     * 
+     * @param gram
+     *            message to send
+     */
+    public void sendMsg(String gram) {
+        try {
+            Message msg = new Message();
+            msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
+                    gram, null));
+            msg.addMessageElement(null, new StringMessageElement(SENDERNAME,
+                    StartJXTA.name, null));
+            msg.addMessageElement(null, new StringMessageElement(
+                    SENDERGROUPNAME, group.toString(), null));
+            outputpipe.send(msg);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    }
 
-	}
+    public void pipeMsgEvent(PipeMsgEvent event) {
+        Message msg = event.getMessage();
+        try {
+            String sender = getValue(msg, SENDERNAME, "Anonyme");
+            String mesage = getValue(msg, SENDERMESSAGE, "??");
+            J3MessagePipe.put(new J3Message(sender, mesage));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Enqueue messages
-	 * 
-	 * @param gram
-	 *            message to send
-	 */
-	public void sendMsg(String gram) {
-		try {
-			Message msg = new Message();
-			msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
-					gram, null));
-			msg.addMessageElement(null, new StringMessageElement(SENDERNAME,
-					StartJXTA.name, null));
-			msg.addMessageElement(null, new StringMessageElement(
-					SENDERGROUPNAME, group.toString(), null));
-			outputpipe.send(msg);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+    private String getValue(Message msg, String tag, String defaut)
+            throws Exception {
 
-	}
+        MessageElement elem = msg.getMessageElement(null, tag);
+        return elem == null ? defaut : new String(elem.getBytes(false));
+    }
 
-	public void pipeMsgEvent(PipeMsgEvent event) {
-		Message msg = event.getMessage();
-		try {
-			String sender = getTagString(msg, SENDERNAME, "anonymous");
-			String groupname = getTagString(msg, SENDERGROUPNAME, "unknown");
-			String senderMessage = getTagString(msg, SENDERMESSAGE, null);
-			String msgstr;
-			if (groupname.equals(group.toString())) {
-				//message is from this group
-				msgstr = sender + "> " + senderMessage;
-			} else {
-				msgstr = sender + "@" + groupname + "> " + senderMessage;
-				//                return;
-			}
+    /**
+     * Generate uniquePipeID that is independantly unique within a group
+     * 
+     * @return The uniquePipeID value
+     */
+    private PipeID getUniquePipeID() {
 
-			System.out.println("PIPEIN:" + msgstr);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        byte[] preCookedPID = { (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+                (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+                (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
+                (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1 };
 
-	/**
-	 * Retrieves the content of the message labeled by tag
-	 * 
-	 * @param msg
-	 *            the message to retrieve the data from
-	 * @param tag
-	 *            the identifying tag for the message
-	 * @return a byte array containg the content
-	 * @throws Exception
-	 *             if the data could not be retrieved
-	 */
-	protected String getTagValue(Message msg, String tag) throws Exception {
+        PipeID id = (PipeID) IDFactory.newPipeID(group.getPeerGroupID(),
+                preCookedPID);
 
-		MessageElement elem = msg.getMessageElement(null, tag);
-		return elem == null ? null : new String(elem.getBytes(false));
-	}
+        return id;
 
-	/**
-	 * Retrieves the content of the message labeled by tag
-	 * 
-	 * @param msg
-	 *            the message to retrieve the data from
-	 * @param tag
-	 *            the identifying tag for the message
-	 * @param defaultValue
-	 *            the default value to return if no data are found
-	 * @return the value of the indicated tag or the default value
-	 * @throws Exception
-	 *             if the data could not be retrieved
-	 */
-	protected String getTagString(Message msg, String tag, String defaultValue)
-			throws Exception {
-		String result = getTagValue(msg, tag);
-
-		if (result != null) {
-			return result;
-		} else {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Generate uniquePipeID that is independantly unique within a group
-	 * 
-	 * @return The uniquePipeID value
-	 */
-	private PipeID getUniquePipeID() {
-
-		byte[] preCookedPID = { (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
-				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
-				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,
-				(byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1, (byte) 0xD1 };
-
-		PipeID id = (PipeID) IDFactory.newPipeID(group.getPeerGroupID(),
-				preCookedPID);
-
-		return id;
-
-	}
+    }
 
 }
 
