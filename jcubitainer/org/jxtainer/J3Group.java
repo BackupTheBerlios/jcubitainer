@@ -138,13 +138,13 @@ public class J3Group {
 
 				joinPeerGroups.put(peerGroup.getPeerGroupID(), peerGroup);
 
-				// Connection Ready !
-				J3xta.setStatut(J3xta.JXTA_STATUT_ON);
-				
 				// Rendez-vous service ?
 				peerGroup.getRendezVousService().setAutoStart(true,120000);
 				
 				createPipeListener();
+
+				// Connection Ready !
+				J3xta.setStatut(J3xta.JXTA_STATUT_ON);
 
 			} else {
 			    Log.debug("! Failure: unable to join group");

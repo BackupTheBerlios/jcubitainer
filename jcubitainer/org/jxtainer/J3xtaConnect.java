@@ -73,6 +73,7 @@ public class J3xtaConnect {
                     Configurator config = new Configurator(name,
                             "JXTAConfiguration", name, "monmotdepasse2005");
                     config.save();
+                    
                 } catch (ConfiguratorException ce) {
                     System.out
                             .println("! Cr�ation du fichier de configuration JXTA impossible.");
@@ -89,7 +90,7 @@ public class J3xtaConnect {
             // Wait until we connect to a rendezvous peer
             Log.debug("! On recherche un rendezvous");
 
-            int boucle = 5 /*1 minute*/* 4;
+            int boucle = 10 /*1 minute*/* 4;
 
             while (!rdv_root.isConnectedToRendezVous() && boucle-- > 0) {
                 try {
@@ -129,7 +130,7 @@ public class J3xtaConnect {
 
         Log.debug("! On va essay� de trouver une partie.");
         try {
-            int boucle = 60 * 5; // 5 minutes
+            int boucle = 60 * 1; // 5 minutes
             while (!J3Group.isConnectToGroup() && --boucle > 0) {
                 Thread.sleep(1000);
                 Log.debug(".");

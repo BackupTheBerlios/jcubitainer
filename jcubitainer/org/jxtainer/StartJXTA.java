@@ -123,11 +123,10 @@ public class StartJXTA extends Process {
     public static J3Pipe getPipe() {
         Enumeration liste = J3Group.getJ3Groups();
         J3Pipe pipe = null;
-        if (liste != null) 
-            if(liste.hasMoreElements()){
-                J3Group group = (J3Group)liste.nextElement();
-                pipe = group.getPipe();
-            }
+        if(liste.hasMoreElements()){
+            J3Group group = (J3Group)liste.nextElement();
+            pipe = group.getPipe();
+        }
         return pipe;
     }
 }
