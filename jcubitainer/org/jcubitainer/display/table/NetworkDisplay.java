@@ -71,10 +71,10 @@ public class NetworkDisplay extends JPanel implements ActionListener {
 		button4.setForeground(Color.white);
 		button4.setBorderPainted(false);
 
-		button.setLabel("Joindre la partie");
-		button2.setLabel("Quitter la partie");
-		button3.setLabel("Se déconnecter de JX3tainer");
-		button4.setLabel("Créer une partie");
+		button.setText("Joindre la partie");
+		button2.setText("Quitter la partie");
+		button3.setText("Se déconnecter de JX3tainer");
+		button4.setText("Créer une partie");
 		parties.setEnabled(false);
 		panel2.add(button);
 		panel2.add(button2);

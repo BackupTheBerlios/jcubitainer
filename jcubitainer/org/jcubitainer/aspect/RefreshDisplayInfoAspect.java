@@ -10,6 +10,7 @@ import org.jcubitainer.display.infopanel.*;
 import org.jcubitainer.meta.*;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.sound.InterfaceMusique;
+import org.jcubitainer.display.theme.*;
 
 /**
  * @author MetalM
@@ -107,6 +108,14 @@ public aspect RefreshDisplayInfoAspect {
 		MetaInfo mi = di.getMetaInfo();
 		//System.out.println("RefreshDisplayInfoAspect from : " + thisJoinPoint);
 		di.setPauseDisplay(mi.isPause());
+	}
+
+	pointcut refreshTheme() : call(void ThemeManager.swithTheme(..));
+
+	after() : refreshTheme() {
+		DisplayInfo di = DisplayInfo.getThis();
+		di.refreshTheme();
+		
 	}
 
 }

@@ -13,9 +13,6 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.display.table.GroupTable;
-import org.jcubitainer.display.table.NetworkDisplay;
-import org.jcubitainer.display.table.NetworkDisplayTable;
 import org.jcubitainer.tools.Process;
 
 /**

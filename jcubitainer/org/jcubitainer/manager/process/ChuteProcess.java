@@ -9,9 +9,9 @@ package org.jcubitainer.manager.process;
 import java.util.Collections;
 import java.util.List;
 
+import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaBoard;
-import org.jcubitainer.move.MoveBoard;
 import org.jcubitainer.tools.PieceComparator;
 import org.jcubitainer.tools.Process;
 

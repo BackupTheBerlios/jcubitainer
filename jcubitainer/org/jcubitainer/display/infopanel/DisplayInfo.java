@@ -1,6 +1,6 @@
 /*
  * Created on 20 janv. 2004
- *
+ * 
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
@@ -8,186 +8,197 @@ package org.jcubitainer.display.infopanel;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.jcubitainer.display.theme.Theme;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaInfo;
 
 /**
  * @author rom
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class DisplayInfo extends JPanel implements ActionListener {
 
-	InfoValue score = null;
-	InfoValue ligne = null;
-	InfoValue bonus_des = null;
-	InfoValue bonus_sup = null;
-	InfoValue bonus_slow = null;
-	JButton button = null;
-	InfoLabel bonus = null;
-	InfoValue level = null;
+    InfoValue score = null;
 
-	InfoMsg pause = null;
-	InfoMsg gameover = null;
-	MetaInfo mi = null;
+    InfoValue ligne = null;
 
-	private static DisplayInfo this_ = null;
+    InfoValue bonus_des = null;
 
-	/**
-	 * 
-	 */
-	public DisplayInfo(MetaInfo pmi) {
-		super();
-		this_ = this;
-		mi = pmi;
+    InfoValue bonus_sup = null;
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.setBackground(Color.black);
-		new InfoLabel("JCubitainer", this).setFont(Font.getFont("Verdana"));
-		new InfoLabel("*", this);
+    InfoValue bonus_slow = null;
 
-		button = new JButton("Start");
-		button.setAlignmentX(Component.CENTER_ALIGNMENT);
-		button.setBackground(Color.gray);
-		button.setForeground(Color.white);
-		// Seulement pour le JDK 1.4 :
-		//button.setFocusable(false);
-		button.addActionListener(this);
-		add(button);
+    JButton button = null;
 
-		new InfoLabel("*", this);
-		new InfoLabel("Score :", this);
-		score = new InfoValue("-", this);
-		new InfoLabel("Lignes :", this);
-		ligne = new InfoValue("-", this);
-		new InfoLabel("Niveau :", this);
+    InfoLabel bonus = null;
 
-		level = new InfoValue("-", this);
-		//level.setVisible(false);
-		new InfoLabel("*", this);
-		new InfoHelp("Changer de pièce : [c ou v]", this);
-		new InfoHelp("Rotation d'une pièce : [space]", this);
-		new InfoHelp("Chutte de la pièce : [enter]", this);
-		new InfoHelp("Ajouter une pièce : [n]", this);
-		new InfoHelp("Pause : [p]", this);
-		new InfoLabel("*", this);
-		new InfoLabel("Bonus destruction pièce [d] :", this);
-		bonus_des = new InfoValue("-", this);
-		new InfoLabel("Bonus 2 lignes en moins [r] :", this);
-		bonus_sup = new InfoValue("-", this);
-		bonus = new InfoLabel("Bonus ralentisseur [s] :", this);
-		bonus_slow = new InfoValue("-", this);
-		new InfoMsg("Rien", this);
-		pause = new InfoMsg("Pause", this);
-		gameover = new InfoMsg("Game Over", this);
-	}
+    InfoValue level = null;
 
-	public void setLineDisplay(int l) {
-		ligne.setText(String.valueOf(l));
-	}
+    InfoMsg pause = null;
 
-	public void setScoreDisplay(int l) {
-		score.setText(String.valueOf(l));
-	}
+    MetaInfo mi = null;
 
-	public void setBonusDisplay(int l) {
-		bonus_des.setText(String.valueOf(l));
-	}
+    InfoImage ii = null;
 
-	public void setSlowDisplay(int l) {
-		bonus_slow.setText(String.valueOf(l));
-	}
+    private static DisplayInfo this_ = null;
 
-	public void setDeleteLineDisplay(int l) {
-		bonus_sup.setText(String.valueOf(l));
-	}
+    /**
+     *  
+     */
+    public DisplayInfo(MetaInfo pmi) {
+        super();
+        this_ = this;
+        mi = pmi;
 
-	public void setLevelDisplay(int l) {
-		level.setText(String.valueOf(l));
-	}
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(Color.black);
+        //new InfoLabel("JCubitainer", this).setFont(Font.getFont("Verdana"));
+        ii = new InfoImage(Theme.getCurrent().getImage("ititle"), this);
+        button = new JButton("Start");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setBackground(Color.gray);
+        button.setForeground(Color.white);
+        // Seulement pour le JDK 1.4 :
+        //button.setFocusable(false);
+        button.addActionListener(this);
+        add(button);
 
-	public void activeSlowDisplay(boolean b) {
-		if (b)
-			bonus.setForeground(Color.cyan);
-		else
-			bonus.setForeground(Color.white);
-	}
+        new InfoLabel("-----", this);
+        new InfoLabel("Score :", this);
+        score = new InfoValue("-", this);
+        new InfoLabel("Lignes :", this);
+        ligne = new InfoValue("-", this);
+        new InfoLabel("Niveau :", this);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == button) {
+        level = new InfoValue("-", this);
+        //level.setVisible(false);
+        new InfoLabel("*", this);
+        new InfoHelp("Musique[on/off] : [m]", this);
+        new InfoHelp("Changer de thème : [t]", this);
+        new InfoHelp("Changer de pièce : [c ou v]", this);
+        new InfoHelp("Rotation d'une pièce : [space]", this);
+        new InfoHelp("Chutte de la pièce : [enter]", this);
+        new InfoHelp("Ajouter une pièce : [n]", this);
+        new InfoHelp("Pause : [p]", this);
+        new InfoLabel("*", this);
+        new InfoLabel("Bonus destruction pièce [d] :", this);
+        bonus_des = new InfoValue("-", this);
+        new InfoLabel("Bonus 2 lignes en moins [r] :", this);
+        bonus_sup = new InfoValue("-", this);
+        bonus = new InfoLabel("Bonus ralentisseur [s] :", this);
+        bonus_slow = new InfoValue("-", this);
+        new InfoMsg("Rien", this);
+        pause = new InfoMsg("Pause", this);
+    }
 
-			String[] levels =
-				{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-			String s =
-				(String) JOptionPane.showInputDialog(
-					this.getParent(),
-					"Quel niveau de jeu ?\n"
-						+ "1 pour les débutants à\n"
-						+ "10 pour les dieux \n",
-					"Choix du niveau",
-					JOptionPane.PLAIN_MESSAGE,
-					null,
-					levels,
-					"level");
+    public void setLineDisplay(int l) {
+        ligne.setText(String.valueOf(l));
+    }
 
-			mi.setNiveau(s == null ? 1 : Integer.parseInt(s));
+    public void setScoreDisplay(int l) {
+        score.setText(String.valueOf(l));
+    }
 
-			JOptionPane.showMessageDialog(
-				this.getParent(),
-				"Pour gagner les bonus, il faut détruire plusieurs lignes en même temps.\n"
-					+ "2 lignes : pour gagner un bonus 'destruction de pièce',\n"
-					+ "3 lignes : pour gagner un bonus 'suppression des 2 dernières lignes',\n"
-					+ "4 lignes : pour gagner un bonus 'ralentisseur de la chutte des pièces',\n"
-					+ "5 lignes : pour gagner 2 bonus,\n"
-					+ "etc....\n"
-					+ "Utilisez les touches qui sont indiquées à côté des bonus pour les utiliser !",
-				"Aide bonus",
-				JOptionPane.INFORMATION_MESSAGE);
+    public void setBonusDisplay(int l) {
+        bonus_des.setText(String.valueOf(l));
+    }
 
-			Game.getGameService().start();
-			mi.setGame_over(false);
-			return;
-		}
-		if (arg0.getSource() == button) {
-			Game.getGameService().pause();
-			System.exit(0);
-		}
-	}
+    public void setSlowDisplay(int l) {
+        bonus_slow.setText(String.valueOf(l));
+    }
 
-	public void setPauseDisplay(boolean b) {
-		pause.setVisible(b);
-	}
+    public void setDeleteLineDisplay(int l) {
+        bonus_sup.setText(String.valueOf(l));
+    }
 
-	public void setGameOverDisplay(boolean b) {
-		gameover.setVisible(b);
-		button.setVisible(b);
-		button.setEnabled(b);
-	}
-	/**
-	 * @return
-	 */
-	public static DisplayInfo getThis() {
-		return this_;
-	}
+    public void setLevelDisplay(int l) {
+        level.setText(String.valueOf(l));
+    }
 
-	/**
-	 * @return
-	 */
-	public MetaInfo getMetaInfo() {
-		return mi;
-	}
+    public void activeSlowDisplay(boolean b) {
+        if (b)
+            bonus.setForeground(Color.cyan);
+        else
+            bonus.setForeground(Color.white);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        if (arg0.getSource() == button) {
+
+            String[] levels = { "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                    "10"};
+            String s = (String) JOptionPane.showInputDialog(this.getParent(),
+                    "Quel niveau de jeu ?\n" + "1 pour les débutants à\n"
+                            + "10 pour les dieux \n", "Choix du niveau",
+                    JOptionPane.PLAIN_MESSAGE, null, levels, "level");
+
+            if (s == null) return;
+
+            mi.setNiveau(s == null ? 1 : Integer.parseInt(s));
+
+            JOptionPane
+                    .showMessageDialog(
+                            this.getParent(),
+                            "Pour gagner les bonus, il faut détruire plusieurs lignes en même temps.\n"
+                                    + "2 lignes : pour gagner un bonus 'destruction de pièce',\n"
+                                    + "3 lignes : pour gagner un bonus 'suppression des 2 dernières lignes',\n"
+                                    + "4 lignes : pour gagner un bonus 'ralentisseur de la chutte des pièces',\n"
+                                    + "5 lignes : pour gagner 2 bonus,\n"
+                                    + "etc....\n"
+                                    + "Utilisez les touches qui sont indiquées à côté des bonus pour les utiliser !",
+                            "Aide bonus", JOptionPane.INFORMATION_MESSAGE);
+
+            Game.getGameService().start();
+            mi.setGame_over(false);
+            return;
+        }
+        if (arg0.getSource() == button) {
+            Game.getGameService().pause();
+            System.exit(0);
+        }
+    }
+
+    public void setPauseDisplay(boolean b) {
+        pause.setVisible(b);
+    }
+
+    public void setGameOverDisplay(boolean b) {
+        button.setVisible(b);
+        button.setEnabled(b);
+    }
+
+    /**
+     * @return
+     */
+    public static DisplayInfo getThis() {
+        return this_;
+    }
+
+    /**
+     * @return
+     */
+    public MetaInfo getMetaInfo() {
+        return mi;
+    }
+
+    public void refreshTheme() {
+        ii.setIcon(new ImageIcon(Theme.getCurrent().getImage("ititle")));
+    }
 
 }

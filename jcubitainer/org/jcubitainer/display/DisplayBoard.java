@@ -1,6 +1,6 @@
 /*
  * Created on 14 janv. 2004
- *
+ *  
  */
 package org.jcubitainer.display;
 
@@ -10,211 +10,213 @@ import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import org.jcubitainer.display.theme.Theme;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.MatiereFactory;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.meta.MetaTexte;
-import org.jcubitainer.tools.Ressources;
 
 /**
  * @author rom
- *
+ *  
  */
 public class DisplayBoard extends JPanel {
 
-	final static Color bg = Color.white;
-	final static Color fg = Color.black;
-	final static int deb_x = 5;
-	final static int deb_y = 0;
-	MetaBoard metabox = null;
-	MetaInfo mi = null;
-	static private DisplayBoard this_ = null;
+    final static Color bg = Color.white;
 
-	// Buffer pour dessiner :
-	private Graphics2D imageGraphics = null;
-	private BufferedImage image = null;
+    final static Color fg = Color.black;
 
-	// Font :
-	private String family = "Serif";
-	private int style = Font.BOLD;
-	private int size = 22;
-	private Font FONT = new Font(family, style, size);
+    final static int deb_x = 5;
 
-	private static Image fond = Ressources.getImage("/logo/fond3.png");
+    final static int deb_y = 0;
 
-	/**
-	 * 
-	 */
-	public DisplayBoard(MetaBoard pmetabox, MetaInfo pmi) {
-		super();
-		metabox = pmetabox;
-		mi = pmi;
-		init();
-		this_ = this;
-	}
+    MetaBoard metabox = null;
 
-	public void init() {
-		//Initialize drawing colors
-		setBackground(bg);
-		setForeground(fg);
-	}
+    MetaInfo mi = null;
 
-	protected void createImage() {
+    static private DisplayBoard this_ = null;
 
-		image =
-			new BufferedImage(
-				getWidth(),
-				getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
-		imageGraphics = image.createGraphics();
+    // Buffer pour dessiner :
+    private Graphics2D imageGraphics = null;
 
-		imageGraphics.setColor(Color.yellow);
-		imageGraphics.setFont(FONT);
+    private BufferedImage image = null;
 
-		clearBackground();
-	}
+    // Font :
+    private String family = "Serif";
 
-	protected void clearBackground() {
+    private int style = Font.BOLD;
 
-		if (imageGraphics != null)
-			imageGraphics.drawImage(fond, 0, 0, null);
-	}
+    private int size = 22;
 
-	public final void paint(Graphics g) {
+    private Font FONT = new Font(family, style, size);
 
-		if (image != null) {
-			clearBackground();
-			toPaint(imageGraphics);
-			g.drawImage(image, 0, 0, null);
-		} else
-			createImage();
+    /**
+     *  
+     */
+    public DisplayBoard(MetaBoard pmetabox, MetaInfo pmi) {
+        super();
+        metabox = pmetabox;
+        mi = pmi;
+        init();
+        this_ = this;
+    }
 
-	}
+    public void init() {
+        //Initialize drawing colors
+        setBackground(bg);
+        setForeground(fg);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.Container#paint(java.awt.Graphics)
-	 */
-	public void toPaint(Graphics2D g2) {
+    protected void createImage() {
 
-		if (!Game.getGameService().isPause() || getMetaInfo().isGame_over()) {
+        image = new BufferedImage(getWidth(), getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        imageGraphics = image.createGraphics();
 
-			// On dessine les pièces mouvantes :
-			List liste = metabox.getPieces_mouvantes();
-			synchronized (liste) {
-				// On dessine l'ombre :
-				paintOmbre(g2);
+        imageGraphics.setColor(Color.yellow);
+        imageGraphics.setFont(FONT);
 
-				// On dessine les pièces mouvantes :
-				for (int i = 0; i < liste.size(); i++) {
-					DisplayPiece mp = (DisplayPiece) liste.get(i);
-					mp.drawPiece(mp != metabox.getCurrentPiece(), g2);
-				}
+        clearBackground();
+    }
 
-				// Les pièces fixes :
-				paintFix(g2);
+    protected void clearBackground() {
 
-				// Afficher le texte :
-				paintText(g2);
-			}
-		}
-	}
+        if (imageGraphics != null)
+                imageGraphics.drawImage(Theme.getCurrent()
+                        .getImage("ifond"), 0, 0, null);
+    }
 
-	private void paintText(Graphics2D g2) {
+    public final void paint(Graphics g) {
 
-		if (getMetabox().getTexte().isDisplay()) {
+        if (image != null) {
+            clearBackground();
+            toPaint(imageGraphics);
+            g.drawImage(image, 0, 0, null);
+        } else
+            createImage();
 
-			MetaTexte mt = getMetabox().getTexte();
+    }
 
-			Composite c = g2.getComposite();
-			g2.setComposite(
-				AlphaComposite.getInstance(
-					AlphaComposite.SRC_OVER,
-					mt.getAlpha()));
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.Container#paint(java.awt.Graphics)
+     */
+    public void toPaint(Graphics2D g2) {
 
-			String texte = mt.getTexte();
+        if (!Game.getGameService().isPause() || getMetaInfo().isGame_over()) {
 
-			// Calcule de la position :					
-			int x = (getWidth() - g2.getFontMetrics().stringWidth(texte)) / 2;
-			int y = 230;
+            // On dessine les pièces mouvantes :
+            List liste = metabox.getPieces_mouvantes();
+            synchronized (liste) {
+                // On dessine l'ombre :
+                paintOmbre(g2);
 
-			g2.drawString(texte, x, y);
-			g2.setComposite(c);
-		}
-	}
+                // On dessine les pièces mouvantes :
+                for (int i = 0; i < liste.size(); i++) {
+                    DisplayPiece mp = (DisplayPiece) liste.get(i);
+                    mp.drawPiece(mp != metabox.getCurrentPiece(), g2);
+                }
 
-	protected void paintOmbre(Graphics2D g2) {
-		// On dessine les pièces fixes :
-		int[] ombre = metabox.getOmbre().getFormat();
+                // Les pièces fixes :
+                paintFix(g2);
 
-		if (ombre == null)
-			return;
-		//System.out.println(metabox.getOmbre());
-		for (int x = 0; x < ombre.length; x++) {
-			int ligne = ombre[x];
-			if (ligne > 0) {
-				//System.out.println(ligne);
-				g2.drawImage(
-					MatiereFactory.getOmbre(),
-					deb_x + ((x) * DisplayPiece.LARGEUR_PIECE),
-					deb_y + ((ligne) * DisplayPiece.HAUTEUR_PIECE),
-					null);
-			}
-		}
-	}
+                // Afficher le texte :
+                paintText(g2);
+            }
+        }
+    }
 
-	protected void paintFix(Graphics2D g2) {
+    private void paintText(Graphics2D g2) {
 
-		// On dessine les pièces fixes :
-		int[][] pieces = metabox.getPieces_mortes();
-		for (int y = 0; y < pieces.length; y++) {
-			int[] ligne = pieces[y];
-			for (int x = 0; x < ligne.length; x++) {
-				if (ligne[x] > 0) {
-					g2.drawImage(
-						MatiereFactory.getColorByMatiere(ligne[x], true),
-						deb_x + ((x) * DisplayPiece.LARGEUR_PIECE),
-						deb_y + ((y) * DisplayPiece.HAUTEUR_PIECE),
-						null);
-				}
-			}
-		}
+        if (getMetabox().getTexte().isDisplay()) {
 
-	}
+            MetaTexte mt = getMetabox().getTexte();
 
-	/**
-	 * @return
-	 */
-	public MetaBoard getMetabox() {
-		return metabox;
-	}
+            Composite c = g2.getComposite();
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                    mt.getAlpha()));
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#repaint()
-	 */
-	public void repaint() {
-		//System.out.println("refresh");
-		super.repaint();
-	}
+            String texte = mt.getTexte();
 
-	/**
-	 * @return
-	 */
-	public static DisplayBoard getThis() {
-		return this_;
-	}
+            // Calcule de la position :
+            int x = (getWidth() - g2.getFontMetrics().stringWidth(texte)) / 2;
+            int y = 230;
 
-	/**
-	 * @return
-	 */
-	public MetaInfo getMetaInfo() {
-		return mi;
-	}
+            g2.drawString(texte, x, y);
+            g2.setComposite(c);
+        }
+    }
+
+    protected void paintOmbre(Graphics2D g2) {
+        // On dessine les pièces fixes :
+        int[] ombre = metabox.getOmbre().getFormat();
+
+        if (ombre == null) return;
+        //System.out.println(metabox.getOmbre());
+        for (int x = 0; x < ombre.length; x++) {
+            int ligne = ombre[x];
+            if (ligne > 0) {
+                //System.out.println(ligne);
+                g2.drawImage(MatiereFactory.getOmbre(), deb_x
+                        + ((x) * DisplayPiece.LARGEUR_PIECE), deb_y
+                        + ((ligne) * DisplayPiece.HAUTEUR_PIECE), null);
+            }
+        }
+    }
+
+    protected void paintFix(Graphics2D g2) {
+
+        // On dessine les pièces fixes :
+        int[][] pieces = metabox.getPieces_mortes();
+        for (int y = 0; y < pieces.length; y++) {
+            int[] ligne = pieces[y];
+            for (int x = 0; x < ligne.length; x++) {
+                if (ligne[x] > 0) {
+                    g2.drawImage(MatiereFactory.getColorByMatiere(ligne[x],
+                            true), deb_x + ((x) * DisplayPiece.LARGEUR_PIECE),
+                            deb_y + ((y) * DisplayPiece.HAUTEUR_PIECE), null);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * @return
+     */
+    public MetaBoard getMetabox() {
+        return metabox;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.Component#repaint()
+     */
+    public void repaint() {
+        //System.out.println("refresh");
+        super.repaint();
+    }
+
+    /**
+     * @return
+     */
+    public static DisplayBoard getThis() {
+        return this_;
+    }
+
+    /**
+     * @return
+     */
+    public MetaInfo getMetaInfo() {
+        return mi;
+    }
 
 }

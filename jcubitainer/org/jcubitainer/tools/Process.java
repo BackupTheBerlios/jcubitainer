@@ -2,52 +2,55 @@ package org.jcubitainer.tools;
 
 public abstract class Process extends Thread {
 
-	boolean pause = false;
-	boolean start = false;
-	long wait;
+    boolean pause = false;
 
-	public Process(long pwait) {
-		super();
-		wait = pwait;
-	}
+    boolean start = false;
 
-	public void start() {
-		start = true;
-		super.start();
-	}
+    long wait;
 
-	public void setWait(long p) {
-		wait = p;
-	}
+    public Process(long pwait) {
+        super();
+        wait = pwait;
+    }
 
-	public abstract void action() throws InterruptedException;
+    public void start() {
+        start = true;
+        super.start();
+    }
 
-	public void run() {
-		while (true) {
-			try {
-				if (!pause)
-					action();
-				sleep(wait);
+    public void setWait(long p) {
+        wait = p;
+    }
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public abstract void action() throws InterruptedException;
 
-	public void pause() {
-		pause = true;
-	}
+    public void run() {
+        while (true) {
+            try {
+                if (!pause) action();
+                sleep(wait);
 
-	public void reStart() {
-		pause = false;
-	}
-	public boolean isPause() {
-		return pause;
-	}
+            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	protected boolean isStart() {
-		return start;
-	}
+    public void pause() {
+        pause = true;
+    }
+
+    public void reStart() {
+        pause = false;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    protected boolean isStart() {
+        return start;
+    }
 
 }

@@ -11,7 +11,7 @@ import java.awt.Graphics;
 
 import javax.swing.JFrame;
 
-import org.jcubitainer.move.MoveBoard;
+import org.jcubitainer.key.MoveBoard;
 
 /**
  * @author rom

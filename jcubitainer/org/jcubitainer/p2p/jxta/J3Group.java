@@ -5,32 +5,23 @@
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package org.jcubitainer.p2p.jxta;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
 
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
 import net.jxta.discovery.DiscoveryService;
-import net.jxta.document.MimeMediaType;
 import net.jxta.document.StructuredDocument;
-import net.jxta.document.StructuredTextDocument;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.membership.Authenticator;
 import net.jxta.membership.MembershipService;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
-import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.display.table.GroupTable;
 import org.jcubitainer.display.table.NetworkDisplayTable;
-import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
 
 /**

@@ -10,6 +10,7 @@ import org.jcubitainer.move.*;
 import org.jcubitainer.meta.*;
 import org.jcubitainer.display.*;
 import org.jcubitainer.manager.*;
+import org.jcubitainer.display.theme.*;
 
 /**
  * @author mounes
@@ -31,6 +32,7 @@ public aspect RefreshDisplayAspect {
 		|| call(void Game.pause(..))
 		|| call(void Game.start(..))
 		|| call(void MetaTexte.setDisplay(..))
+		|| call(void ThemeManager.swithTheme(..))
 		;
 
 	after() : refresh() {

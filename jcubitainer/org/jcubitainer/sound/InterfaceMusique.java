@@ -1,104 +1,122 @@
 package org.jcubitainer.sound;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
+import java.util.List;
 
+import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
+
 /*
  * Created on 15 mars 04
- *
+ * 
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
 /**
  * @author mounes
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
 public class InterfaceMusique {
 
-	private static String[] files =
-		{
-			"/ressources/musiques/barimyst.mid",
-			"/ressources/musiques/india.mid",
-			"/ressources/musiques/polonais.mid" };
-	private static ArrayList liste = new ArrayList();
-	private Musique play = null;
-	private static ProcessMg plg = null;
-	private static InterfaceMusique _ = null;
+    private ProcessMg play = null;
 
-	class PlaySound extends Process {
+    private static ProcessMg plg = null;
 
-		protected PlaySound() {
-			super(5000);
-			for (int i = 0; i < files.length; i++) {
-				try {
-					liste.add(new Musique(files[i]));
-				} catch (MidiUnavailableException e) {
-					e.printStackTrace();
-				} catch (InvalidMidiDataException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			plg = new ProcessMg(this);
-		}
+    private static InterfaceMusique this_ = null;
 
-		public void action() throws InterruptedException {
-			Collections.shuffle(liste);
-			Iterator playlist = liste.iterator();
-			while (playlist.hasNext() && !isPause()) {
-				play = (Musique) playlist.next();
-				System.out.println("on joue " + play);
-				play.start();
-				play.waitSound();
-				try {
-					play.sleep(3000);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.jcubitainer.tools.Process#pause()
-		 */
-		public void pause() {
-			super.pause();
-			System.out.println("pause musique");
-			play.interrupt();
-			plg.getProcess().interrupt();
-		}
+    private static boolean playMusic = true;
 
-	}
+    static {
+        playMusic = "true".equals(Configuration.getProperties("musique"));
+        this_ = new InterfaceMusique();
+    }
 
-	public static void START_musique() {
-		getThis().getPlg().wakeUp();
-	}
+    class PlaySound extends Process {
 
-	public static void STOP_musique() {
-		getThis().getPlg().pause();
-	}
+        protected PlaySound() {
+            super(1000);
+            plg = new ProcessMg(this);
+        }
 
-	private synchronized static InterfaceMusique getThis() {
-		if (_ == null)
-			_ = new InterfaceMusique();
-		return _;
-	}
+        public void action() throws InterruptedException {
+            try {
+                List playlist = Theme.getCurrent().getMusiques();
+                int pos = 0;
+                if (play != null) {
+                    pos = playlist.indexOf(play) + 1;
+                    if (pos > 0 && pos < playlist.size()) {
+                    } else
+                        pos = 0;
+                }
+                play = (ProcessMg) playlist.get(pos);
+                System.out.println("on joue \"" + play.getProcess() + "\"");
+                play.wakeUp();
+                synchronized (((Musique) play.getProcess())) {
+                    System.out.println("action !");
+                    while (true)
+                        if (!((Musique) play.getProcess()).isPause())
+                            ((Musique) play.getProcess()).wait(500);
+                        else
+                            break;
+                    System.out.println("fin action !");
+                }
+            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } /*
+           * (non-Javadoc)
+           * 
+           * @see org.jcubitainer.tools.Process#pause()
+           */
 
-	/**
-	 * @return
-	 */
-	private synchronized ProcessMg getPlg() {
-		if (plg == null)
-			new PlaySound();
-		return plg;
-	}
+        public void pause() {
+            super.pause();
+            Musique m = (Musique) play.getProcess();
+            m.pause();
+            //            plg.getProcess().interrupted();
+        }
+
+    }
+
+    public static void START_musique() {
+        if (InterfaceMusique.playMusic) this_.getPlg().wakeUp();
+    }
+
+    public static boolean STOP_musique() {
+        if (!this_.getPlg().isStop()) {
+            this_.getPlg().pause();
+            return true;
+        } else
+            return false;
+    }
+
+    /**
+     * @return
+     */
+    private synchronized ProcessMg getPlg() {
+        if (plg == null) new PlaySound();
+        return plg;
+    }
+
+    /**
+     * @param playMusic
+     *            The playMusic to set.
+     */
+    public static boolean switchPlayMusic() {
+        synchronized (this_) {
+            playMusic = !playMusic;
+            // on veut éteindre et la musique tourne :
+            if (!playMusic) STOP_musique();
+            // on veut la musique et c'était arrêté :
+            if (playMusic) START_musique();
+        }
+        Configuration.setPropertie("musique", String.valueOf(playMusic));
+        return playMusic;
+    }
 }

@@ -6,9 +6,9 @@
  */
 package org.jcubitainer.manager.process;
 
+import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.meta.MetaPiece;
-import org.jcubitainer.move.MoveBoard;
 import org.jcubitainer.tools.Process;
 
 /**

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.manager.process.ChuteProcess;
@@ -24,317 +25,298 @@ import org.jcubitainer.meta.MetaPiece;
  */
 public class MovePiece {
 
-	private final static int COLLISION_PIECE_FIXE = 2;
-	private final static int COLLISION_PIECE_MOVE = 1;
-	private final static int COLLISION_NO = 0;
+    private final static int COLLISION_PIECE_FIXE = 2;
 
-	MoveBoard movebox = null;
+    private final static int COLLISION_PIECE_MOVE = 1;
 
-	/**
-	 *  
-	 */
-	public MovePiece(MoveBoard p) {
-		super();
-		movebox = p;
-	}
+    private final static int COLLISION_NO = 0;
 
-	/**
-	 * @param mp
-	 */
-	public void right(MetaPiece mp) {
-		int position = mp.getPosition_x();
-		if ((position + mp.getLargeur()) < movebox.getMetabox().getLargeur()) {
-			//mp.clearPiece();
-			mp.setPosition_x(mp.getPosition_x() + 1);
-			if (checkCollision(mp) != COLLISION_NO)
-				mp.setPosition_x(mp.getPosition_x() - 1);
-			//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-		}
-	}
+    MoveBoard movebox = null;
 
-	/**
-	 * 2 Collision avec des pièces fixes 1 Collision avec une pièce mouvante 0
-	 * Rien
-	 * 
-	 * @param mp
-	 */
-	private int checkCollision(MetaPiece mp) {
-		MetaBoard mb = movebox.getMetabox();
-		Iterator it = mb.getPieces_mouvantes().iterator();
-		boolean[][] format_piece1 = mp.getFormat();
+    /**
+     *  
+     */
+    public MovePiece(MoveBoard p) {
+        super();
+        movebox = p;
+    }
 
-		for (; it.hasNext();) {
-			MetaPiece temp_mp = (MetaPiece) it.next();
-			if (temp_mp != mp) {
-				// Vérification rapide des positions :
-				// ( Si pas de superposition )
+    /**
+     * @param mp
+     */
+    public void right(MetaPiece mp) {
+        int position = mp.getPosition_x();
+        if ((position + mp.getLargeur()) < movebox.getMetabox().getLargeur()) {
+            //mp.clearPiece();
+            mp.setPosition_x(mp.getPosition_x() + 1);
+            if (checkCollision(mp) != COLLISION_NO)
+                    mp.setPosition_x(mp.getPosition_x() - 1);
+            //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+        }
+    }
 
-				if (// vérification de x
-				 ((mp.getPosition_x()
-					+ mp.getLargeur()
-					> temp_mp.getPosition_x())
-					&& ((mp.getPosition_x()
-						< temp_mp.getPosition_x() + temp_mp.getLargeur())))
-					&& // vérification de y
-				 (
-						(mp.getPosition_y() + mp.getHauteur()
-							> temp_mp.getPosition_y())
-							&& (mp.getPosition_y()
-								< temp_mp.getPosition_y()
-									+ temp_mp.getHauteur()))) {
-					// *********************************
-					// * Faire une analyse plus fine : *
-					// *********************************
-					boolean[][] format_piece2 = temp_mp.getFormat();
-					// On boucle sur piece 1 :
-					for (int ref_piece_1_y = 0;
-						ref_piece_1_y < format_piece1.length;
-						ref_piece_1_y++) {
+    /**
+     * 2 Collision avec des pièces fixes 1 Collision avec une pièce mouvante 0
+     * Rien
+     * 
+     * @param mp
+     */
+    private int checkCollision(MetaPiece mp) {
+        MetaBoard mb = movebox.getMetabox();
+        Iterator it = mb.getPieces_mouvantes().iterator();
+        boolean[][] format_piece1 = mp.getFormat();
 
-						boolean[] ligne = format_piece1[ref_piece_1_y];
+        for (; it.hasNext();) {
+            MetaPiece temp_mp = (MetaPiece) it.next();
+            if (temp_mp != mp) {
+                // Vérification rapide des positions :
+                // ( Si pas de superposition )
 
-						for (int ref_piece_1_x = 0;
-							ref_piece_1_x < ligne.length;
-							ref_piece_1_x++) {
-							// Position dans le référentiel piece 1 :
-							// Il y a une pièce :
-							if (ligne[ref_piece_1_x]) {
+                if (// vérification de x
+                ((mp.getPosition_x() + mp.getLargeur() > temp_mp
+                        .getPosition_x()) && ((mp.getPosition_x() < temp_mp
+                        .getPosition_x()
+                        + temp_mp.getLargeur())))
+                        && // vérification de y
+                        ((mp.getPosition_y() + mp.getHauteur() > temp_mp
+                                .getPosition_y()) && (mp.getPosition_y() < temp_mp
+                                .getPosition_y()
+                                + temp_mp.getHauteur()))) {
+                    // *********************************
+                    // * Faire une analyse plus fine : *
+                    // *********************************
+                    boolean[][] format_piece2 = temp_mp.getFormat();
+                    // On boucle sur piece 1 :
+                    for (int ref_piece_1_y = 0; ref_piece_1_y < format_piece1.length; ref_piece_1_y++) {
 
-								// On va dans le référentiel MetaBoard :
-								int ref_meta_x =
-									mp.getPosition_x() + ref_piece_1_x;
-								int ref_meta_y =
-									mp.getPosition_y() + ref_piece_1_y;
-								// On va dans le référentiel piece 2 :
-								int ref_piece_2_x =
-									ref_meta_x - temp_mp.getPosition_x();
-								int ref_piece_2_y =
-									ref_meta_y - temp_mp.getPosition_y();
+                        boolean[] ligne = format_piece1[ref_piece_1_y];
 
-								if (ref_piece_2_y < 0
-									|| ref_piece_2_x < 0
-									|| ref_piece_2_x > (temp_mp.getLargeur() - 1)
-									|| ref_piece_2_y
-										> (temp_mp.getHauteur() - 1)) {
-									continue;
+                        for (int ref_piece_1_x = 0; ref_piece_1_x < ligne.length; ref_piece_1_x++) {
+                            // Position dans le référentiel piece 1 :
+                            // Il y a une pièce :
+                            if (ligne[ref_piece_1_x]) {
 
-								} else if (format_piece2[ref_piece_2_y][ref_piece_2_x])
-									// Collision !
-									{
-									return COLLISION_PIECE_MOVE;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+                                // On va dans le référentiel MetaBoard :
+                                int ref_meta_x = mp.getPosition_x()
+                                        + ref_piece_1_x;
+                                int ref_meta_y = mp.getPosition_y()
+                                        + ref_piece_1_y;
+                                // On va dans le référentiel piece 2 :
+                                int ref_piece_2_x = ref_meta_x
+                                        - temp_mp.getPosition_x();
+                                int ref_piece_2_y = ref_meta_y
+                                        - temp_mp.getPosition_y();
 
-		// Vérification avec les pièces fixes :
+                                if (ref_piece_2_y < 0
+                                        || ref_piece_2_x < 0
+                                        || ref_piece_2_x > (temp_mp
+                                                .getLargeur() - 1)
+                                        || ref_piece_2_y > (temp_mp
+                                                .getHauteur() - 1)) {
+                                    continue;
 
-		for (int ref_piece_1_y = 0;
-			ref_piece_1_y < format_piece1.length;
-			ref_piece_1_y++) {
+                                } else if (format_piece2[ref_piece_2_y][ref_piece_2_x])
+                                // Collision !
+                                { return COLLISION_PIECE_MOVE; }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			boolean[] ligne = format_piece1[ref_piece_1_y];
+        // Vérification avec les pièces fixes :
 
-			for (int ref_piece_1_x = 0;
-				ref_piece_1_x < ligne.length;
-				ref_piece_1_x++) {
-				// Position dans le référentiel piece 1 :
-				// Il y a une pièce :
-				if (ligne[ref_piece_1_x]) {
+        for (int ref_piece_1_y = 0; ref_piece_1_y < format_piece1.length; ref_piece_1_y++) {
 
-					// On va dans le référentiel MetaBoard :
-					int ref_meta_x = mp.getPosition_x() + ref_piece_1_x;
-					int ref_meta_y = mp.getPosition_y() + ref_piece_1_y;
+            boolean[] ligne = format_piece1[ref_piece_1_y];
 
-					if (mb.getPieces_mortes()[ref_meta_y][ref_meta_x] > 0) {
-						return COLLISION_PIECE_FIXE;
-					}
-				}
-			}
-		}
+            for (int ref_piece_1_x = 0; ref_piece_1_x < ligne.length; ref_piece_1_x++) {
+                // Position dans le référentiel piece 1 :
+                // Il y a une pièce :
+                if (ligne[ref_piece_1_x]) {
 
-		return COLLISION_NO;
-	}
+                    // On va dans le référentiel MetaBoard :
+                    int ref_meta_x = mp.getPosition_x() + ref_piece_1_x;
+                    int ref_meta_y = mp.getPosition_y() + ref_piece_1_y;
 
-	public void left(MetaPiece mp) {
-		int position = mp.getPosition_x();
-		if (position > 0) {
-			//mp.clearPiece();
-			mp.setPosition_x(mp.getPosition_x() - 1);
-			if (checkCollision(mp) != COLLISION_NO)
-				mp.setPosition_x(mp.getPosition_x() + 1);
-			//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-		}
-	}
+                    if (mb.getPieces_mortes()[ref_meta_y][ref_meta_x] > 0) { return COLLISION_PIECE_FIXE; }
+                }
+            }
+        }
 
-	/**
-	 * @param mp
-	 */
-	public void up(MetaPiece mp) {
-		int position = mp.getPosition_y();
-		if (position > 5) {
-			//mp.clearPiece();
-			mp.setPosition_y(mp.getPosition_y() - 1);
-			if (checkCollision(mp) != COLLISION_NO)
-				mp.setPosition_y(mp.getPosition_y() + 1);
-			//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-		}
+        return COLLISION_NO;
+    }
 
-	}
+    public void left(MetaPiece mp) {
+        int position = mp.getPosition_x();
+        if (position > 0) {
+            //mp.clearPiece();
+            mp.setPosition_x(mp.getPosition_x() - 1);
+            if (checkCollision(mp) != COLLISION_NO)
+                    mp.setPosition_x(mp.getPosition_x() + 1);
+            //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+        }
+    }
 
-	/**
-	 * Le boolean permet de savoir si la piece a touché le bas de la grille :
-	 * true : oui
-	 * 
-	 * @param mp
-	 */
-	public boolean down(MetaPiece mp, boolean slow) {
-		int position = mp.getPosition_y();
-		if (position + mp.getHauteur() < movebox.getMetabox().getHauteur()) {
-			mp.setPosition_y(mp.getPosition_y() + 1);
-			int retour;
-			if ((retour = checkCollision(mp)) != COLLISION_NO)
-				mp.setPosition_y(mp.getPosition_y() - 1);
-			else {
-				if (slow)
-					mp.setPosition_y(mp.getPosition_y() - 1);
-			}
-			return retour == COLLISION_PIECE_FIXE;
-		}
-		return true;
-	}
+    /**
+     * @param mp
+     */
+    public void up(MetaPiece mp) {
+        int position = mp.getPosition_y();
+        if (position > 5) {
+            //mp.clearPiece();
+            mp.setPosition_y(mp.getPosition_y() - 1);
+            if (checkCollision(mp) != COLLISION_NO)
+                    mp.setPosition_y(mp.getPosition_y() + 1);
+            //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+        }
 
-	public void rotation(MetaPiece mp) {
-		// Ancienne version :
-		boolean format[][] = mp.getFormat();
-		//mp.clearPiece();
-		mp.rotationLeft();
-		int position = mp.getPosition_x();
-		int position_y = mp.getPosition_y();
+    }
 
-		if (((position + mp.getLargeur() - 1)
-			< movebox.getMetabox().getLargeur())
-			&& ((position_y + mp.getHauteur() - 1
-				< movebox.getMetabox().getHauteur()))) {
-			if (checkCollision(mp) != COLLISION_NO) {
-				mp.setFormat(format);
-			}
-		} else {
-			mp.setFormat(format);
-		}
-		//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-	}
+    /**
+     * Le boolean permet de savoir si la piece a touché le bas de la grille :
+     * true : oui
+     * 
+     * @param mp
+     */
+    public boolean down(MetaPiece mp, boolean slow) {
+        int position = mp.getPosition_y();
+        if (position + mp.getHauteur() < movebox.getMetabox().getHauteur()) {
+            mp.setPosition_y(mp.getPosition_y() + 1);
+            int retour;
+            if ((retour = checkCollision(mp)) != COLLISION_NO)
+                mp.setPosition_y(mp.getPosition_y() - 1);
+            else {
+                if (slow) mp.setPosition_y(mp.getPosition_y() - 1);
+            }
+            return retour == COLLISION_PIECE_FIXE;
+        }
+        return true;
+    }
 
-	public boolean forceAddPiece(MetaPiece mp) {
-		movebox.getMetabox().addPiece(mp);
-		int length = movebox.getMetabox().getLargeur() - mp.getLargeur() + 1;
-		for (int i = 0; i < length; i++) {
-			int pos = i;
-			if (i % 2 != 0)
-				pos = length - i;
-			mp.setPosition_x(pos);
-			if (checkCollision(mp) == COLLISION_NO) {
-				//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-				return true;
-			}
-		}
-		movebox.getMetabox().removePiece(mp);
-		return false;
-	}
+    public void rotation(MetaPiece mp) {
+        // Ancienne version :
+        boolean format[][] = mp.getFormat();
+        //mp.clearPiece();
+        mp.rotationLeft();
+        int position = mp.getPosition_x();
+        int position_y = mp.getPosition_y();
 
-	public boolean addPiece(MetaPiece mp) {
-		movebox.getMetabox().addPiece(mp);
-		if (checkCollision(mp) == COLLISION_NO) {
-			//mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
-			return true;
-		}
-		movebox.getMetabox().removePiece(mp);
-		return false;
-	}
+        if (((position + mp.getLargeur() - 1) < movebox.getMetabox()
+                .getLargeur())
+                && ((position_y + mp.getHauteur() - 1 < movebox.getMetabox()
+                        .getHauteur()))) {
+            if (checkCollision(mp) != COLLISION_NO) {
+                mp.setFormat(format);
+            }
+        } else {
+            mp.setFormat(format);
+        }
+        //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+    }
 
-	/**
-	 * @param liste
-	 * @return
-	 */
-	public int downPieces(List liste, int boucle) {
-		ChuteProcess cs =
-			(ChuteProcess) Game.getGameService().getTimer().getProcess();
-		int min_hauteur = 6;
-		List list2 = new ArrayList();
-		MetaBoard metabox = movebox.getMetabox();
+    public boolean forceAddPiece(MetaPiece mp) {
+        movebox.getMetabox().addPiece(mp);
+        int length = movebox.getMetabox().getLargeur() - mp.getLargeur() + 1;
+        for (int i = 0; i < length; i++) {
+            int pos = i;
+            if (i % 2 != 0) pos = length - i;
+            mp.setPosition_x(pos);
+            if (checkCollision(mp) == COLLISION_NO) {
+            //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+            return true; }
+        }
+        movebox.getMetabox().removePiece(mp);
+        return false;
+    }
 
-		for (int pos = 0; pos < liste.size(); pos++) {
-			MetaPiece mp = (MetaPiece) liste.get(pos);
-			int y = mp.getPosition_y();
-			if (((MoveBoard) movebox)
-				.getMovepiece()
-				.down(mp, boucle % 2 == 1)) {
-				// On fige la pièce :
-				//System.out.println("*******");
-				metabox.removePiece(mp);
-				liste.remove(mp);
-				pos--;
-				metabox.fixPiece(mp);
-				movebox.getMetaInfo().addScore(5);
-				if (mp.getPosition_y() < 5) {
-					Game.getGameService().endGame();
-					return 0;
-				}
-			} else {
-				if (min_hauteur > mp.getPosition_y())
-					min_hauteur = mp.getPosition_y();
-				if (!list2.contains(mp) && y == mp.getPosition_y()) {
-					list2.add(mp);
-					liste.remove(mp);
-					liste.add(liste.size(), mp);
-					pos--;
-				}
-			}
-		}
+    public boolean addPiece(MetaPiece mp) {
+        movebox.getMetabox().addPiece(mp);
+        if (checkCollision(mp) == COLLISION_NO) {
+        //mp.drawPiece(mp != movebox.getMetabox().getCurrentPiece());
+        return true; }
+        movebox.getMetabox().removePiece(mp);
+        return false;
+    }
 
-		//metabox.setFreeNewPiece(min_hauteur > 5);
+    /**
+     * @param liste
+     * @return
+     */
+    public int downPieces(List liste, int boucle) {
+        ChuteProcess cs = (ChuteProcess) Game.getGameService().getTimer()
+                .getProcess();
+        int min_hauteur = 6;
+        List list2 = new ArrayList();
+        MetaBoard metabox = movebox.getMetabox();
 
-		// Des lignes à supprimer ?
-		int ligne;
-		Game gs = Game.getGameService();
+        for (int pos = 0; pos < liste.size(); pos++) {
+            MetaPiece mp = (MetaPiece) liste.get(pos);
+            int y = mp.getPosition_y();
+            if (((MoveBoard) movebox).getMovepiece().down(mp, boucle % 2 == 1)) {
+                // On fige la pièce :
+                //System.out.println("*******");
+                metabox.removePiece(mp);
+                liste.remove(mp);
+                pos--;
+                metabox.fixPiece(mp);
+                movebox.getMetaInfo().addScore(5);
+                if (mp.getPosition_y() < 5) {
+                    Game.getGameService().endGame();
+                    return 0;
+                }
+            } else {
+                if (min_hauteur > mp.getPosition_y())
+                        min_hauteur = mp.getPosition_y();
+                if (!list2.contains(mp) && y == mp.getPosition_y()) {
+                    list2.add(mp);
+                    liste.remove(mp);
+                    liste.add(liste.size(), mp);
+                    pos--;
+                }
+            }
+        }
 
-		if ((ligne = metabox.removeLines()) != 0)
-			//movebox.repaint();
-			/*else*/ {
-			//System.out.println(ligne);
-			movebox.getMetaInfo().addLines(ligne);
-			movebox.getMetaInfo().addScore(50 * ligne);
-			gs.getBonus().newBonusByLine(ligne);
-			//movebox.repaint();
-		}
+        //metabox.setFreeNewPiece(min_hauteur > 5);
 
-		// Gestion des niveaux :
-		gs.getLevelmanager().setLevel(cs);			
+        // Des lignes à supprimer ?
+        int ligne;
+        Game gs = Game.getGameService();
 
-		if (metabox.getPieces_mouvantes().size() == 0)
-			addPiece(
-				PieceFactory.getInstance().getDisplayPiece(
-					movebox.getMetaInfo().getNiveau()));
-		//System.out.println(metabox.isFreeNewPiece());
+        if ((ligne = metabox.removeLines()) != 0)
+        //movebox.repaint();
+        /* else */{
+            //System.out.println(ligne);
+            movebox.getMetaInfo().addLines(ligne);
+            movebox.getMetaInfo().addScore(50 * ligne);
+            gs.getBonus().newBonusByLine(ligne);
+            //movebox.repaint();
+        }
 
-		return min_hauteur;
-	}
+        // Gestion des niveaux :
+        gs.getLevelmanager().setLevel(cs);
 
-	public void forceDownPiece(MetaPiece mp) {
-		List liste = new ArrayList();
-		liste.add(mp);
-		int hauteur = mp.getPosition_y();
-		while (liste.size() > 0) {
-			downPieces(liste, 0);
-			if (hauteur == mp.getPosition_y())
-				// Une pièce sur le passage, on ne peut pas descendre
-				// plus bas !
-				break;
-			hauteur = mp.getPosition_y();
-		}
-	}
+        if (metabox.getPieces_mouvantes().size() == 0)
+                addPiece(PieceFactory.getInstance().getDisplayPiece(
+                        movebox.getMetaInfo().getNiveau()));
+        //System.out.println(metabox.isFreeNewPiece());
+
+        return min_hauteur;
+    }
+
+    public void forceDownPiece(MetaPiece mp) {
+        List liste = new ArrayList();
+        liste.add(mp);
+        int hauteur = mp.getPosition_y();
+        while (liste.size() > 0) {
+            downPieces(liste, 0);
+            if (hauteur == mp.getPosition_y())
+            // Une pièce sur le passage, on ne peut pas descendre
+                    // plus bas !
+                    break;
+            hauteur = mp.getPosition_y();
+        }
+    }
 
 }

@@ -11,7 +11,6 @@ import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerAdvertisement;
-import net.jxta.protocol.PeerGroupAdvertisement;
 
 import org.jcubitainer.tools.Process;
 

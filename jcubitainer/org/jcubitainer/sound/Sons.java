@@ -1,41 +1,61 @@
 /*
  * Created on 17 mars 04
- *
+ *  
  */
 package org.jcubitainer.sound;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
+import java.io.ByteArrayInputStream;
 import java.util.Hashtable;
 
-import org.jcubitainer.tools.Ressources;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine.Info;
+
+import org.jcubitainer.display.theme.Theme;
 
 /**
- * @author mounes
- *
+ * 
+ * http://forum.java.sun.com/thread.jsp?forum=31&thread=420688
+ * 
+ * @author mounes 
+ * 
  */
 public class Sons {
 
-	private static String SOUND1 = "/ressources/sons/mechanical.wav";
-	private static String SOUND2 = "/ressources/sons/ton.wav";
-	private static Hashtable hs = new Hashtable();
+    private static Hashtable hs = new Hashtable();
 
-	private static void jouerSon(String s) {
-//		System.out.println("Play : " + s);
-		AudioClip ac = (AudioClip) hs.get(s);
-		if (ac == null) {
-			ac = Applet.newAudioClip(Ressources.getURL(s));
-			hs.put(s, ac);
-		}
-		ac.play();
-	}
+    private static void jouerSon(byte[] s) {
+        try {
+            Clip m_clip;
+            AudioInputStream m_stream;
 
-	public static void son1() {
-		jouerSon(SOUND1);
-	}
+            AudioFileFormat audioFileFormat = AudioSystem
+                    .getAudioFileFormat(new ByteArrayInputStream(s));
 
-	public static void son2() {
-		jouerSon(SOUND2);
-	}
+            m_stream = AudioSystem
+                    .getAudioInputStream(new ByteArrayInputStream(s));
+            AudioFormat format = m_stream.getFormat();
+            Info info = new Info(Clip.class, format, ((int) m_stream
+                    .getFrameLength() * format.getFrameSize()));
+            m_clip = (Clip) AudioSystem.getLine(info);
+            m_clip.open(m_stream);
+            m_clip.setFramePosition(0);
+            m_clip.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void son1() {
+        jouerSon(Theme.getCurrent().getSon("son1"));
+    }
+
+    public static void son2() {
+        jouerSon(Theme.getCurrent().getSon("son2"));
+    }
 
 }

@@ -6,11 +6,11 @@
  */
 package org.jcubitainer.manager;
 
+import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.process.ChuteProcess;
 import org.jcubitainer.manager.process.PieceProcess;
 import org.jcubitainer.manager.process.TexteProcess;
 import org.jcubitainer.meta.MetaInfo;
-import org.jcubitainer.move.MoveBoard;
 import org.jcubitainer.tools.ProcessMg;
 
 /**
