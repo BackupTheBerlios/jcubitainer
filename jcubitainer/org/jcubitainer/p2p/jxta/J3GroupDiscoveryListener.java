@@ -53,7 +53,6 @@ public class J3GroupDiscoveryListener extends Process implements
 		super(30000);
 		discoveryService = ds;
 		rootGroup = proot;
-		discoveryService.addDiscoveryListener(this);
 	}
 
 	public void discoveryEvent(DiscoveryEvent ev) {
@@ -69,31 +68,35 @@ public class J3GroupDiscoveryListener extends Process implements
 				try {
 					adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
 							.nextElement();
-					
-					if (knowsPeers.add(adv.getID()))
-						System.out.println("- Peer Group = " + adv.getName());
-					
-					if (adv.getName().startsWith(J3xta.JXTA_ID)) {
-						System.out.println("! Peergroup à nous : "
-								+ adv.getName());
-						J3Group J3g = J3Group.getInstance(adv, rootGroup,
-								discoveryService);
 
-						J3g.joinThisGroup();
+					if (knowsPeers.add(adv.getID())) {
+						System.out.println("- Peer Group = " + adv.getName());
+						if (adv.getName().startsWith(J3xta.JXTA_ID)) {
+							System.out.println("! Peergroup à nous : "
+									+ adv.getName());
+							J3Group j3g = J3Group.getInstance(adv, rootGroup,
+									discoveryService);
+
+							j3g.joinThisGroup();
+						}
 					}
 				} catch (Exception e) {
 				}
 			}
 		}
-
 	}
 
 	public void action() {
 		try {
-			
-			//System.out.println("Sending a Discovery Message");
-			// look for any peer group
-			discoveryService.getLocalAdvertisements(DiscoveryService.GROUP, null, null);
+
+			discoveryService.addDiscoveryListener(this);
+
+			discoveryService.getRemoteAdvertisements(null,
+					DiscoveryService.GROUP, "Name", J3xta.JXTA_ID + "*", 50,
+					null);
+
+			discoveryService.getLocalAdvertisements(DiscoveryService.GROUP,
+					"Name", J3xta.JXTA_ID + "*");
 
 			//			discoveryService.getLocalAdvertisements(
 			//				DiscoveryService.GROUP,

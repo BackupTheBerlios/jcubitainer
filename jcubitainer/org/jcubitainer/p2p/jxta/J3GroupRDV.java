@@ -65,9 +65,9 @@ public class J3GroupRDV extends Process {
 	 */
 	public J3GroupRDV(PeerGroup proot, DiscoveryService pdiscoSvc) {
 		super(3 * 60 * 1000);
-		
+
 		String group_name = J3xta.JXTA_ID + NAME + StartJXTA.name;
-		
+
 		rootGroup = proot;
 		discoSvc = pdiscoSvc;
 		//		PeerGroupID peerGroupID = net.jxta.id.IDFactory.newPeerGroupID();
@@ -82,10 +82,10 @@ public class J3GroupRDV extends Process {
 			PeerGroupAdvertisement newPGAdv = (PeerGroupAdvertisement) AdvertisementFactory
 					.newAdvertisement(PeerGroupAdvertisement
 							.getAdvertisementType());
-			
+
 			// Nouveau IDFactory :
 			PeerGroupID id = IDFactory.newPeerGroupID();
-			
+
 			newPGAdv.setPeerGroupID(id);
 			newPGAdv.setModuleSpecID(implAdv.getModuleSpecID());
 			newPGAdv.setName(group_name);
@@ -107,11 +107,14 @@ public class J3GroupRDV extends Process {
 	}
 
 	public void publishGroup() {
-		//System.out.println("Publication du groupe : " +
-		// peerGroup.getPeerGroupName());
+		System.out.println("Publication du groupe : " +
+		 peerGroup.getPeerGroupName());
 		try {
 			//            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
-			discoSvc.remotePublish(adv);
+			discoSvc.publish(adv, PeerGroup.DEFAULT_LIFETIME,
+					PeerGroup.DEFAULT_EXPIRATION);
+			discoSvc.publish(adv, PeerGroup.DEFAULT_LIFETIME,
+					PeerGroup.DEFAULT_EXPIRATION);
 			//            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
 		} catch (Exception e) {
 			System.out
@@ -124,48 +127,6 @@ public class J3GroupRDV extends Process {
 	public void action() throws InterruptedException {
 		//		System.out.println("Publication");
 		publishGroup();
-
-	}
-
-	public void joinThisGroup() {
-		System.out.println("Joining peer group...");
-
-		StructuredDocument creds = null;
-
-		try {
-			// Generate the credentials for the Peer Group
-			AuthenticationCredential authCred = new AuthenticationCredential(
-					peerGroup, null, creds);
-
-			// Get the MembershipService from the peer group
-			MembershipService membership = peerGroup.getMembershipService();
-
-			// Get the Authenticator from the Authentication creds
-			Authenticator auth = membership.apply(authCred);
-
-			// Check if everything is okay to join the group
-			if (auth.isReadyForJoin()) {
-				Credential myCred = membership.join(auth);
-
-				System.out.println("Successfully joined group "
-						+ peerGroup.getPeerGroupName());
-
-				// display the credential as a plain text document.
-				//                System.out.println("Credential: ");
-				//                StructuredTextDocument doc = (StructuredTextDocument) myCred
-				//                        .getDocument(new MimeMediaType("text/plain"));
-				//
-				//                StringWriter out = new StringWriter();
-				//                doc.sendToWriter(out);
-				//                System.out.println(out.toString());
-				//                out.close();
-				J3xta.setStatut(J3xta.JXTA_STATUT_ON);
-			} else {
-				System.out.println("Failure: unable to join group");
-			}
-		} catch (Exception e) {
-			System.out.println("Failure in authentication." + e);
-		}
 
 	}
 

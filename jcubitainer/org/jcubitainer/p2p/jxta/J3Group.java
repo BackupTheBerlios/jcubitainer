@@ -114,11 +114,15 @@ public class J3Group {
 
     }
 
-    public void joinThisGroup() {
+    public synchronized void joinThisGroup() {
 
         if (joinPeerGroups.containsKey(peerGroup.getPeerGroupID())) return;
 
         //System.out.println("Joining peer group...");
+        
+        // On ne peut joindre un seul groupe pour l'instant !
+        
+        if (joinPeerGroups.size() > 0 ) return;
 
         StructuredDocument creds = null;
 
@@ -151,6 +155,10 @@ public class J3Group {
                  System.out.println(out.toString());
                  out.close();*/
                 joinPeerGroups.put(peerGroup.getPeerGroupID(), peerGroup);
+
+                // Connection Ready !
+                J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+                
             } else {
                 System.out.println("Failure: unable to join group");
             }
