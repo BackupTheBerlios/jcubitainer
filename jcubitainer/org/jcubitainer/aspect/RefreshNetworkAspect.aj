@@ -41,7 +41,11 @@ public aspect RefreshNetworkAspect {
 
     public static String MALUS_PIECE = "MALUS!PIECE";
     
-	pointcut showStatut() : call(void J3xta.setStatut(..));
+    public static String MALUS_LINE = "MALUS!LINE";
+
+    public static String MALUS_SPEED = "MALUS!SPEED";
+
+    pointcut showStatut() : call(void J3xta.setStatut(..));
 
 	after() : showStatut() {
 	    int s = J3xta.getStatut();
@@ -78,6 +82,22 @@ public aspect RefreshNetworkAspect {
 	pointcut envoyerMalusPiece() : call(void Bonus.deletePiece());
 
 	after() : envoyerMalusPiece() {
+	    sendMsg(MALUS_PIECE);
+	}
+
+	pointcut envoyerMalusLine() : call(void Bonus.deleteLine());
+
+	after() : envoyerMalusLine() {
+	    sendMsg(MALUS_LINE);
+	}
+
+	pointcut envoyerMalusSpeed() : call(void Bonus.slow());
+
+	after() : envoyerMalusSpeed() {
+	    sendMsg(MALUS_SPEED);
+	}
+	
+	public static void sendMsg(String malus) {
         if (NetworkManager.isNetworkOn()) {
             Enumeration liste = J3Group.getJ3Groups();
             J3Pipe pipe = null;
@@ -87,7 +107,7 @@ public aspect RefreshNetworkAspect {
                     pipe = group.getPipe();
                 }
             if ( pipe != null ) 
-                pipe.sendMsg(MALUS_PIECE);
+                pipe.sendMsg(malus);
         }                    
 	}
 }
