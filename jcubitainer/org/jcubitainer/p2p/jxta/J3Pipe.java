@@ -31,7 +31,6 @@ import java.io.IOException;
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.endpoint.Message;
-import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.id.IDFactory;
 import net.jxta.pipe.InputPipe;
@@ -49,11 +48,15 @@ import org.jcubitainer.tools.Process;
 
 public class J3Pipe extends Process implements PipeMsgListener {
 
-    private final static String SENDERNAME = "JxtaTalkSenderName";
+    public final static String SENDERNAME = "JxtaTalkSenderName";
 
-    private final static String SENDERGROUPNAME = "GrpName";
+    public final static String SENDERGROUPNAME = "GrpName";
 
-    private final static String SENDERMESSAGE = "JxtaTalkSenderMessage";
+    public final static String SENDERMESSAGE = "Jxta Talk Sender Message";
+
+    public final static String SYSTEMMESSAGE = "Jx3Message";
+
+    public final static String PEERID = "Peer_ID";
 
     private InputPipe inputpipe;
 
@@ -68,7 +71,9 @@ public class J3Pipe extends Process implements PipeMsgListener {
     private J3Group group;
 
     private int ping_id = 0;
-    
+
+    private static final String MESSAGE_PING = "ping";
+
     /**
      * the thread which creates (resolves) the output pipe and sends a message
      * once it's resolved
@@ -78,7 +83,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
         try {
 
             discovery.publish(pipeAdv);
-            sendMsg("ping");
+            sendMsg(MESSAGE_PING, true);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -120,7 +125,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
      * @param gram
      *            message to send
      */
-    public void sendMsg(String gram) {
+    private void sendMsg(String gram, boolean system) {
         try {
             Message msg = new Message();
             msg.addMessageElement(null, new StringMessageElement(SENDERMESSAGE,
@@ -129,6 +134,12 @@ public class J3Pipe extends Process implements PipeMsgListener {
                     StartJXTA.name, null));
             msg.addMessageElement(null, new StringMessageElement(
                     SENDERGROUPNAME, group.toString(), null));
+            msg.addMessageElement(null, new StringMessageElement(PEERID, group
+                    .getPeerID().toString(), null));
+
+            if (system)
+                msg.addMessageElement(null, new StringMessageElement(
+                        SYSTEMMESSAGE, "yes", null));
             outputpipe.send(msg);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -137,28 +148,18 @@ public class J3Pipe extends Process implements PipeMsgListener {
     }
 
     public void pipeMsgEvent(PipeMsgEvent event) {
-        Message msg = event.getMessage();
-        try {
-            String sender = getValue(msg, SENDERNAME, "Anonyme");
-            String mesage = getValue(msg, SENDERMESSAGE, "??");
-            J3MessagePipe.put(new J3Message(sender, mesage));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        J3Message mes = new J3Message(event.getMessage());
+
+        if (mes.isSystem()) {
+            if (MESSAGE_PING.equals(mes.getWhat())
+                    && !StartJXTA.name.equals(mes.getWho())) {                
+                J3Peer peer = new J3Peer(mes.getPeer_id(), mes.getWho());
+                J3PeerManager.addPeer(peer);
+            }
+        } else
+            J3MessagePipe.put(mes);
     }
 
-    private String getValue(Message msg, String tag, String defaut)
-            throws Exception {
-
-        MessageElement elem = msg.getMessageElement(null, tag);
-        return elem == null ? defaut : new String(elem.getBytes(false));
-    }
-
-    /**
-     * Generate uniquePipeID that is independantly unique within a group
-     * 
-     * @return The uniquePipeID value
-     */
     private PipeID getUniquePipeID() {
 
         byte[] preCookedPID = { (byte) 0xD1, (byte) 0xD1, (byte) 0xD1,

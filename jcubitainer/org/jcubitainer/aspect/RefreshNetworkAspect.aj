@@ -36,4 +36,17 @@ public aspect RefreshNetworkAspect {
 	                message.getWho() + ":" + message.getWhat());
 	}
 
+	pointcut endGame() : call(void J3PeerManager.remove(..));
+
+	after() : endGame() {
+	    if( J3PeerManager.size() == 0)
+	        DisplayBoard.getThis().getMetabox().getTexte().setTexte("Personne !");
+	}
+
+	pointcut newGame() : call(void J3PeerManager.put(..));
+
+	after() : newGame() {
+	    if( J3PeerManager.size() != 0)
+	        DisplayBoard.getThis().getMetabox().getTexte().setTexte("Game OK !");
+	}
 }

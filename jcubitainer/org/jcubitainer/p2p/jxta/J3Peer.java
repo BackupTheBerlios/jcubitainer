@@ -20,55 +20,33 @@
 
 /* History & changes **************************************************
  *                                                                     *
- ******** December 12, 2004 ********************************************
+ ******** May 5, 2004 **************************************************
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta.util;
+package org.jcubitainer.p2p.jxta;
 
-import org.jcubitainer.p2p.jxta.J3Pipe;
+public class J3Peer {
 
-import net.jxta.endpoint.Message;
-import net.jxta.endpoint.MessageElement;
+    private String id = null;
 
-public class J3Message {
+    private String name = null;
 
-    private String who = null;
-
-    private String what = null;
-
-    private boolean system = false;
-    
-    private String peer_id = null;
-
-    Message message = null;
-
-    public J3Message(Message pmessage) {
-        message = pmessage;
-        who = getValue(J3Pipe.SENDERNAME, "Anonyme");
-        what = getValue(J3Pipe.SENDERMESSAGE, "??");
-        peer_id = getValue(J3Pipe.PEERID, "??");
-        system = "yes".equals(getValue(J3Pipe.SYSTEMMESSAGE, ""));
+    public J3Peer(String p, String pname) {
+        id = p;
+        name = pname;
     }
 
-    public String getWhat() {
-        return what;
+    public String getPeerID() {
+        return id;
     }
 
-    public boolean isSystem() {
-        return system;
+    public String toString() {
+        return getPeerID();
     }
 
-    public String getWho() {
-        return who;
+    public String getName() {
+        return name;
     }
 
-    private String getValue(String tag, String defaut) {
-        MessageElement elem = message.getMessageElement(null, tag);
-        return elem == null ? defaut : new String(elem.getBytes(false));
-    }
-
-    public String getPeer_id() {
-        return peer_id;
-    }
 }

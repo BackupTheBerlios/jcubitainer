@@ -35,7 +35,6 @@ public class J3MessagePipe {
 
     public static J3Message drop() {
         synchronized (pipe) {
-            System.out.print(":");
             if (!pipe.isEmpty())
                 return (J3Message) pipe.remove(0);
             else
@@ -45,7 +44,6 @@ public class J3MessagePipe {
 
     public static void put(J3Message mes) {
         synchronized (pipe) {
-            System.out.print("/");
             pipe.add(mes);
         }
     }

@@ -33,6 +33,7 @@ import net.jxta.discovery.DiscoveryService;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.membership.Authenticator;
 import net.jxta.membership.MembershipService;
+import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
@@ -168,6 +169,10 @@ public class J3Group {
 
 	public PeerGroupID getPeerGroupID() {
 		return peerGroup.getPeerGroupID();
+	}
+
+	public PeerID getPeerID() {
+		return peerGroup.getPeerID();
 	}
 
 	public static boolean isConnectToGroup() {
