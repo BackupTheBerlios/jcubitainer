@@ -256,22 +256,22 @@ public class DisplayInfo extends JPanel implements ActionListener {
         case J3xta.JXTA_STATUT_ON:
             connexion.setText("Connecté");
             connexion
-                    .setIcon(Ressources.getImageIcon("/ressources/online.png"));
+                    .setIcon(Ressources.getImageIcon("/ressources/images/online.png"));
             break;
         case J3xta.JXTA_STATUT_OFF:
             connexion.setText("Non connecté");
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/throbber-small.gif"));
+                    .getImageIcon("/ressources/images/throbber-small.gif"));
             break;
         case J3xta.JXTA_STATUT_CONNECT:
             connexion.setText("Connexion...");
             connexion.setIcon(Ressources
-                    .getImageIcon("/ressources/throbber-small.gif"));
+                    .getImageIcon("/ressources/images/throbber-small.gif"));
             break;
         case J3xta.JXTA_STATUT_ERROR:
             connexion.setText("Erreur...");
             connexion
-                    .setIcon(Ressources.getImageIcon("/ressources/Stop16.gif"));
+                    .setIcon(Ressources.getImageIcon("/ressources/images/Stop16.gif"));
             break;
         }
     }
