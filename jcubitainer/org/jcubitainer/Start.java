@@ -109,8 +109,8 @@ public class Start {
          */
         new Game(db, mi);
         ss.hide(1);
-        //frame.setVisible(true);
-        StartJXTA.wakeUp("e" + Math.random());
+        frame.setVisible(true);
+        //StartJXTA.wakeUp("e" + Math.random());
         // PUB : Affichage de l'url du site.
         mb.getTexte().setTexte("http://jcubitainer.berlios.de");
     }
