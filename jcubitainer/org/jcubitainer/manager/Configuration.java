@@ -40,7 +40,7 @@ public class Configuration extends Properties {
 
     public static final String DIR = ".jcubitainer";
 
-    public static final String VERSION = "0.2.3";
+    public static final String VERSION = "0.2.4";
 
     /**
      *  
@@ -85,7 +85,7 @@ public class Configuration extends Properties {
 
             System.out.println("Sauvegarde du fichier de configuration !");
             FileOutputStream out = new FileOutputStream(conf);
-            c.store(out, new Date().toString());
+            c.store(out, "VERSION:" + VERSION);
             out.close();
         } catch (Exception e) {
             e.printStackTrace();

@@ -29,10 +29,13 @@ package org.jcubitainer.tools.logs;
 import java.io.PrintStream;
 
 import javax.swing.JOptionPane;
+import org.jcubitainer.tools.Messages;
 
 public class ErrorPrintStream extends PrintStream {
 
-    Object[] options = { "Continuer", "Ne plus prévenir", "Quitter"};
+    Object[] options = { Messages.getString("ErrorPrintStream.continuer"),
+            Messages.getString("ErrorPrintStream.plus_prevenir"),
+            Messages.getString("ErrorPrintStream.quitter")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // Pour avoir une seule fenêtre ouverte :
     boolean open = false;
@@ -55,8 +58,10 @@ public class ErrorPrintStream extends PrintStream {
         if (!open) {
             open = true;
             String message = obj.toString();
-            int n = JOptionPane.showOptionDialog(null,
-                    "Une erreur est survenue :\n" + message, "Erreur !",
+            int n = JOptionPane.showOptionDialog(null, Messages
+                    .getString("ErrorPrintStream.erreur_survenue")
+                    + message, Messages
+                    .getString("ErrorPrintStream.titre_erreur"), //$NON-NLS-1$ //$NON-NLS-2$
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.ERROR_MESSAGE, null, options, options[0]);
             open = false;

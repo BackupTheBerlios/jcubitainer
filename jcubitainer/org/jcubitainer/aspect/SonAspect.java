@@ -34,6 +34,7 @@ import org.jcubitainer.manager.*;
 import org.jcubitainer.sound.InterfaceMusique;
 import org.jcubitainer.sound.Sons;
 import org.jcubitainer.display.theme.*;
+import org.jcubitainer.tools.Messages;
 
 public aspect SonAspect {
 
@@ -73,9 +74,9 @@ public aspect SonAspect {
 
 	after() : showPlay() {
         DisplayBoard.getThis().getMetabox().getTexte().setTexte(
-                "musique : "
+                Messages.getString("SonAspect.musique") //$NON-NLS-1$
                 +
-                ("true".equals(Configuration.getProperties("musique"))?"on":"off"));
+                ("true".equals(Configuration.getProperties("musique"))?"on":"off")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 	
 }

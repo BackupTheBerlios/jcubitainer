@@ -47,6 +47,7 @@ import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.p2p.jxta.J3xtaConnect;
+import org.jcubitainer.tools.Messages;
 import org.jcubitainer.tools.logs.Logs;
 
 public class Start {
@@ -80,7 +81,8 @@ public class Start {
         di.setPreferredSize(new Dimension(200, 50));
         new PieceFactory(mb);
 
-        JCubitainerFrame frame = new JCubitainerFrame("JCubitainer", db);
+        JCubitainerFrame frame = new JCubitainerFrame(Messages
+                .getString("J3.title"), db);
         frame.setIconImage(ThemeManager.getCurrent().getImage("ilogo"));
         //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -133,11 +135,12 @@ public class Start {
 
     public static void main(String[] args) {
 
-        new Logs();
-
         try {
             // Chargement du fichier de configuration s'il existe :
             new Configuration();
+
+            new Logs();
+
             // Chargement du thème par défaut :
             new ThemeManager();
 

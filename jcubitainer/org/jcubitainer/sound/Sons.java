@@ -26,17 +26,12 @@
 
 package org.jcubitainer.sound;
 
-import java.io.ByteArrayInputStream;
+import java.applet.AudioClip;
 import java.util.Hashtable;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine.Info;
-
 import org.jcubitainer.display.theme.ThemeManager;
+
+import sun.applet.AppletAudioClip;
 
 /**
  * 
@@ -46,26 +41,9 @@ import org.jcubitainer.display.theme.ThemeManager;
  */
 public class Sons {
 
-    private static Hashtable hs = new Hashtable();
-
     private static void jouerSon(byte[] s) {
         try {
-            Clip m_clip;
-            AudioInputStream m_stream;
-
-            AudioFileFormat audioFileFormat = AudioSystem
-                    .getAudioFileFormat(new ByteArrayInputStream(s));
-
-            m_stream = AudioSystem
-                    .getAudioInputStream(new ByteArrayInputStream(s));
-            AudioFormat format = m_stream.getFormat();
-            Info info = new Info(Clip.class, format, ((int) m_stream
-                    .getFrameLength() * format.getFrameSize()));
-            m_clip = (Clip) AudioSystem.getLine(info);
-            m_clip.open(m_stream);
-            m_clip.setFramePosition(0);
-            m_clip.start();
-
+            new AppletAudioClip(s).play();
         } catch (Exception e) {
             e.printStackTrace();
         }

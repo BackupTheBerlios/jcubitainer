@@ -40,6 +40,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import org.jcubitainer.tools.Messages;
 
 public class NetworkDisplayTable extends JPanel {
 
@@ -50,10 +51,10 @@ public class NetworkDisplayTable extends JPanel {
     private GroupTable group_selectionne = null;
 
     protected static NetworkDisplayTable parties = new NetworkDisplayTable(
-            "Parties", 150, 200, true);
+            Messages.getString("NetworkDisplayTable.partie"), 150, 200, true); //$NON-NLS-1$
 
     protected static NetworkDisplayTable joueurs = new NetworkDisplayTable(
-            "Joueurs", 150, 200, false);
+            Messages.getString("NetworkDisplayTable.joueurs"), 150, 200, false); //$NON-NLS-1$
 
     public NetworkDisplayTable(String ptitle, int largeur, int hauteur,
             boolean actif) {
@@ -78,12 +79,12 @@ public class NetworkDisplayTable extends JPanel {
         table.setCellSelectionEnabled(actif);
         table.setGridColor(Color.black);
         table.setShowGrid(true);
-        table.getTableHeader().setFont(new Font("Courier", Font.BOLD, 13));
+        table.getTableHeader().setFont(new Font("Courier", Font.BOLD, 13)); //$NON-NLS-1$
         table.getTableHeader().setBackground(Color.black);
         table.getTableHeader().setForeground(Color.yellow);
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
-        table.setFont(new Font("Helvetica", Font.BOLD, 10));
+        table.setFont(new Font("Helvetica", Font.BOLD, 10)); //$NON-NLS-1$
 
         if (actif) {
             table.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

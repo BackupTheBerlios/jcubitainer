@@ -36,6 +36,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import org.jcubitainer.tools.Messages;
 
 public class NetworkDisplay extends JPanel implements ActionListener {
 
@@ -89,10 +90,10 @@ public class NetworkDisplay extends JPanel implements ActionListener {
         button4.setForeground(Color.white);
         button4.setBorderPainted(false);
 
-        button.setText("Joindre la partie");
-        button2.setText("Quitter la partie");
-        button3.setText("Se déconnecter de JX3tainer");
-        button4.setText("Créer une partie");
+        button.setText(Messages.getString("NetworkDisplay.joindre")); //$NON-NLS-1$
+        button2.setText(Messages.getString("NetworkDisplay.quitter")); //$NON-NLS-1$
+        button3.setText(Messages.getString("NetworkDisplay.deconnecter")); //$NON-NLS-1$
+        button4.setText(Messages.getString("NetworkDisplay.creer")); //$NON-NLS-1$
         parties.setEnabled(false);
         panel2.add(button);
         panel2.add(button2);
@@ -104,10 +105,10 @@ public class NetworkDisplay extends JPanel implements ActionListener {
         button3.setMnemonic(KeyEvent.VK_D);
         button4.setMnemonic(KeyEvent.VK_C);
         // Ajout des actions :
-        button.setActionCommand("joindre");
-        button2.setActionCommand("quitter");
-        button3.setActionCommand("deconnecter");
-        button4.setActionCommand("creer");
+        button.setActionCommand("joindre"); //$NON-NLS-1$
+        button2.setActionCommand("quitter"); //$NON-NLS-1$
+        button3.setActionCommand("deconnecter"); //$NON-NLS-1$
+        button4.setActionCommand("creer"); //$NON-NLS-1$
         button.addActionListener(this);
         button2.addActionListener(this);
         button3.addActionListener(this);

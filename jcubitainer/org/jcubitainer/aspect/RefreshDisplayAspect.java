@@ -32,6 +32,7 @@ import org.jcubitainer.meta.*;
 import org.jcubitainer.display.*;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.display.theme.*;
+import org.jcubitainer.tools.Messages;
 
 public aspect RefreshDisplayAspect {
 
@@ -60,12 +61,22 @@ public aspect RefreshDisplayAspect {
 
 	before() : refreshTheme() {
         DisplayBoard.getThis().getMetabox().getTexte().setTexte(
-                "Chargement..");	    
+                Messages.getString("RefreshDisplayAspect.chargement"));	     //$NON-NLS-1$
 	}
 	after() : refreshTheme() {
 		DisplayBoard.getThis().repaint();
         DisplayBoard.getThis().getMetabox().getTexte().setTexte(
                 ThemeManager.getCurrent().getNom());
 	}
+
+	pointcut showPlay() : call(void Messages.switchLangue(..));
+
+	after() : showPlay() {
+        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+                Messages.getString("RefreshDisplayAspect.langue") //$NON-NLS-1$
+                +
+                Configuration.getProperties("langue")); //$NON-NLS-1$
+	}
+	
 
 }

@@ -51,6 +51,7 @@ import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.meta.MetaPiece;
 import org.jcubitainer.move.MovePiece;
 import org.jcubitainer.sound.InterfaceMusique;
+import org.jcubitainer.tools.Messages;
 
 public class MoveBoard extends DisplayBoard implements MouseListener,
         KeyListener, Runnable {
@@ -66,6 +67,14 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
     Thread thread = null;
 
     int keys[] = new int[256];
+
+    private final int TOUCHE_NON_ACTIVE = 0;
+
+    private final int TOUCHE_NON_ACTIVE_ET_NON_HONOREE = 1;
+
+    private final int TOUCHE_ACTIVE_ET_HONOREE = 2;
+
+    private final int TOUCHE_ACTIVE_ET_NON_HONOREE = 3;
 
     /**
      * @param pmetabox
@@ -125,10 +134,6 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
     public void mouseReleased(MouseEvent arg0) {
     }
 
-    public void keyPressed(KeyEvent e) {
-        keys[e.getKeyCode() & 0xff] = 1;
-    }
-
     /*
      * (non-Javadoc)
      *  
@@ -148,6 +153,11 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                 }
             }
 
+            if (isDown(KeyEvent.VK_L)) {
+                up(KeyEvent.VK_L);
+                Messages.switchLangue();
+            }
+
             if (isDown(KeyEvent.VK_P) && !getMetaInfo().isGame_over()) {
                 up(KeyEvent.VK_P);
                 synchronized (getMetabox().getPieces_mouvantes()) {
@@ -156,7 +166,8 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                         gs.start();
                     else {
                         gs.pause();
-                        getMetabox().getTexte().setTexte("Pause");
+                        getMetabox().getTexte().setTexte(
+                                Messages.getString("MoveBoard.pause")); //$NON-NLS-1$
                     }
                 }
             }
@@ -228,7 +239,7 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                 if (isDown(KeyEvent.VK_J)) {
                     up(KeyEvent.VK_J);
                     getMetabox().getTexte().setTexte(
-                            "J3itainer" + Configuration.VERSION);
+                            "J3itainer" + Configuration.VERSION); //$NON-NLS-1$
                 }
 
                 if (isDown(KeyEvent.VK_L)) {
@@ -328,15 +339,20 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
         }
     }
 
+    public void keyPressed(KeyEvent e) {
+        keys[e.getKeyCode() & 0xff] = TOUCHE_ACTIVE_ET_NON_HONOREE;
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
     public void keyReleased(KeyEvent e) {
-
-        keys[e.getKeyCode() & 0xff] = 0;
-
+        if (keys[e.getKeyCode() & 0xff] == TOUCHE_ACTIVE_ET_NON_HONOREE)
+            keys[e.getKeyCode() & 0xff] = TOUCHE_NON_ACTIVE_ET_NON_HONOREE;
+        else if (keys[e.getKeyCode() & 0xff] != TOUCHE_NON_ACTIVE_ET_NON_HONOREE)
+                keys[e.getKeyCode() & 0xff] = TOUCHE_NON_ACTIVE;
     }
 
     /*
@@ -360,20 +376,26 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
      */
     public void setCheckMove(boolean b) {
         checkMove = b;
-        if (true) {
+        if (b) {
             // Pour être sûr :
-            for (int i = 0; i < keys.length; keys[i++] = 0) {
+            for (int i = 0; i < keys.length; keys[i++] = TOUCHE_NON_ACTIVE) {
             }
             this.requestFocus();
         }
     }
 
     protected boolean isDown(int key) {
-        return (keys[key & 0xff] != 0);
+        int valeur = keys[key & 0xff];
+        boolean retour = valeur != TOUCHE_NON_ACTIVE;
+        if (valeur == TOUCHE_ACTIVE_ET_NON_HONOREE)
+                keys[key & 0xff] = TOUCHE_ACTIVE_ET_HONOREE;
+        if (valeur == TOUCHE_NON_ACTIVE_ET_NON_HONOREE)
+                keys[key & 0xff] = TOUCHE_NON_ACTIVE;
+        return retour;
     }
 
     protected void up(int key) {
-        keys[key & 0xff] = 0;
+        keys[key & 0xff] = TOUCHE_NON_ACTIVE;
     }
 
 }

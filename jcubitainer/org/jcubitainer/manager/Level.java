@@ -30,6 +30,7 @@ import org.jcubitainer.manager.process.ChuteProcess;
 import org.jcubitainer.manager.process.PieceProcess;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.meta.MetaTexte;
+import org.jcubitainer.tools.Messages;
 
 public class Level {
 
@@ -55,7 +56,8 @@ public class Level {
             // Pas de changement de niveau la première fois :
             if (mi.getNiveauSuivant() != 0) mi.setNiveau(mi.getNiveau() + 1);
             mi.setNiveauSuivant(mi.getNiveauSuivant() + 2000);
-            mt.setTexte("Niveau " + mi.getNiveau() + " !");
+            mt.setTexte(Messages.getString("Level.niveau") + mi.getNiveau()
+                    + " !"); //$NON-NLS-1$ //$NON-NLS-2$
             setSpeedByLevel(cs);
             return;
         }

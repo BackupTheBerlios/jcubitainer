@@ -63,6 +63,15 @@ public aspect RefreshDisplayInfoAspect {
 		di.setLevelDisplay(mi.getNiveau());
 	}
 
+	pointcut refreshHit() : call(void MetaInfo.setHit(..));
+
+	after() : refreshHit() {
+		DisplayInfo di = DisplayInfo.getThis();
+		MetaInfo mi = di.getMetaInfo();
+		//System.out.println("RefreshDisplayInfoAspect from : " + thisJoinPoint);
+		di.setHitDisplay(mi.getHit());
+	}
+
 	pointcut refreshBonus_des() : call(void MetaInfo.setBonus_des(..));
 
 	after() : refreshBonus_des() {
@@ -126,5 +135,6 @@ public aspect RefreshDisplayInfoAspect {
 		di.refreshTheme();
 		
 	}
+	
 
 }

@@ -26,6 +26,8 @@
 
 package org.jcubitainer.meta;
 
+import org.jcubitainer.manager.Configuration;
+
 public class MetaInfo {
 
     private int score = 0;
@@ -89,10 +91,26 @@ public class MetaInfo {
     }
 
     /**
+     * @param i
+     */
+    public void setHit(int i) {
+        // On stocke directement dans le fichier de configuration :
+        Configuration.setPropertie("hit", String.valueOf(i));
+    }
+
+    /**
      * @return
      */
     public int getBonus_des() {
         return bonus_des;
+    }
+
+    public int getHit() {
+        try {
+            return Integer.parseInt(Configuration.getProperties("hit"));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /**
