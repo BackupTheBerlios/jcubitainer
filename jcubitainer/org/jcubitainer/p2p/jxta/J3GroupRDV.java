@@ -18,18 +18,20 @@
  *                                                                     *
  ***********************************************************************/
 
-/* History & changes **************************************************
- *                                                                     *
- ******** May 5, 2004 **************************************************
- *   - First release                                                   *
- ***********************************************************************/
+/*******************************************************************************
+ * History & changes * ******* May 5, 2004
+ * ************************************************** - First release *
+ ******************************************************************************/
 
 package org.jcubitainer.p2p.jxta;
 
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
 import net.jxta.discovery.DiscoveryService;
+import net.jxta.document.Advertisement;
+import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.StructuredDocument;
+import net.jxta.id.IDFactory;
 import net.jxta.membership.Authenticator;
 import net.jxta.membership.MembershipService;
 import net.jxta.peergroup.PeerGroup;
@@ -38,137 +40,156 @@ import net.jxta.pipe.PipeService;
 import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
+import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3GroupRDV extends Process {
 
-    public static final String NAME = "Partie_";
+	public static final String NAME = "Partie_";
 
-    public static final String DESCRIPTION = "J3xtainer Groupe V0.3";
+	public static final String DESCRIPTION = "J3xtainer Groupe V0.3";
 
-    private PeerGroup peerGroup = null;
+	private PeerGroup peerGroup = null;
 
-    private PeerGroup rootGroup = null;
+	private PeerGroup rootGroup = null;
 
-    private DiscoveryService discoSvc = null;
+	private DiscoveryService discoSvc = null;
 
-    private ProcessMg pipe = null;
+	private ProcessMg pipe = null;
 
-    private PeerGroupAdvertisement adv = null;
-    
-    /**
-     * 
-     */
-    public J3GroupRDV(PeerGroup proot, DiscoveryService pdiscoSvc) {
-        super(60 * 1000);
-        rootGroup = proot;
-        discoSvc = pdiscoSvc;
-        //		PeerGroupID peerGroupID = net.jxta.id.IDFactory.newPeerGroupID();
+	private PeerGroupAdvertisement adv = null;
 
-        try {
-            ModuleImplAdvertisement implAdv = rootGroup
-                    .getAllPurposePeerGroupImplAdvertisement();
-            peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID + NAME,
-                    DESCRIPTION);
+	/**
+	 *  
+	 */
+	public J3GroupRDV(PeerGroup proot, DiscoveryService pdiscoSvc) {
+		super(3 * 60 * 1000);
+		
+		String group_name = J3xta.JXTA_ID + NAME + StartJXTA.name;
+		
+		rootGroup = proot;
+		discoSvc = pdiscoSvc;
+		//		PeerGroupID peerGroupID = net.jxta.id.IDFactory.newPeerGroupID();
 
-            //peerGroup.getRendezVousService().startRendezVous();
+		try {
+			ModuleImplAdvertisement implAdv = rootGroup
+					.getAllPurposePeerGroupImplAdvertisement();
+			//			peerGroup = rootGroup.newGroup(null, implAdv, J3xta.JXTA_ID +
+			// NAME
+			//					+ StartJXTA.name, DESCRIPTION);
 
-            adv = peerGroup.getPeerGroupAdvertisement(); 
-            
-            System.out.println("Groupe créé :" + peerGroup.getPeerGroupName());
-            //System.out.println("Groupe détail :" + peerGroup.toString());
+			PeerGroupAdvertisement newPGAdv = (PeerGroupAdvertisement) AdvertisementFactory
+					.newAdvertisement(PeerGroupAdvertisement
+							.getAdvertisementType());
+			
+			// Nouveau IDFactory :
+			PeerGroupID id = IDFactory.newPeerGroupID();
+			
+			newPGAdv.setPeerGroupID(id);
+			newPGAdv.setModuleSpecID(implAdv.getModuleSpecID());
+			newPGAdv.setName(group_name);
+			newPGAdv.setDescription(DESCRIPTION);
+			peerGroup = rootGroup.newGroup(newPGAdv);
 
-        } catch (Exception e) {
-            System.err.println("Group creation failed");
-            e.printStackTrace();
-        }
+			peerGroup.getRendezVousService().startRendezVous();
 
-    }
+			adv = peerGroup.getPeerGroupAdvertisement();
 
-    public void publishGroup() {
-                System.out.println("Publication du groupe : " + peerGroup.getPeerGroupName());
-        try {
-//            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
-            discoSvc.remotePublish(adv);
-//            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
-        } catch (Exception e) {
-            System.out
-                    .println("Failed to publish peer advertisement in the group ["
-                            + peerGroup.getPeerGroupName() + "]");
-        }
+			System.out.println("Groupe créé :" + peerGroup.getPeerGroupName());
+			//System.out.println("Groupe détail :" + peerGroup.toString());
 
-    }
+		} catch (Exception e) {
+			System.err.println("Group creation failed");
+			e.printStackTrace();
+		}
 
-    public void action() throws InterruptedException {
-        //		System.out.println("Publication");
-        publishGroup();
+	}
 
-    }
+	public void publishGroup() {
+		//System.out.println("Publication du groupe : " +
+		// peerGroup.getPeerGroupName());
+		try {
+			//            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
+			discoSvc.remotePublish(adv);
+			//            discoSvc.remotePublish(peerGroup.getPeerAdvertisement());
+		} catch (Exception e) {
+			System.out
+					.println("Failed to publish peer advertisement in the group ["
+							+ peerGroup.getPeerGroupName() + "]");
+		}
 
-    public void joinThisGroup() {
-        System.out.println("Joining peer group...");
+	}
 
-        StructuredDocument creds = null;
+	public void action() throws InterruptedException {
+		//		System.out.println("Publication");
+		publishGroup();
 
-        try {
-            // Generate the credentials for the Peer Group
-            AuthenticationCredential authCred = new AuthenticationCredential(
-                    peerGroup, null, creds);
+	}
 
-            // Get the MembershipService from the peer group
-            MembershipService membership = peerGroup.getMembershipService();
+	public void joinThisGroup() {
+		System.out.println("Joining peer group...");
 
-            // Get the Authenticator from the Authentication creds
-            Authenticator auth = membership.apply(authCred);
+		StructuredDocument creds = null;
 
-            // Check if everything is okay to join the group
-            if (auth.isReadyForJoin()) {
-                Credential myCred = membership.join(auth);
+		try {
+			// Generate the credentials for the Peer Group
+			AuthenticationCredential authCred = new AuthenticationCredential(
+					peerGroup, null, creds);
 
-                System.out.println("Successfully joined group "
-                        + peerGroup.getPeerGroupName());
+			// Get the MembershipService from the peer group
+			MembershipService membership = peerGroup.getMembershipService();
 
-                // display the credential as a plain text document.
-                //                System.out.println("Credential: ");
-                //                StructuredTextDocument doc = (StructuredTextDocument) myCred
-                //                        .getDocument(new MimeMediaType("text/plain"));
-                //
-                //                StringWriter out = new StringWriter();
-                //                doc.sendToWriter(out);
-                //                System.out.println(out.toString());
-                //                out.close();
-                J3xta.setStatut(J3xta.JXTA_STATUT_ON);
-            } else {
-                System.out.println("Failure: unable to join group");
-            }
-        } catch (Exception e) {
-            System.out.println("Failure in authentication." + e);
-        }
+			// Get the Authenticator from the Authentication creds
+			Authenticator auth = membership.apply(authCred);
 
-    }
+			// Check if everything is okay to join the group
+			if (auth.isReadyForJoin()) {
+				Credential myCred = membership.join(auth);
 
-    public DiscoveryService getDiscoveryService() {
-        return peerGroup.getDiscoveryService();
-    }
+				System.out.println("Successfully joined group "
+						+ peerGroup.getPeerGroupName());
 
-    public PipeService getPipeService() {
-        return peerGroup.getPipeService();
-    }
+				// display the credential as a plain text document.
+				//                System.out.println("Credential: ");
+				//                StructuredTextDocument doc = (StructuredTextDocument) myCred
+				//                        .getDocument(new MimeMediaType("text/plain"));
+				//
+				//                StringWriter out = new StringWriter();
+				//                doc.sendToWriter(out);
+				//                System.out.println(out.toString());
+				//                out.close();
+				J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+			} else {
+				System.out.println("Failure: unable to join group");
+			}
+		} catch (Exception e) {
+			System.out.println("Failure in authentication." + e);
+		}
 
-    public PeerGroupID getPeerGroupID() {
-        return peerGroup.getPeerGroupID();
-    }
+	}
 
-    public void createPipe() {
-        // Création d'un pipe :
-        pipe = new ProcessMg(new J3Pipe(this));
-        pipe.wakeUp();
-    }
+	public DiscoveryService getDiscoveryService() {
+		return peerGroup.getDiscoveryService();
+	}
 
-    public String toString() {
+	public PipeService getPipeService() {
+		return peerGroup.getPipeService();
+	}
 
-        return peerGroup.getPeerGroupName();
+	public PeerGroupID getPeerGroupID() {
+		return peerGroup.getPeerGroupID();
+	}
 
-    }
+	public void createPipe() {
+		// Création d'un pipe :
+		pipe = new ProcessMg(new J3Pipe(this));
+		pipe.wakeUp();
+	}
+
+	public String toString() {
+
+		return peerGroup.getPeerGroupName();
+
+	}
 }

@@ -26,6 +26,7 @@
 package org.jcubitainer.p2p.jxta;
 
 import java.util.Enumeration;
+import java.util.HashSet;
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
@@ -43,13 +44,16 @@ public class J3GroupDiscoveryListener extends Process implements
 
 	private PeerGroup rootGroup = null;
 
+	HashSet knowsPeers = new HashSet();
+
 	/**
 	 *  
 	 */
 	public J3GroupDiscoveryListener(DiscoveryService ds, PeerGroup proot) {
-		super(10000);
+		super(30000);
 		discoveryService = ds;
 		rootGroup = proot;
+		discoveryService.addDiscoveryListener(this);
 	}
 
 	public void discoveryEvent(DiscoveryEvent ev) {
@@ -65,9 +69,12 @@ public class J3GroupDiscoveryListener extends Process implements
 				try {
 					adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
 							.nextElement();
-					                    System.out.println(" Peer Group = " + adv.getName());
+					
+					if (knowsPeers.add(adv.getID()))
+						System.out.println("- Peer Group = " + adv.getName());
+					
 					if (adv.getName().startsWith(J3xta.JXTA_ID)) {
-						System.out.println("Peergroup à nous : "
+						System.out.println("! Peergroup à nous : "
 								+ adv.getName());
 						J3Group J3g = J3Group.getInstance(adv, rootGroup,
 								discoveryService);
@@ -83,11 +90,10 @@ public class J3GroupDiscoveryListener extends Process implements
 
 	public void action() {
 		try {
-			discoveryService.addDiscoveryListener(this);
+			
 			//System.out.println("Sending a Discovery Message");
 			// look for any peer group
-			discoveryService.getRemoteAdvertisements(null,
-					DiscoveryService.GROUP, null, null, 5);
+			discoveryService.getLocalAdvertisements(DiscoveryService.GROUP, null, null);
 
 			//			discoveryService.getLocalAdvertisements(
 			//				DiscoveryService.GROUP,

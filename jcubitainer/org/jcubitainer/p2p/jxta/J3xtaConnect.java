@@ -30,6 +30,7 @@ import net.jxta.exception.PeerGroupException;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
+import net.jxta.rendezvous.RendezvousListener;
 
 import org.jcubitainer.tools.ProcessMg;
 
@@ -48,7 +49,7 @@ public class J3xtaConnect {
 
 	private ProcessMg group = null;
 
-	private RendezVousService rdv;
+	private RendezVousService rdv_root;
 
 	public J3xtaConnect() {
 		try {
@@ -58,11 +59,11 @@ public class J3xtaConnect {
 			rootDiscoveryService = root.getDiscoveryService();
 
 			//          Extract the discovery and rendezvous services from our peer group
-			rdv = root.getRendezVousService();
+			rdv_root = root.getRendezVousService();
 
 			// Wait until we connect to a rendezvous peer
 			System.out.print("On se connecte à un rendezvous...");
-			while (!rdv.isConnectedToRendezVous()) {
+			while (!rdv_root.isConnectedToRendezVous()) {
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException ex) {
@@ -70,10 +71,7 @@ public class J3xtaConnect {
 			}
 
 			System.out.println("Connecté à JXTA !");
-			//			j3root =
-			// J3Group.getInstance(root.getPeerGroupAdvertisement(),root,rootDiscoveryService);
-			//			j3root.joinThisGroup();
-//			J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+
 		} catch (PeerGroupException e) {
 			System.out.println("fatal error : group creation failure");
 			e.printStackTrace();
