@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -24,7 +24,7 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer;
 
 import java.io.IOException;
 
@@ -41,10 +41,9 @@ import net.jxta.pipe.PipeMsgListener;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
 
-import org.jcubitainer.p2p.StartJXTA;
-import org.jcubitainer.p2p.jxta.util.J3Message;
-import org.jcubitainer.p2p.jxta.util.J3MessagePipe;
 import org.jcubitainer.tools.Process;
+import org.jxtainer.util.J3Message;
+import org.jxtainer.util.J3MessagePipe;
 
 public class J3Pipe extends Process implements PipeMsgListener {
 
@@ -172,7 +171,7 @@ public class J3Pipe extends Process implements PipeMsgListener {
         } else {
             // On veut recevoir les messages que des peers connus :
             if (J3PeerManager.existPeer(mes.getPeer_id())) {
-                System.out.println("! Message reçu de " + mes.getWho()
+                System.out.println("! Message reï¿½u de " + mes.getWho()
                         + " de : " + mes.getWhat());
                 J3MessagePipe.put(mes);
             }

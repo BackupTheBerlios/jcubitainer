@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -23,7 +23,7 @@
  * ************************************************** - First release *
  ******************************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -40,7 +40,6 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3Group {
@@ -85,11 +84,11 @@ public class J3Group {
 			pg = new J3Group(peerGroup_temp, proot, pdiscoSvc);
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
-			System.out.println("! Groupe trouvé : " + groupAdv.getName());
+			System.out.println("! Groupe trouvï¿½ : " + groupAdv.getName());
 			StartJXTA.setPeer_ID(pg.getPeerID().toString());
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
-			System.out.println("! Impossible de créé le groupe : "
+			System.out.println("! Impossible de crï¿½ï¿½ le groupe : "
 					+ groupAdv.getName());
 		}
 		return pg;
@@ -180,7 +179,7 @@ public class J3Group {
 	}
 
 	public void createPipeListener() {
-		// On veut écouter l'arrivé des pipes
+		// On veut ï¿½couter l'arrivï¿½ des pipes
 	    
 	    pipe = new J3Pipe(this);	    
 		pipe_listener = new ProcessMg(pipe);
@@ -211,8 +210,8 @@ public class J3Group {
     }
     
     public void quitGroup(){
-        System.out.print("! On quitte le réseau, ");
+        System.out.print("! On quitte le rï¿½seau, ");
         pipe.sendMsg(J3Pipe.MESSAGE_REMOVE,true);
-        System.out.println(" message envoyé.");
+        System.out.println(" message envoyï¿½.");
     }
 }

@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -28,7 +28,7 @@ package org.jcubitainer.tools.network.jxta;
 
 import java.util.Hashtable;
 
-import org.jcubitainer.p2p.jxta.J3Peer;
+import org.jxtainer.J3Peer;
 
 public class PeersManager {
 

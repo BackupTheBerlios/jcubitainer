@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -23,7 +23,7 @@
  * ************************************************** - First release *
  ******************************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer;
 
 import java.io.File;
 
@@ -34,7 +34,6 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupFactory;
 import net.jxta.rendezvous.RendezVousService;
 
-import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.ProcessMg;
 
 public class J3xtaConnect {
@@ -54,7 +53,7 @@ public class J3xtaConnect {
     public J3xtaConnect(File configuration) {
         try {
             J3xta.setStatut(J3xta.JXTA_STATUT_CONNECT);
-            System.out.println("! Connexion à JXTA !");
+            System.out.println("! Connexion ï¿½ JXTA !");
 
             // Configuration automatique :
             if (configuration != null)
@@ -68,14 +67,14 @@ public class J3xtaConnect {
             if (!config_jxta.exists()) {
                 try {
                     System.out
-                            .println("! Création du fichier de configuration JXTA.");
+                            .println("! Crï¿½ation du fichier de configuration JXTA.");
                     String name = StartJXTA.getPeerName();
                     Configurator config = new Configurator(name,
                             "JXTAConfiguration", name, "monmotdepasse2005");
                     config.save();
                 } catch (ConfiguratorException ce) {
                     System.out
-                            .println("! Création du fichier de configuration JXTA impossible.");
+                            .println("! Crï¿½ation du fichier de configuration JXTA impossible.");
                     // Impossible de faire une configuration automatique !
                 }
             }
@@ -99,11 +98,11 @@ public class J3xtaConnect {
             }
 
             if (rdv_root.isConnectedToRendezVous())
-                System.out.println("! Peer Rendez-vous trouvé.");
+                System.out.println("! Peer Rendez-vous trouvï¿½.");
             else
-                System.out.println("! Peer Rendez-vous non trouvé.");
+                System.out.println("! Peer Rendez-vous non trouvï¿½.");
 
-            System.out.println("! Connecté à JXTA.");
+            System.out.println("! Connectï¿½ ï¿½ JXTA.");
 
         } catch (Exception e) {
             System.out.println("! fatal error : group creation failure");
@@ -127,7 +126,7 @@ public class J3xtaConnect {
 
         // On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
-        System.out.print("! On va essayé de trouver une partie.");
+        System.out.print("! On va essayï¿½ de trouver une partie.");
         try {
             int boucle = 60 * 5; // 5 minutes
             while (!J3Group.isConnectToGroup() && --boucle > 0) {
@@ -139,11 +138,11 @@ public class J3xtaConnect {
         }
 
         if (!J3Group.isConnectToGroup()) {
-            System.out.println("! Pas de groupe trouvé :-(");
+            System.out.println("! Pas de groupe trouvï¿½ :-(");
             J3GroupRDV rdv = new J3GroupRDV(root, rootDiscoveryService);
             group = new ProcessMg(rdv);
             group.wakeUp();
         } else
-            System.out.println("! Une partie trouvée sur Internet.");
+            System.out.println("! Une partie trouvï¿½e sur Internet.");
     }
 }

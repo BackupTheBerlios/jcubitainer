@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Enumeration;
 
 import org.jxtainer.*;
 
@@ -76,7 +75,7 @@ public class HelloChatWorld {
 			}
 		} catch (InterruptedException e) {
 			consoleOut("Impossible de se connecter : " + e.toString());
-			exit(0);
+			System.exit(0);
 		}
 
 		// Pipe pour envoyer les messages sur le chat :
@@ -99,4 +98,4 @@ public class HelloChatWorld {
 			return "ERROR";
 		}
 	}
-
+}

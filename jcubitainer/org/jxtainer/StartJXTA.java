@@ -4,12 +4,10 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package org.jcubitainer.p2p;
+package org.jxtainer;
 
 import java.io.File;
 
-import org.jcubitainer.p2p.jxta.J3xta;
-import org.jcubitainer.p2p.jxta.J3xtaConnect;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
 
@@ -37,10 +35,10 @@ public class StartJXTA extends Process {
     }
 
     public void action() throws InterruptedException {
-        //Démarrage de JXTA :
+        //Dï¿½marrage de JXTA :
         if (connect == null) {
             connect = new J3xtaConnect(config_dir);
-            //Pour être à l'écoute des autres :
+            //Pour ï¿½tre ï¿½ l'ï¿½coute des autres :
             connect.addGroupListener();
         }
     }

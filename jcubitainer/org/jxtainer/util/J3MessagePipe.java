@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -20,47 +20,32 @@
 
 /* History & changes **************************************************
  *                                                                     *
- ******** May 5, 2004 **************************************************
+ ******** December 12, 2004 ********************************************
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer.util;
 
-public class J3xta {
+import java.util.ArrayList;
+import java.util.List;
 
-    private static final String JXTA_ID = "J3xtainer";
-    
-    private static String suffix = "";
+public class J3MessagePipe {
 
-    public static final int JXTA_STATUT_OFF = 0;
+    private static List pipe = new ArrayList();
 
-    public static final int JXTA_STATUT_ON = 1;
-
-    public static final int JXTA_STATUT_ERROR = 2;
-
-    public static final int JXTA_STATUT_CONNECT = 3;
-
-    private static int statut = JXTA_STATUT_OFF;
-
-    /**
-     * @return
-     */
-    public static int getStatut() {
-        return statut;
+    public static J3Message drop() {
+        synchronized (pipe) {
+            if (!pipe.isEmpty())
+                return (J3Message) pipe.remove(0);
+            else
+                return null;
+        }
     }
 
-    /**
-     * @param i
-     */
-    public static void setStatut(int i) {
-        statut = i;
+    public static void put(J3Message mes) {
+        synchronized (pipe) {
+            pipe.add(mes);
+        }
     }
 
-    public static void setSuffix(String suffix) {
-        J3xta.suffix = suffix;
-    }
-
-    public static String getJXTA_ID() {
-        return JXTA_ID + suffix;
-    }
 }

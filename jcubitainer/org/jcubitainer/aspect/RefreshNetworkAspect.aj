@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -30,13 +30,12 @@ import java.util.Enumeration;
 
 import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.NetworkManager;
-import org.jcubitainer.p2p.StartJXTA;
-import org.jcubitainer.p2p.jxta.*;
+import org.jxtainer.*;
+import org.jxtainer.util.*;
 import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.infopanel.*;
 import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.manager.*;
-import org.jcubitainer.p2p.jxta.util.*;
 import org.jcubitainer.tools.network.jxta.*;
 import org.jcubitainer.manager.process.*;
 import org.jcubitainer.tools.*;

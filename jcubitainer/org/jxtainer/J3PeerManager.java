@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -24,7 +24,7 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer;
 
 import java.util.Enumeration;
 import java.util.Hashtable;

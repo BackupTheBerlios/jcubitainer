@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -20,33 +20,55 @@
 
 /* History & changes **************************************************
  *                                                                     *
- ******** May 5, 2004 **************************************************
+ ******** December 12, 2004 ********************************************
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer.util;
 
-public class J3Peer {
+import org.jxtainer.J3Pipe;
 
-    private String id = null;
+import net.jxta.endpoint.Message;
+import net.jxta.endpoint.MessageElement;
 
-    private String name = null;
+public class J3Message {
 
-    public J3Peer(String p, String pname) {
-        id = p;
-        name = pname;
+    private String who = null;
+
+    private String what = null;
+
+    private boolean system = false;
+    
+    private String peer_id = null;
+
+    Message message = null;
+
+    public J3Message(Message pmessage) {
+        message = pmessage;
+        who = getValue(J3Pipe.SENDERNAME, "Anonyme");
+        what = getValue(J3Pipe.SENDERMESSAGE, "??");
+        peer_id = getValue(J3Pipe.PEERID, "??");
+        system = "yes".equals(getValue(J3Pipe.SYSTEMMESSAGE, ""));
     }
 
-    public String getPeerID() {
-        return id;
+    public String getWhat() {
+        return what;
     }
 
-    public String toString() {
-        return getPeerID();
+    public boolean isSystem() {
+        return system;
     }
 
-    public String getName() {
-        return name;
+    public String getWho() {
+        return who;
     }
 
+    private String getValue(String tag, String defaut) {
+        MessageElement elem = message.getMessageElement(null, tag);
+        return elem == null ? defaut : new String(elem.getBytes(false));
+    }
+
+    public String getPeer_id() {
+        return peer_id;
+    }
 }

@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -23,7 +23,7 @@
  * ************************************************** - First release *
  ******************************************************************************/
 
-package org.jcubitainer.p2p.jxta;
+package org.jxtainer;
 
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.document.AdvertisementFactory;
@@ -33,7 +33,6 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.protocol.PeerGroupAdvertisement;
 
-import org.jcubitainer.p2p.StartJXTA;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
 
@@ -85,7 +84,7 @@ public class J3GroupRDV extends Process {
 
 			adv = peerGroup.getPeerGroupAdvertisement();
 
-			System.out.println("! Groupe créé :" + peerGroup.getPeerGroupName());
+			System.out.println("! Groupe crï¿½ï¿½ :" + peerGroup.getPeerGroupName());
 
 		} catch (Exception e) {
 			System.err.println("! Group creation failed");

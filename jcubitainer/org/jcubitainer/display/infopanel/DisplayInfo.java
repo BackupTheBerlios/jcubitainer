@@ -1,7 +1,7 @@
 /***********************************************************************
  * JCubitainer                                                         *
  * Version release date : May 5, 2004                                  *
- * Author : Mounès Ronan metalm@users.berlios.de                       *
+ * Author : Mounï¿½s Ronan metalm@users.berlios.de                       *
  *                                                                     *
  *     http://jcubitainer.berlios.de/                                  *
  *                                                                     *
@@ -49,10 +49,10 @@ import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaInfo;
-import org.jcubitainer.p2p.StartJXTA;
-import org.jcubitainer.p2p.jxta.J3xta;
 import org.jcubitainer.tools.Messages;
 import org.jcubitainer.tools.Ressources;
+import org.jxtainer.J3xta;
+import org.jxtainer.StartJXTA;
 
 public class DisplayInfo extends JPanel implements ActionListener {
 
@@ -120,7 +120,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
                 .getImageIcon("/ressources/images/Search16.gif")); //$NON-NLS-1$
         network.addActionListener(this);
 
-        // Bar pour le démarrage :
+        // Bar pour le dï¿½marrage :
         toolbar = new JToolBar();
         toolbar.setBackground(Color.black);
         toolbar.setForeground(Color.black);

@@ -1,7 +1,7 @@
 package org.jcubitainer.tools.network.jxta;
 
 import org.jcubitainer.display.table.DisplayPlayer;
-import org.jcubitainer.p2p.jxta.J3Peer;
+import org.jxtainer.J3Peer;
 
 public class PeerContainer extends DisplayPlayer {
 
