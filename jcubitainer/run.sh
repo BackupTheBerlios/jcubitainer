@@ -1,0 +1,1 @@
+java -DJXTA_HOME=client -classpath lib/jxta.jar:lib/log4j.jar:lib/jxtasecurity.jar:lib/cryptix-asn1.jar:lib/cryptix32.jar:lib/jxtaptls.jar:lib/bcprov-jdk14.jar:lib/aspectjrt.jar:. org.jcubitainer.Start

@@ -1,0 +1,53 @@
+ ________________________________
+/                                \
+| Use Case gestion des groupes : |#
+|      JX3tainer Version 0.2     |#
+\________________________________/#
+ #################################
+
+******************************
+* Présentation du document : *
+******************************
+
+Dés que l'on trouve un groupe, on s'inscrit.
+Ainsi, un Peer est inscrit à tous les groupes au niveau JXTA.
+Pour joindre une partie, il faut ouvrir un Pipe sur tous les joueurs d'une partie.
+
+************
+* Règles : *
+************
+
+Régle 1 : ID du groupe actif.
+Permet de savoir dans quel groupe on se trouve. Cet ID est envoyé lorsque l'on contact un Peer par Pipe.
+Il permet de savoir si le joueur est dans une partie. 
+
+Régle 2 : Si l'ID du Peer qui pose la question est le même que le Peer interrogé, alors, on garde la Pipe ouvert.
+Sinon, on garde le Peer dans un hashtable.
+
+
+*************************
+* Scénarios possibles : *
+*************************
+
+# création d'une partie :
+	* On crée un groupe JXTA.
+	* On devient un peer rendez-vous. ( pourquoi ? )
+	* On se joint au groupe.
+	* On stocke en mémoire l'ID du groupe actif.
+	* On grise les boutons sauf "quitter".
+	* On ne peut plus sélectionner une autre partie.
+
+
+# rejoindre une partie :
+	* On se joint au groupe JXTA. ( déjà fait ? )
+	* On recherche tous peers connecté à ce groupe. ( comment ? )
+	* On ouvre un Pipe sur tous les peers.
+	* On grise les boutons sauf "quitter".
+	* On ne peut plus sélectionner une autre partie.
+
+# quitter une partie :
+	* On envoie un message par Pipe pour notifier la suppresion.
+	* On ferme tous les Pipes.
+	* On ne stocke plus l'ID du groupe
+	* On grise le bouton "quitter".
+	* On peut sélectionner une autre partie.
