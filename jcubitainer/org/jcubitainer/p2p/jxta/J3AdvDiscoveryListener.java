@@ -51,9 +51,8 @@ public class J3AdvDiscoveryListener extends Process implements
     }
 
     public void discoveryEvent(DiscoveryEvent ev) {
-        //        System.out.println("discoveryEvent ! J3AdvDiscoveryListener");
-        DiscoveryResponseMsg res = ev.getResponse();
-        String aRes = res.getPeerAdv();
+
+    	//        System.out.println("discoveryEvent ! J3AdvDiscoveryListener");
         DiscoveryResponseMsg theDiscoveryResponseMsg = ev.getResponse();
 
         PeerGroupAdvertisement adv = null;
