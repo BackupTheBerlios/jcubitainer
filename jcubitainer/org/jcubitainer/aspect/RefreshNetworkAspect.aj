@@ -37,7 +37,7 @@ import org.jcubitainer.display.infopanel.*;
 import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.p2p.jxta.util.*;
-import org.jcubitainer.tools.PeerContainer;
+import org.jcubitainer.tools.network.jxta.*;
 import org.jcubitainer.manager.process.*;
 import java.util.*;
 import org.jcubitainer.tools.*;

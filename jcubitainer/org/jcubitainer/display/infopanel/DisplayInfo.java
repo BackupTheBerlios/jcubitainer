@@ -41,9 +41,11 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.jcubitainer.display.JCubitainerFrame;
+import org.jcubitainer.display.dialog.DisplayLogin;
 import org.jcubitainer.display.table.NetworkDisplay;
 import org.jcubitainer.display.table.StickyFrame;
 import org.jcubitainer.display.theme.ThemeManager;
+import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.p2p.StartJXTA;
@@ -85,6 +87,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
 
     private static DisplayInfo this_ = null;
 
+    private static final String NL = "\n";
+
     /**
      *  
      */
@@ -109,7 +113,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
         network.setAlignmentX(Component.CENTER_ALIGNMENT);
         network.setBackground(Color.black);
         network.setForeground(Color.white);
-        network.setIcon(Ressources.getImageIcon("/ressources/images/Search16.gif"));
+        network.setIcon(Ressources
+                .getImageIcon("/ressources/images/Search16.gif"));
         network.addActionListener(this);
 
         // Bar pour le démarrage :
@@ -216,7 +221,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
         if (arg0.getSource() == start) {
 
             String[] levels = { "1", "2", "3", "4", "5", "6", "7", "8", "9", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-                    "10"}; //$NON-NLS-1$
+                    "10" }; //$NON-NLS-1$
             String s = (String) JOptionPane.showInputDialog(this.getParent(),
                     Messages.getString("DisplayInfo.quel_niveau")
                             + Messages.getString("DisplayInfo.debutant") //$NON-NLS-1$ //$NON-NLS-2$
@@ -224,7 +229,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
                             .getString("DisplayInfo.choixniveau"), //$NON-NLS-1$ //$NON-NLS-2$
                     JOptionPane.PLAIN_MESSAGE, null, levels, "level"); //$NON-NLS-1$
 
-            if (s == null) return;
+            if (s == null)
+                return;
 
             mi.setNiveau(s == null ? 1 : Integer.parseInt(s));
 
@@ -245,21 +251,42 @@ public class DisplayInfo extends JPanel implements ActionListener {
         }
 
         if (arg0.getSource() == network) {
-            String s = (String) JOptionPane.showInputDialog(this.getParent(),
-                    "Votre nom", "...", JOptionPane.PLAIN_MESSAGE, null, null,
-                    "Player");
+            DisplayLogin customDialog = new DisplayLogin(JCubitainerFrame
+                    .getFrame(), Configuration.getProperties("login"));
+            customDialog.pack();
+            customDialog.setLocationRelativeTo(this);
+            customDialog.setVisible(true);
+            String s = customDialog.getLogin();
+            Configuration.setPropertie("login", s);
 
-            if ((s != null) && (s.length() > 0)) {
-                StartJXTA.wakeUp(s);
-                clearHit();
-        		StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame(),s);
-        		frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        		NetworkDisplay nd = new NetworkDisplay();
-        		frame2.getContentPane().add(nd);
-        		frame2.setResizable(false);
-        		frame2.pack();
-        		frame2.setVisible(true);
-        		}
+            JOptionPane
+                    .showMessageDialog(
+                            this.getParent(),
+                            "Attention ! La connexion sur le réseau 'peer to peer'"
+                                    + NL
+                                    + " JXTA peut prendre 5 à 10 minutes environ.",
+                            "Information JXTA", JOptionPane.WARNING_MESSAGE);
+
+            JOptionPane
+                    .showMessageDialog(
+                            this.getParent(),
+                            "L'utilisation d'un Bonus se transforme en Malus "
+                                    + NL
+                                    + "sur les autres joueurs de la partie. Par exemple,"
+                                    + NL
+                                    + " le Bonus 'Une pièce supprimée' va devenir"
+                                    + NL + " le Malus 'Une pièce ajoutée'.",
+                            "Règle du jeu", JOptionPane.INFORMATION_MESSAGE);
+
+            StartJXTA.wakeUp(s);
+            clearHit();
+            StickyFrame frame2 = new StickyFrame(JCubitainerFrame.getFrame(), s);
+            frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            NetworkDisplay nd = new NetworkDisplay();
+            frame2.getContentPane().add(nd);
+            frame2.setResizable(false);
+            frame2.pack();
+            frame2.setVisible(true);
 
         }
     }
@@ -285,8 +312,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
         switch (i) {
         case J3xta.JXTA_STATUT_ON:
             connexion.setText("Connecté");
-            connexion
-                    .setIcon(Ressources.getImageIcon("/ressources/images/online.png"));
+            connexion.setIcon(Ressources
+                    .getImageIcon("/ressources/images/online.png"));
             setRechercheVisible(true);
             break;
         case J3xta.JXTA_STATUT_OFF:
@@ -301,8 +328,8 @@ public class DisplayInfo extends JPanel implements ActionListener {
             break;
         case J3xta.JXTA_STATUT_ERROR:
             connexion.setText("Erreur...");
-            connexion
-                    .setIcon(Ressources.getImageIcon("/ressources/images/Stop16.gif"));
+            connexion.setIcon(Ressources
+                    .getImageIcon("/ressources/images/Stop16.gif"));
             break;
         }
     }

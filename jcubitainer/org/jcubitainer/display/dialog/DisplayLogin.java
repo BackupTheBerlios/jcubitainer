@@ -40,124 +40,124 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class DisplayLogin extends JDialog implements ActionListener, PropertyChangeListener {
+public class DisplayLogin extends JDialog implements ActionListener,
+        PropertyChangeListener {
 
-	public static final int MAX = 10;
+    public static final int MAX = 10;
 
-	private String login = null;
-	private JTextField champ;
+    private String login = null;
 
-	private JOptionPane fenetre;
+    private JTextField champ;
 
-	Object[] options_on = { "Go !" };
-	Object[] options_off = { "X" };
+    private JOptionPane fenetre;
 
-	public DisplayLogin(JFrame frame, String old) {
+    Object[] options_on = { "Go !" };
 
-		super(frame, true);
+    Object[] options_off = { "X" };
 
-		champ = new JTextField(old, MAX);
+    public DisplayLogin(JFrame frame, String old) {
 
-		Object[] tableau = { "Entrez votre nom ( moins de 10 caractères )", champ };
+        super(frame, true);
 
-		fenetre =
-			new JOptionPane(
-				tableau,
-				JOptionPane.QUESTION_MESSAGE,
-				JOptionPane.YES_NO_OPTION,
-				null,
-				options_off,
-				options_off[0]);
+        champ = new JTextField(old, MAX);
 
-		setContentPane(fenetre);
+        Object[] tableau = { "Entrez votre nom ( moins de 10 caractères )",
+                champ };
 
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        fenetre = new JOptionPane(tableau, JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.YES_NO_OPTION, null, options_off, options_off[0]);
 
-		addComponentListener(new ComponentAdapter() {
-			public void componentShown(ComponentEvent ce) {
-				champ.requestFocusInWindow();
-			}
-		});
+        setContentPane(fenetre);
 
-		champ.addKeyListener(new KeyListener() {
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-			public void keyTyped(KeyEvent e) {
-				check();
-			}
+        addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent ce) {
+                champ.requestFocusInWindow();
+            }
+        });
 
-			public void keyPressed(KeyEvent e) {
-			}
+        champ.addKeyListener(new KeyListener() {
 
-			public void keyReleased(KeyEvent e) {
-				check();
-			}
+            public void keyTyped(KeyEvent e) {
+                check();
+            }
 
-		});
+            public void keyPressed(KeyEvent e) {
+            }
 
-		champ.addActionListener(this);
-		fenetre.addPropertyChangeListener(this);
+            public void keyReleased(KeyEvent e) {
+                check();
+            }
 
-	}
+        });
 
-	public void actionPerformed(ActionEvent e) {
-		// Pour forcer le bouton "GO !"
-		fenetre.setValue(options_on[0]);
-	}
+        champ.addActionListener(this);
+        fenetre.addPropertyChangeListener(this);
 
-	private boolean check() {
-		String s = champ.getText();
-		boolean retour = false;
-		if (s == null || s.length() < 1 || s.length() > MAX) {
-			fenetre.setOptions(options_off);
-		} else {
-			fenetre.setOptions(options_on);
-			retour = true;
-		}
+    }
 
-		champ.requestFocusInWindow();
-		return retour;
-	}
+    public void actionPerformed(ActionEvent e) {
+        // Pour forcer le bouton "GO !"
+        fenetre.setValue(options_on[0]);
+    }
 
-	public void propertyChange(PropertyChangeEvent e) {
-		String prop = e.getPropertyName();
+    private boolean check() {
+        String s = champ.getText();
+        boolean retour = false;
+        if (s == null || s.length() < 1 || s.length() > MAX) {
+            fenetre.setOptions(options_off);
+        } else {
+            fenetre.setOptions(options_on);
+            retour = true;
+        }
 
-		if (isVisible()
-			&& (e.getSource() == fenetre)
-			&& (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
-			Object value = fenetre.getValue();
+        champ.requestFocusInWindow();
+        return retour;
+    }
 
-			if (value == JOptionPane.UNINITIALIZED_VALUE) {
-				return;
-			}
+    public void propertyChange(PropertyChangeEvent e) {
+        String prop = e.getPropertyName();
 
-			fenetre.setValue(JOptionPane.UNINITIALIZED_VALUE);
+        if (isVisible()
+                && (e.getSource() == fenetre)
+                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY
+                        .equals(prop))) {
+            Object value = fenetre.getValue();
 
-			if (options_on[0].equals(value)) {
-				login = champ.getText();
-				if (check())
-					quit();
-			} else
-				champ.requestFocusInWindow();
-		}
-	}
-	private void quit() {
-		setVisible(false);
-	}
+            if (value == JOptionPane.UNINITIALIZED_VALUE) {
+                return;
+            }
 
-	public String getLogin() {
-		return login;
-	}
+            fenetre.setValue(JOptionPane.UNINITIALIZED_VALUE);
 
-	public void setVisible(boolean visible) {
-		if (visible) {
-			check();
-			String s = champ.getText();
-			if (s != null) {
-				champ.setSelectionStart(0);
-				champ.setSelectionEnd(s.length());
-			}
-		}
-		super.setVisible(visible);
-	}
+            if (options_on[0].equals(value)) {
+                login = champ.getText();
+                if (check())
+                    quit();
+            } else
+                champ.requestFocusInWindow();
+        }
+    }
+
+    private void quit() {
+        setVisible(false);
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setVisible(boolean visible) {
+        if (visible) {
+            check();
+            String s = champ.getText();
+            if (s != null) {
+                champ.setSelectionStart(0);
+                champ.setSelectionEnd(s.length());
+            }
+        }
+        super.setVisible(visible);
+    }
 
 }
