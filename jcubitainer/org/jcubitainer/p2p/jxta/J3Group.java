@@ -57,7 +57,7 @@ public class J3Group {
 
     private static Hashtable joinPeerGroups = new Hashtable();
 
-    private Hashtable knowPeers = new Hashtable();
+    private static Hashtable knowPeers = new Hashtable();
 
     //    private GroupTable gt = null;
 
