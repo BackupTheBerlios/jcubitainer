@@ -40,7 +40,7 @@ public class NetworkManager {
             network = true;
             DisplayInfo di = DisplayInfo.getThis();
             MetaInfo mi = di.getMetaInfo();
-            mi.setNiveau(2);
+            mi.setNiveau(4);
             Game.getGameService().start();
             DisplayBoard.getThis().getMetabox().getTexte().setTexte(
                     Messages.getString("NetworkManager.go")); //$NON-NLS-1$
