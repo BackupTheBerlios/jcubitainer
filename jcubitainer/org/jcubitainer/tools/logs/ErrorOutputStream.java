@@ -24,72 +24,65 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.manager;
+package org.jcubitainer.tools.logs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
-import java.util.Properties;
 
-public class Configuration extends Properties {
+import org.jcubitainer.manager.Configuration;
 
-    static File conf = null;
+public class ErrorOutputStream extends OutputStream {
 
-    static Configuration c = null;
+    FileOutputStream file = null;
 
-    public static final String DIR = ".jcubitainer";
-
-    public static final String VERSION = "0.2.1";
+    boolean first = true;
 
     /**
      *  
      */
-    public Configuration() {
+    public ErrorOutputStream() {
         super();
-        conf = new File(System.getProperty("user.home") + File.separator + DIR
-                + File.separator + "conf.txt");
-        loadConf();
-        c = this;
     }
 
-    private void loadConf() {
-        if (conf.canRead()) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.io.OutputStream#write(int)
+     */
+    public void write(int b) throws IOException {
+        if (first) {
+            first = false;
+            System.out.println("!! Création du fichier de logs !!");
             try {
+                file = new FileOutputStream(new File(System
+                        .getProperty("user.home")
+                        + File.separator
+                        + Configuration.DIR
+                        + File.separator
+                        + "erreurs.log"));
 
-                FileInputStream fileinputstream = new FileInputStream(conf);
-                load(fileinputstream);
-                fileinputstream.close();
-                System.out.println(this);
-
+                // Ajout d'info en plus :
+                String info = new Date().toString();
+                // Version JDK :
+                info += "\n" + "java.version: "
+                        + System.getProperty("java.version");
+                info += "\n" + "java.vm.version: "
+                        + System.getProperty("java.vm.version");
+                info += "\n" + "java.vm.vendor: "
+                        + System.getProperty("java.vm.vendor");
+                info += "\n" + "java.vm.name: "
+                        + System.getProperty("java.vm.name") + "\n";
+                write(info.getBytes());
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out
+                        .println("!! Impossible de créer le fichier de logs !!"
+                                + e.getMessage());
             }
-        } else {
-            System.out.println("Le fichier de configuration n'existe pas !");
         }
+
+        if (file != null) file.write(b);
     }
-
-    public static void setPropertie(String key, String value) {
-        c.setProperty(key, value);
-    }
-
-    public static String getProperties(String key) {
-        return c.getProperty(key);
-    }
-
-    public static void save() {
-        try {
-            new File(System.getProperty("user.home") + File.separator + DIR)
-                    .mkdirs();
-
-            System.out.println("Sauvegarde du fichier de configuration !");
-            FileOutputStream out = new FileOutputStream(conf);
-            c.store(out, new Date().toString());
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

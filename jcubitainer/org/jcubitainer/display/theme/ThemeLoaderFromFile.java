@@ -24,72 +24,49 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.manager;
+package org.jcubitainer.display.theme;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.Properties;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
-public class Configuration extends Properties {
+public class ThemeLoaderFromFile implements ThemeLoader {
 
-    static File conf = null;
+    InputStream is = null;
 
-    static Configuration c = null;
-
-    public static final String DIR = ".jcubitainer";
-
-    public static final String VERSION = "0.2.1";
+    String id = null;
 
     /**
      *  
      */
-    public Configuration() {
+    public ThemeLoaderFromFile(File fichier) {
         super();
-        conf = new File(System.getProperty("user.home") + File.separator + DIR
-                + File.separator + "conf.txt");
-        loadConf();
-        c = this;
-    }
-
-    private void loadConf() {
-        if (conf.canRead()) {
-            try {
-
-                FileInputStream fileinputstream = new FileInputStream(conf);
-                load(fileinputstream);
-                fileinputstream.close();
-                System.out.println(this);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Le fichier de configuration n'existe pas !");
-        }
-    }
-
-    public static void setPropertie(String key, String value) {
-        c.setProperty(key, value);
-    }
-
-    public static String getProperties(String key) {
-        return c.getProperty(key);
-    }
-
-    public static void save() {
+        id = fichier.getName();
         try {
-            new File(System.getProperty("user.home") + File.separator + DIR)
-                    .mkdirs();
-
-            System.out.println("Sauvegarde du fichier de configuration !");
-            FileOutputStream out = new FileOutputStream(conf);
-            c.store(out, new Date().toString());
-            out.close();
-        } catch (Exception e) {
+            is = new FileInputStream(fichier);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jcubitainer.display.theme.ThemeLoader#getInputStream()
+     */
+    public InputStream getInputStream() {
+        return is;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jcubitainer.display.theme.ThemeLoader#getID()
+     */
+    public String getID() {
+        // TODO Auto-generated method stub
+        return id;
     }
 
 }

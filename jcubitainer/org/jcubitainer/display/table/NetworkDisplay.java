@@ -1,7 +1,29 @@
-/*
- * Created on 11 mars 04
- *
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.display.table;
 
 import java.awt.BorderLayout;
@@ -15,103 +37,100 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-/**
- * @author mounes
- *
- */
 public class NetworkDisplay extends JPanel implements ActionListener {
 
-	String lastAction = null;
+    String lastAction = null;
 
-	/**
-	 * 
-	 */
-	public NetworkDisplay() {
-		super();
+    /**
+     * 
+     */
+    public NetworkDisplay() {
+        super();
 
-		JPanel panel = new JPanel(new GridLayout(1, 0));
-		JPanel panel2 = new JPanel(new GridLayout(1, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 0));
+        JPanel panel2 = new JPanel(new GridLayout(1, 0));
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		NetworkDisplayTable parties =
-			NetworkDisplayTable.getNetworkDisplayForParties();
+        NetworkDisplayTable parties = NetworkDisplayTable
+                .getNetworkDisplayForParties();
 
-		panel.add(parties, BorderLayout.WEST);
+        panel.add(parties, BorderLayout.WEST);
 
-		NetworkDisplayTable joueurs =
-			NetworkDisplayTable.getNetworkDisplayForJoueurs();
+        NetworkDisplayTable joueurs = NetworkDisplayTable
+                .getNetworkDisplayForJoueurs();
 
-		panel.add(joueurs, BorderLayout.EAST);
+        panel.add(joueurs, BorderLayout.EAST);
 
-		panel.setBackground(Color.black);
-		panel.setForeground(Color.black);
+        panel.setBackground(Color.black);
+        panel.setForeground(Color.black);
 
-		setBackground(Color.black);
-		setForeground(Color.black);
+        setBackground(Color.black);
+        setForeground(Color.black);
 
-		// Ajout des boutons :
-		JButton button = new JButton();
-		button.setBackground(Color.black);
-		button.setForeground(Color.white);
-		button.setBorderPainted(false);
+        // Ajout des boutons :
+        JButton button = new JButton();
+        button.setBackground(Color.black);
+        button.setForeground(Color.white);
+        button.setBorderPainted(false);
 
-		JButton button2 = new JButton();
-		button2.setBackground(Color.black);
-		button2.setForeground(Color.white);
-		button2.setBorderPainted(false);
+        JButton button2 = new JButton();
+        button2.setBackground(Color.black);
+        button2.setForeground(Color.white);
+        button2.setBorderPainted(false);
 
-		JButton button3 = new JButton();
-		button3.setBackground(Color.black);
-		button3.setForeground(Color.white);
-		button3.setBorderPainted(false);
+        JButton button3 = new JButton();
+        button3.setBackground(Color.black);
+        button3.setForeground(Color.white);
+        button3.setBorderPainted(false);
 
-		JButton button4 = new JButton();
-		button4.setBackground(Color.black);
-		button4.setForeground(Color.white);
-		button4.setBorderPainted(false);
+        JButton button4 = new JButton();
+        button4.setBackground(Color.black);
+        button4.setForeground(Color.white);
+        button4.setBorderPainted(false);
 
-		button.setText("Joindre la partie");
-		button2.setText("Quitter la partie");
-		button3.setText("Se déconnecter de JX3tainer");
-		button4.setText("Créer une partie");
-		parties.setEnabled(false);
-		panel2.add(button);
-		panel2.add(button2);
-		panel2.add(button4);
-		panel2.add(button3);
-		// Ajout des raccourcis :
-		button.setMnemonic(KeyEvent.VK_J); 
-		button2.setMnemonic(KeyEvent.VK_Q); 
-		button3.setMnemonic(KeyEvent.VK_D); 
-		button4.setMnemonic(KeyEvent.VK_C);
-		// Ajout des actions :
-		button.setActionCommand("joindre");
-		button2.setActionCommand("quitter");
-		button3.setActionCommand("deconnecter");
-		button4.setActionCommand("creer");
-		button.addActionListener(this);
-		button2.addActionListener(this);
-		button3.addActionListener(this);
-		button4.addActionListener(this);
+        button.setText("Joindre la partie");
+        button2.setText("Quitter la partie");
+        button3.setText("Se déconnecter de JX3tainer");
+        button4.setText("Créer une partie");
+        parties.setEnabled(false);
+        panel2.add(button);
+        panel2.add(button2);
+        panel2.add(button4);
+        panel2.add(button3);
+        // Ajout des raccourcis :
+        button.setMnemonic(KeyEvent.VK_J);
+        button2.setMnemonic(KeyEvent.VK_Q);
+        button3.setMnemonic(KeyEvent.VK_D);
+        button4.setMnemonic(KeyEvent.VK_C);
+        // Ajout des actions :
+        button.setActionCommand("joindre");
+        button2.setActionCommand("quitter");
+        button3.setActionCommand("deconnecter");
+        button4.setActionCommand("creer");
+        button.addActionListener(this);
+        button2.addActionListener(this);
+        button3.addActionListener(this);
+        button4.addActionListener(this);
 
-		add(panel, BorderLayout.NORTH);
-		add(panel2);
-	}
+        add(panel, BorderLayout.NORTH);
+        add(panel2);
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		// Actions, voir les aspects !
-		action(e);
-	} 
-	
-	public void action(ActionEvent e ) {
-		lastAction = e.getActionCommand();
-	}
-	/**
-	 * @return
-	 */
-	public String getLastAction() {
-		return lastAction;
-	}
+    public void actionPerformed(ActionEvent e) {
+        // Actions, voir les aspects !
+        action(e);
+    }
+
+    public void action(ActionEvent e) {
+        lastAction = e.getActionCommand();
+    }
+
+    /**
+     * @return
+     */
+    public String getLastAction() {
+        return lastAction;
+    }
 
 }

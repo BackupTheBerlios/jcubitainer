@@ -1,33 +1,51 @@
-/*
- * Created on 10 mars 2004
- *
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.p2p.jxta;
 
 import net.jxta.peer.PeerID;
 import net.jxta.protocol.PeerAdvertisement;
 
-/**
- * @author metalm
- *
- */
 public class J3Peer {
 
-	PeerAdvertisement adv = null;
+    PeerAdvertisement adv = null;
 
-	/**
-	 * @param adv
-	 */
-	public J3Peer(PeerAdvertisement padv) {
-		adv = padv;
-	}
+    /**
+     * @param adv
+     */
+    public J3Peer(PeerAdvertisement padv) {
+        adv = padv;
+    }
 
-	public PeerID getPeerID() {
-		return adv.getPeerID();
-	}
+    public PeerID getPeerID() {
+        return adv.getPeerID();
+    }
 
-	public String toString() {
-		return adv.getName();
-	}
+    public String toString() {
+        return adv.getName();
+    }
 
 }

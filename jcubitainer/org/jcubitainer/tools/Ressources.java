@@ -1,29 +1,39 @@
-/*
- * Created on 21 févr. 2004
- * 
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.tools;
 
 import java.awt.Image;
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import org.jcubitainer.display.JCubitainerFrame;
 
-/**
- * @author MetalM
- * 
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class Ressources {
 
     public static Image getImage(String nom_image) {
@@ -39,27 +49,6 @@ public class Ressources {
             return null;
         }
     }
-
-    /**
-     * @param nom
-     * @return null
-     * @deprecated Ne marche pas dans un fichier JAR !
-     */
-//    public static List getFiles(String nom) {
-//        java.net.URL url = JCubitainerFrame.class.getResource(nom);
-//        if (url == null) return new ArrayList();
-//        try {
-//            File f = new File(url.toURI());
-//            if (f.isDirectory()) {
-//                List l = new ArrayList();
-//                Collections.addAll(l, f.listFiles());
-//                return l;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
     public static InputStream getConfigInputStream(String fichier) {
         return JCubitainerFrame.class.getResourceAsStream("/config/" + fichier);

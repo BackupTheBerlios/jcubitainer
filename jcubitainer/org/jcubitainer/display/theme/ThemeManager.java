@@ -1,31 +1,47 @@
-/*
- * Created on 28 avr. 2004
- * 
- * TODO To change the template for this generated file go to Window -
- * Preferences - Java - Code Generation - Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.display.theme;
 
-import java.io.InputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jcubitainer.manager.Configuration;
-import org.jcubitainer.tools.Ressources;
 
-/**
- * @author mounes
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Generation - Code and Comments
- */
 public class ThemeManager {
+
+    public static final String DIR2 = "themes";
 
     private static List theme = new ArrayList();
 
-    private static String current = null;
+    private static ThemeLoader current = null;
 
     private static Theme currentTheme = null;
 
@@ -36,10 +52,11 @@ public class ThemeManager {
      */
     public ThemeManager() throws ThemeError {
         super();
-        theme.add("/ressources/themes/theme_basic.zip");
-        theme.add("/ressources/themes/theme_gnome.zip");
-        theme.add("/ressources/themes/theme_xp.zip");
-        //        theme.addAll(Ressources.getFiles("/ressources/themes/"));
+        theme.add(new ThemeLoaderFromJar("/ressources/themes/theme_basic.zip"));
+        theme.add(new ThemeLoaderFromJar("/ressources/themes/theme_gnome.zip"));
+        theme.add(new ThemeLoaderFromJar("/ressources/themes/theme_xp.zip"));
+        theme.add(new ThemeLoaderFromJar("/ressources/themes/mandrake.zip"));
+        theme.addAll(getFilesFromDir());
         reload();
     }
 
@@ -48,34 +65,32 @@ public class ThemeManager {
     }
 
     public static void reload() throws ThemeError {
-        InputStream is = null;
-        String f = null;
+        ThemeLoader tl = null;
         if (current == null) {
             // Recherche du thème dans le fichier de configuration :
             String key = Configuration.getProperties("theme");
             // Si on ne trouve pas le thème :
-            f = (String) theme.get(0);
+            tl = (ThemeLoader) theme.get(0);
             Iterator i = theme.iterator();
             while (i.hasNext()) {
-                String temp = (String) i.next();
-                if (temp.equals(key)) f = temp;
+                ThemeLoader temp = (ThemeLoader) i.next();
+                if (temp.getID().equals(key)) tl = temp;
             }
         } else {
             int pos = theme.indexOf(current) + 1;
             if (pos >= theme.size()) pos = 0;
-            f = (String) theme.get(pos);
+            tl = (ThemeLoader) theme.get(pos);
         }
-        if (f != null) {
-            is = Ressources.getInputStream(f);
+        if (tl != null) {
             // Chargement :
-            Theme temp = (Theme) cache.get(f);
+            Theme temp = (Theme) cache.get(tl);
             if (temp == null) {
-                temp = new Theme(is);
-                cache.put(f, temp);
+                temp = new Theme(tl.getInputStream());
+                cache.put(tl, temp);
             }
-            current = f;
+            current = tl;
             currentTheme = temp;
-            Configuration.setPropertie("theme", current);
+            Configuration.setPropertie("theme", current.getID());
         }
     }
 
@@ -86,4 +101,20 @@ public class ThemeManager {
         return currentTheme;
     }
 
+    public static List getFilesFromDir() {
+        new File(System.getProperty("user.home") + File.separator
+                + Configuration.DIR).mkdirs();
+        File dir = new File(System.getProperty("user.home") + File.separator
+                + Configuration.DIR + File.separator + DIR2);
+        dir.mkdirs();
+        Iterator temp = Arrays.asList(dir.listFiles()).iterator();
+        List retour = new ArrayList();
+
+        while (temp.hasNext()) {
+            File f = (File) temp.next();
+            if (f.isFile()) retour.add(new ThemeLoaderFromFile(f));
+        }
+
+        return retour;
+    }
 }

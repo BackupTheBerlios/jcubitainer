@@ -26,9 +26,12 @@
 
 package org.jcubitainer.display.theme;
 
-public class ThemeError extends Exception {
+import java.io.InputStream;
 
-    public ThemeError(String message) {
-        super(message);
-    }
+public interface ThemeLoader {
+
+    public InputStream getInputStream();
+
+    public String getID();
+
 }

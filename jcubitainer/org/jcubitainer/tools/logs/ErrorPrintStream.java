@@ -24,71 +24,46 @@
  *   - First release                                                   *
  ***********************************************************************/
 
-package org.jcubitainer.manager;
+package org.jcubitainer.tools.logs;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.Properties;
+import java.io.PrintStream;
 
-public class Configuration extends Properties {
+import javax.swing.JOptionPane;
 
-    static File conf = null;
+public class ErrorPrintStream extends PrintStream {
 
-    static Configuration c = null;
-
-    public static final String DIR = ".jcubitainer";
-
-    public static final String VERSION = "0.2.1";
+    // Pour avoir une seule fenêtre ouverte :
+    boolean open = false;
 
     /**
-     *  
+     * @param out
      */
-    public Configuration() {
-        super();
-        conf = new File(System.getProperty("user.home") + File.separator + DIR
-                + File.separator + "conf.txt");
-        loadConf();
-        c = this;
+    public ErrorPrintStream() {
+        super(new ErrorOutputStream());
     }
 
-    private void loadConf() {
-        if (conf.canRead()) {
-            try {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.io.PrintStream#print(java.lang.Object)
+     */
+    public void print(Object obj) {
+        super.print(obj);
 
-                FileInputStream fileinputstream = new FileInputStream(conf);
-                load(fileinputstream);
-                fileinputstream.close();
-                System.out.println(this);
+        if (!open) {
+            open = true;
+            String message = obj.toString();
+            Object[] options = { "Continuer", "Ne plus prévenir", "Quitter"};
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Le fichier de configuration n'existe pas !");
-        }
-    }
+            int n = JOptionPane.showOptionDialog(null,
+                    "Une erreur est survenue :\n" + message, "Erreur !",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.ERROR_MESSAGE, null, options, options[0]);
 
-    public static void setPropertie(String key, String value) {
-        c.setProperty(key, value);
-    }
+            open = false;
+            if (n == 1) open = true;
+            if (n == 2) System.exit(1);
 
-    public static String getProperties(String key) {
-        return c.getProperty(key);
-    }
-
-    public static void save() {
-        try {
-            new File(System.getProperty("user.home") + File.separator + DIR)
-                    .mkdirs();
-
-            System.out.println("Sauvegarde du fichier de configuration !");
-            FileOutputStream out = new FileOutputStream(conf);
-            c.store(out, new Date().toString());
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

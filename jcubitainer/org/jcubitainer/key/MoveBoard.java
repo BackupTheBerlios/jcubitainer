@@ -1,9 +1,29 @@
-/*
- * Created on 15 janv. 2004
- * 
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.key;
 
 import java.awt.event.KeyEvent;
@@ -17,6 +37,7 @@ import org.jcubitainer.display.DisplayBoard;
 import org.jcubitainer.display.theme.ThemeError;
 import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Bonus;
+import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.manager.process.ChuteProcess;
@@ -26,12 +47,6 @@ import org.jcubitainer.meta.MetaPiece;
 import org.jcubitainer.move.MovePiece;
 import org.jcubitainer.sound.InterfaceMusique;
 
-/**
- * @author rom
- * 
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class MoveBoard extends DisplayBoard implements MouseListener,
         KeyListener {
 
@@ -116,8 +131,10 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                 Game gs = Game.getGameService();
                 if (gs.isPause())
                     gs.start();
-                else
+                else {
                     gs.pause();
+                    getMetabox().getTexte().setTexte("Pause");
+                }
             }
         }
 
@@ -175,7 +192,8 @@ public class MoveBoard extends DisplayBoard implements MouseListener,
                 }
             }
         } else if (keyCode == KeyEvent.VK_J) {
-            getMetabox().getTexte().setTexte("J3itainer02");
+            getMetabox().getTexte().setTexte(
+                    "J3itainer" + Configuration.VERSION);
         } else if (keyCode == KeyEvent.VK_L) {
             synchronized (getMetabox().getPieces_mouvantes()) {
                 // On mettre 1 car on ne veut pas que les pièces descendent.

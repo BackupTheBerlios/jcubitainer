@@ -1,9 +1,30 @@
-/*
- * Créé le 11 févr. 04
- *
- * Pour changer le modèle de ce fichier généré, allez à :
- * Fenêtre&gt;Préférences&gt;Java&gt;Génération de code&gt;Code et commentaires
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
+
 package org.jcubitainer.aspect;
 
 import org.jcubitainer.move.*;
@@ -12,10 +33,6 @@ import org.jcubitainer.display.*;
 import org.jcubitainer.manager.*;
 import org.jcubitainer.display.theme.*;
 
-/**
- * @author mounes
- *
- */
 public aspect RefreshDisplayAspect {
 
 	pointcut refresh() : call(int MovePiece.downPieces(..))
@@ -32,12 +49,23 @@ public aspect RefreshDisplayAspect {
 		|| call(void Game.pause(..))
 		|| call(void Game.start(..))
 		|| call(void MetaTexte.setDisplay(..))
-		|| call(void ThemeManager.swithTheme(..))
 		;
 
 	after() : refresh() {
 		DisplayBoard.getThis().repaint();
 		//System.out.println("RefreshDisplayAspect from : " + thisJoinPoint);
+	}
+
+	pointcut refreshTheme() : call(void ThemeManager.swithTheme(..));
+
+	before() : refreshTheme() {
+        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+                "Chargement..");	    
+	}
+	after() : refreshTheme() {
+		DisplayBoard.getThis().repaint();
+        DisplayBoard.getThis().getMetabox().getTexte().setTexte(
+                ThemeManager.getCurrent().getNom());
 	}
 
 }

@@ -1,9 +1,29 @@
-/*
- * Created on 20 janv. 2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.display;
 
 import java.awt.Color;
@@ -13,40 +33,36 @@ import javax.swing.JFrame;
 
 import org.jcubitainer.key.MoveBoard;
 
-/**
- * @author rom
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class JCubitainerFrame extends JFrame {
 
-	MoveBoard mb = null;
-	final static Color bg = Color.white;
-	final static Color fg = Color.black;
+    MoveBoard mb = null;
 
-	/**
-	 * @param string
-	 * @param db
-	 */
-	public JCubitainerFrame(String string, MoveBoard p) {
-		super(string);
-		mb = p;
-		init();
-	}
+    final static Color bg = Color.white;
 
-	public void init() {
-		//Initialize drawing colors
-		setBackground(bg);
-		setForeground(fg);
-	}
+    final static Color fg = Color.black;
 
-	/* (non-Javadoc)
-	 * @see java.awt.Container#paint(java.awt.Graphics)
-	 */
-	public void paint(Graphics arg0) {
-		mb.paint(arg0);
-		super.paint(arg0);
-	}
+    /**
+     * @param string
+     * @param db
+     */
+    public JCubitainerFrame(String string, MoveBoard p) {
+        super(string);
+        mb = p;
+        init();
+    }
+
+    public void init() {
+        //Initialize drawing colors
+        setBackground(bg);
+        setForeground(fg);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.Container#paint(java.awt.Graphics)
+     */
+    public void paint(Graphics arg0) {
+        mb.paint(arg0);
+        super.paint(arg0);
+    }
 
 }

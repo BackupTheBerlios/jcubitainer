@@ -1,7 +1,29 @@
-/*
- * Created on 14 janv. 2004
- *  
- */
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer.display;
 
 import java.awt.AlphaComposite;
@@ -22,10 +44,6 @@ import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.meta.MetaTexte;
 
-/**
- * @author rom
- *  
- */
 public class DisplayBoard extends JPanel {
 
     final static Color bg = Color.white;
@@ -88,8 +106,8 @@ public class DisplayBoard extends JPanel {
     protected void clearBackground() {
 
         if (imageGraphics != null)
-                imageGraphics.drawImage(ThemeManager.getCurrent()
-                        .getImage("ifond"), 0, 0, null);
+                imageGraphics.drawImage(ThemeManager.getCurrent().getImage(
+                        "ifond"), 0, 0, null);
     }
 
     public final void paint(Graphics g) {
@@ -110,27 +128,35 @@ public class DisplayBoard extends JPanel {
      */
     public void toPaint(Graphics2D g2) {
 
-        if (!Game.getGameService().isPause() || getMetaInfo().isGame_over()) {
+        //        if (getMetaInfo().isGame_over()) {
+
+        // En pause :
+        Composite c = g2.getComposite();
+        if (Game.getGameService().isPause() && !getMetaInfo().isGame_over())
+                g2.setComposite(AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, .2f));
+
+        // On dessine les pièces mouvantes :
+        List liste = metabox.getPieces_mouvantes();
+        synchronized (liste) {
+            // On dessine l'ombre :
+            paintOmbre(g2);
 
             // On dessine les pièces mouvantes :
-            List liste = metabox.getPieces_mouvantes();
-            synchronized (liste) {
-                // On dessine l'ombre :
-                paintOmbre(g2);
-
-                // On dessine les pièces mouvantes :
-                for (int i = 0; i < liste.size(); i++) {
-                    DisplayPiece mp = (DisplayPiece) liste.get(i);
-                    mp.drawPiece(mp != metabox.getCurrentPiece(), g2);
-                }
-
-                // Les pièces fixes :
-                paintFix(g2);
-
-                // Afficher le texte :
-                paintText(g2);
+            for (int i = 0; i < liste.size(); i++) {
+                DisplayPiece mp = (DisplayPiece) liste.get(i);
+                mp.drawPiece(mp != metabox.getCurrentPiece(), g2);
             }
+
+            // Les pièces fixes :
+            paintFix(g2);
+
+            // Afficher le texte :
+            paintText(g2);
         }
+
+        g2.setComposite(c);
+        //        }
     }
 
     private void paintText(Graphics2D g2) {

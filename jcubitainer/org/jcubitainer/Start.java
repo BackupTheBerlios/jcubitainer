@@ -1,3 +1,29 @@
+/***********************************************************************
+ * JCubitainer                                                         *
+ * Version release date : May 5, 2004                                  *
+ * Author : Mounès Ronan metalm@users.berlios.de                       *
+ *                                                                     *
+ *     http://jcubitainer.berlios.de/                                  *
+ *                                                                     *
+ * This code is released under the GNU GPL license, version 2 or       *
+ * later, for educational and non-commercial purposes only.            *
+ * If any part of the code is to be included in a commercial           *
+ * software, please contact us first for a clearance at                *
+ * metalm@users.berlios.de                                             *
+ *                                                                     *
+ *   This notice must remain intact in all copies of this code.        *
+ *   This code is distributed WITHOUT ANY WARRANTY OF ANY KIND.        *
+ *   The GNU GPL license can be found at :                             *
+ *           http://www.gnu.org/copyleft/gpl.html                      *
+ *                                                                     *
+ ***********************************************************************/
+
+/* History & changes **************************************************
+ *                                                                     *
+ ******** May 5, 2004 **************************************************
+ *   - First release                                                   *
+ ***********************************************************************/
+
 package org.jcubitainer;
 
 import java.awt.BorderLayout;
@@ -13,7 +39,6 @@ import org.jcubitainer.display.DisplayPiece;
 import org.jcubitainer.display.JCubitainerFrame;
 import org.jcubitainer.display.SplashScreen;
 import org.jcubitainer.display.infopanel.DisplayInfo;
-import org.jcubitainer.display.theme.ThemeError;
 import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.key.MoveBoard;
 import org.jcubitainer.manager.Configuration;
@@ -22,19 +47,8 @@ import org.jcubitainer.manager.PieceFactory;
 import org.jcubitainer.meta.MetaBoard;
 import org.jcubitainer.meta.MetaInfo;
 import org.jcubitainer.p2p.jxta.J3xtaConnect;
+import org.jcubitainer.tools.logs.Logs;
 
-/*
- * Created on 14 janv. 2004
- * 
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-/**
- * @author rom
- * 
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class Start {
 
     static SplashScreen ss = null;
@@ -66,7 +80,7 @@ public class Start {
         di.setPreferredSize(new Dimension(200, 50));
         new PieceFactory(mb);
 
-        JCubitainerFrame frame = new JCubitainerFrame("JCubitainer 0.2", db);
+        JCubitainerFrame frame = new JCubitainerFrame("JCubitainer", db);
         frame.setIconImage(ThemeManager.getCurrent().getImage("ilogo"));
         //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -116,13 +130,15 @@ public class Start {
 
     public static void main(String[] args) {
 
-        // Chargement du fichier de configuration s'il existe :
-        new Configuration();
+        new Logs();
 
-        // Chargement du thème par défaut :
         try {
+            // Chargement du fichier de configuration s'il existe :
+            new Configuration();
+            // Chargement du thème par défaut :
             new ThemeManager();
-        } catch (ThemeError e1) {
+
+        } catch (Throwable e1) {
             e1.printStackTrace();
         }
         ss = new SplashScreen();
