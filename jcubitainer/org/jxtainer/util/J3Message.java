@@ -1,9 +1,9 @@
 /***********************************************************************
- * JCubitainer                                                         *
- * Version release date : May 5, 2004                                  *
- * Author : Moun�s Ronan metalm@users.berlios.de                       *
+ * JXtainer                                                            *
+ * Version release date : April 3, 2005                                *
+ * Author : Mounes Ronan metalm@users.berlios.de                       *
  *                                                                     *
- *     http://jcubitainer.berlios.de/                                  *
+ *     http://jcubitainer.berlios.de/jxtainer/                         *
  *                                                                     *
  * This code is released under the GNU GPL license, version 2 or       *
  * later, for educational and non-commercial purposes only.            *
@@ -16,12 +16,6 @@
  *   The GNU GPL license can be found at :                             *
  *           http://www.gnu.org/copyleft/gpl.html                      *
  *                                                                     *
- ***********************************************************************/
-
-/* History & changes **************************************************
- *                                                                     *
- ******** December 12, 2004 ********************************************
- *   - First release                                                   *
  ***********************************************************************/
 
 package org.jxtainer.util;
