@@ -55,7 +55,7 @@ public class ErrorOutputStream extends OutputStream {
     public void write(int b) throws IOException {
         if (first) {
             first = false;
-            System.out.println("!! Création du fichier de logs !!");
+            System.out.println("** Création du fichier de logs !!");
             try {
                 file = new FileOutputStream(new File(System
                         .getProperty("user.home")
@@ -78,7 +78,7 @@ public class ErrorOutputStream extends OutputStream {
                 write(info.getBytes());
             } catch (Exception e) {
                 System.out
-                        .println("!! Impossible de créer le fichier de logs !!"
+                        .println("** Impossible de créer le fichier de logs !!"
                                 + e.getMessage());
             }
         }

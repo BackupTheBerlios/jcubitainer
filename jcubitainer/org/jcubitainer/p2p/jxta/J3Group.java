@@ -84,11 +84,11 @@ public class J3Group {
 			pg = new J3Group(peerGroup_temp, proot, pdiscoSvc);
 			pg.publishGroup();
 			knowPeerGroups.put(groupAdv.getPeerGroupID(), pg);
-			System.out.println("- Groupe trouvé : " + groupAdv.getName());
+			System.out.println("! Groupe trouvé : " + groupAdv.getName());
 
 		} catch (PeerGroupException e) {
 			e.printStackTrace();
-			System.out.println("Impossible de créé le groupe : "
+			System.out.println("! Impossible de créé le groupe : "
 					+ groupAdv.getName());
 		}
 		return pg;
@@ -100,7 +100,7 @@ public class J3Group {
 			rootdiscoSvc.publish(peerGroup.getPeerGroupAdvertisement());
 		} catch (Exception e) {
 			System.out
-					.println("Failed to publish peer advertisement in the group ["
+					.println("! Failed to publish peer advertisement in the group ["
 							+ peerGroup.getPeerGroupName() + "]");
 		}
 
@@ -147,10 +147,10 @@ public class J3Group {
 				createPipeListener();
 
 			} else {
-				System.out.println("Failure: unable to join group");
+				System.out.println("! Failure: unable to join group");
 			}
 		} catch (Exception e) {
-			System.out.println("Failure in authentication." + e);
+			System.out.println("! Failure in authentication." + e);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class J3Group {
     }
     
     public void quitGroup(){
-        System.out.print("On quitte le réseau, ");
+        System.out.print("! On quitte le réseau, ");
         pipe.sendMsg(J3Pipe.MESSAGE_REMOVE,true);
         System.out.println(" message envoyé.");
     }

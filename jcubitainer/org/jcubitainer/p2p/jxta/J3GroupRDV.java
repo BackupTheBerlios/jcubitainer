@@ -85,10 +85,10 @@ public class J3GroupRDV extends Process {
 
 			adv = peerGroup.getPeerGroupAdvertisement();
 
-			System.out.println("Groupe créé :" + peerGroup.getPeerGroupName());
+			System.out.println("! Groupe créé :" + peerGroup.getPeerGroupName());
 
 		} catch (Exception e) {
-			System.err.println("Group creation failed");
+			System.err.println("! Group creation failed");
 			e.printStackTrace();
 		}
 
@@ -101,7 +101,7 @@ public class J3GroupRDV extends Process {
 					PeerGroup.DEFAULT_EXPIRATION);
 		} catch (Exception e) {
 			System.out
-					.println("Failed to publish peer advertisement in the group ["
+					.println("! Failed to publish peer advertisement in the group ["
 							+ peerGroup.getPeerGroupName() + "]");
 		}
 
