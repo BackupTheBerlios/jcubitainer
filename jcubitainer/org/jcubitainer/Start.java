@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,7 +13,6 @@ import org.jcubitainer.display.DisplayPiece;
 import org.jcubitainer.display.JCubitainerFrame;
 import org.jcubitainer.display.SplashScreen;
 import org.jcubitainer.display.infopanel.DisplayInfo;
-import org.jcubitainer.display.theme.Theme;
 import org.jcubitainer.display.theme.ThemeError;
 import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.key.MoveBoard;
@@ -69,7 +67,7 @@ public class Start {
         new PieceFactory(mb);
 
         JCubitainerFrame frame = new JCubitainerFrame("JCubitainer 0.2", db);
-        frame.setIconImage(Theme.getCurrent().getImage("ilogo"));
+        frame.setIconImage(ThemeManager.getCurrent().getImage("ilogo"));
         //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.addWindowListener(new WindowAdapter() {

@@ -7,7 +7,7 @@
 package org.jcubitainer.manager;
 
 import org.jcubitainer.display.DisplayPiece;
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.meta.MetaBoard;
 
 /**
@@ -80,7 +80,7 @@ public class PieceFactory {
     }
 
     public DisplayPiece getDisplayPiece(int level) {
-        int max_matiere = Theme.getCurrent().getMAX_MATIERE();
+        int max_matiere = ThemeManager.getCurrent().getMAX_MATIERE();
         int max = 8 + level;
         if (max > formats.length) max = formats.length;
         int piece = (int) (Math.random() * (double) max);

@@ -7,8 +7,8 @@
 package org.jcubitainer.display.theme;
 
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +27,10 @@ public class ThemeManager {
 
     private static String current = null;
 
+    private static Theme currentTheme = null;
+
+    private static Hashtable cache = new Hashtable();
+
     /**
      *  
      */
@@ -34,11 +38,12 @@ public class ThemeManager {
         super();
         theme.add("/ressources/themes/theme_basic.zip");
         theme.add("/ressources/themes/theme_gnome.zip");
+        theme.add("/ressources/themes/theme_xp.zip");
         //        theme.addAll(Ressources.getFiles("/ressources/themes/"));
         reload();
     }
 
-    public static void swithTheme() throws ThemeError {
+    public synchronized static void swithTheme() throws ThemeError {
         reload();
     }
 
@@ -62,9 +67,23 @@ public class ThemeManager {
         }
         if (f != null) {
             is = Ressources.getInputStream(f);
-            new Theme(is);
+            // Chargement :
+            Theme temp = (Theme) cache.get(f);
+            if (temp == null) {
+                temp = new Theme(is);
+                cache.put(f, temp);
+            }
             current = f;
+            currentTheme = temp;
             Configuration.setPropertie("theme", current);
         }
     }
+
+    /**
+     * @return Returns the current.
+     */
+    public static Theme getCurrent() {
+        return currentTheme;
+    }
+
 }

@@ -14,7 +14,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine.Info;
 
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 
 /**
  * 
@@ -51,11 +51,11 @@ public class Sons {
     }
 
     public static void son1() {
-        jouerSon(Theme.getCurrent().getSon("son1"));
+        jouerSon(ThemeManager.getCurrent().getSon("son1"));
     }
 
     public static void son2() {
-        jouerSon(Theme.getCurrent().getSon("son2"));
+        jouerSon(ThemeManager.getCurrent().getSon("son2"));
     }
 
 }

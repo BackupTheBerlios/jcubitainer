@@ -17,7 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.meta.MetaInfo;
 
@@ -64,7 +64,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.black);
         //new InfoLabel("JCubitainer", this).setFont(Font.getFont("Verdana"));
-        ii = new InfoImage(Theme.getCurrent().getImage("ititle"), this);
+        ii = new InfoImage(ThemeManager.getCurrent().getImage("ititle"), this);
         button = new JButton("Start");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setBackground(Color.gray);
@@ -198,7 +198,7 @@ public class DisplayInfo extends JPanel implements ActionListener {
     }
 
     public void refreshTheme() {
-        ii.setIcon(new ImageIcon(Theme.getCurrent().getImage("ititle")));
+        ii.setIcon(new ImageIcon(ThemeManager.getCurrent().getImage("ititle")));
     }
 
 }

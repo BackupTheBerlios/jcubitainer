@@ -27,7 +27,6 @@ import org.jcubitainer.tools.ProcessMg;
  */
 public class Theme {
 
-    private static Theme current = null;
 
     // Description dans theme.properties :
     Properties description = null;
@@ -47,7 +46,6 @@ public class Theme {
 
     public Theme(InputStream is) throws ThemeError {
         load(is);
-        current = this;
     }
 
     public void load(InputStream is) throws ThemeError {
@@ -180,13 +178,6 @@ public class Theme {
      */
     public String getNom() {
         return nom;
-    }
-
-    /**
-     * @return Returns the current.
-     */
-    public static Theme getCurrent() {
-        return current;
     }
 
     public Image getImage(String nom) {

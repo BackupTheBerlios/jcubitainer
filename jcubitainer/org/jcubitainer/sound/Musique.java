@@ -22,6 +22,8 @@ public class Musique extends Process implements MetaEventListener {
 
     private Sequencer seqer;
 
+    private boolean playing = true;
+
     public void meta(MetaMessage mes) {
         if (mes.getType() == 47) {
             pause(true);
@@ -30,7 +32,7 @@ public class Musique extends Process implements MetaEventListener {
 
     public Musique(InputStream is, String nom) throws MidiUnavailableException,
             InvalidMidiDataException, IOException {
-        super(1000);
+        super(2000);
         file = nom;
         try {
             Sequence seq = MidiSystem.getSequence(is);
@@ -57,10 +59,12 @@ public class Musique extends Process implements MetaEventListener {
     private void startSound() {
         seqer.setMicrosecondPosition(0);
         seqer.start();
+        playing = true;
     }
 
     private void pause(boolean stop) {
         super.pause();
+        playing = false;
         seqer.stop();
         interrupt();
     }
@@ -74,9 +78,11 @@ public class Musique extends Process implements MetaEventListener {
     }
 
     public void action() {
+        System.out.println(">");
         startSound();
         try {
-            join();
+            while (playing)
+                join(3000);
             pause(false);
         } catch (Exception e) {
         }

@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 
 /*
  * Created on 26 janv. 2004
@@ -26,7 +26,7 @@ public class SplashScreen extends JWindow {
 
     public SplashScreen() {
         super();
-        ImageIcon icon = new ImageIcon(Theme.getCurrent().getImage(
+        ImageIcon icon = new ImageIcon(ThemeManager.getCurrent().getImage(
                 "isplash"));
         if (icon != null) {
             getContentPane().add(new JLabel(icon, JLabel.CENTER));

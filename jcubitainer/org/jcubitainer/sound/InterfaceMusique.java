@@ -2,7 +2,7 @@ package org.jcubitainer.sound;
 
 import java.util.List;
 
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Configuration;
 import org.jcubitainer.tools.Process;
 import org.jcubitainer.tools.ProcessMg;
@@ -39,13 +39,13 @@ public class InterfaceMusique {
     class PlaySound extends Process {
 
         protected PlaySound() {
-            super(1000);
+            super(2000);
             plg = new ProcessMg(this);
         }
 
         public void action() throws InterruptedException {
             try {
-                List playlist = Theme.getCurrent().getMusiques();
+                List playlist = ThemeManager.getCurrent().getMusiques();
                 int pos = 0;
                 if (play != null) {
                     pos = playlist.indexOf(play) + 1;
@@ -85,15 +85,19 @@ public class InterfaceMusique {
     }
 
     public static void START_musique() {
-        if (InterfaceMusique.playMusic) this_.getPlg().wakeUp();
+        synchronized (this_.getPlg()) {
+            if (InterfaceMusique.playMusic) this_.getPlg().wakeUp();
+        }
     }
 
     public static boolean STOP_musique() {
-        if (!this_.getPlg().isStop()) {
-            this_.getPlg().pause();
-            return true;
-        } else
-            return false;
+        synchronized (this_.getPlg()) {
+            if (!this_.getPlg().isStop()) {
+                this_.getPlg().pause();
+                return true;
+            } else
+                return false;
+        }
     }
 
     /**

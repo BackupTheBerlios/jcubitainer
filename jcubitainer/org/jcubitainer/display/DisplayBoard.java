@@ -15,7 +15,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.manager.Game;
 import org.jcubitainer.manager.MatiereFactory;
 import org.jcubitainer.meta.MetaBoard;
@@ -88,7 +88,7 @@ public class DisplayBoard extends JPanel {
     protected void clearBackground() {
 
         if (imageGraphics != null)
-                imageGraphics.drawImage(Theme.getCurrent()
+                imageGraphics.drawImage(ThemeManager.getCurrent()
                         .getImage("ifond"), 0, 0, null);
     }
 

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jcubitainer.display.theme.Theme;
+import org.jcubitainer.display.theme.ThemeManager;
 import org.jcubitainer.tools.PieceComparator;
 import org.jcubitainer.tools.TableauTools;
 
@@ -163,7 +164,7 @@ public class MetaBoard {
 
     public void upLines() {
         pieces_mortes = TableauTools.upAll(pieces_mortes);
-        pieces_mortes = TableauTools.swingLast(pieces_mortes, Theme
+        pieces_mortes = TableauTools.swingLast(pieces_mortes, ThemeManager
                 .getCurrent().getMAX_MATIERE());
     }
 

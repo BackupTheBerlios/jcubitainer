@@ -45,21 +45,21 @@ public class Ressources {
      * @return null
      * @deprecated Ne marche pas dans un fichier JAR !
      */
-    public static List getFiles(String nom) {
-        java.net.URL url = JCubitainerFrame.class.getResource(nom);
-        if (url == null) return new ArrayList();
-        try {
-            File f = new File(url.toURI());
-            if (f.isDirectory()) {
-                List l = new ArrayList();
-                Collections.addAll(l, f.listFiles());
-                return l;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public static List getFiles(String nom) {
+//        java.net.URL url = JCubitainerFrame.class.getResource(nom);
+//        if (url == null) return new ArrayList();
+//        try {
+//            File f = new File(url.toURI());
+//            if (f.isDirectory()) {
+//                List l = new ArrayList();
+//                Collections.addAll(l, f.listFiles());
+//                return l;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     public static InputStream getConfigInputStream(String fichier) {
         return JCubitainerFrame.class.getResourceAsStream("/config/" + fichier);
