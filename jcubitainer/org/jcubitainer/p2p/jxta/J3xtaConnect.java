@@ -73,7 +73,7 @@ public class J3xtaConnect {
 			//			j3root =
 			// J3Group.getInstance(root.getPeerGroupAdvertisement(),root,rootDiscoveryService);
 			//			j3root.joinThisGroup();
-			J3xta.setStatut(J3xta.JXTA_STATUT_ON);
+//			J3xta.setStatut(J3xta.JXTA_STATUT_ON);
 		} catch (PeerGroupException e) {
 			System.out.println("fatal error : group creation failure");
 			e.printStackTrace();
@@ -89,9 +89,9 @@ public class J3xtaConnect {
 		groupDiscoveryServiceProcess.wakeUp();
 
 		// On lance le service qui va devoir trouver les advs :
-		advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
-				rootDiscoveryService));
-		advDiscoveryServiceProcess.wakeUp();
+//		advDiscoveryServiceProcess = new ProcessMg(new J3AdvDiscoveryListener(
+//				rootDiscoveryService));
+//		advDiscoveryServiceProcess.wakeUp();
 
 		// On va attendre 1 minute pour essayer de trouver un groupe JXtainer
 
@@ -108,5 +108,7 @@ public class J3xtaConnect {
 			group = new ProcessMg(rdv);
 			group.wakeUp();
 		}
+		else 
+			System.out.println("Une partie trouvée sur Internet ! Bravo !");
 	}
 }

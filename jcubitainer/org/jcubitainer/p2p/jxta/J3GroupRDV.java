@@ -43,7 +43,7 @@ import org.jcubitainer.tools.ProcessMg;
 
 public class J3GroupRDV extends Process {
 
-    public static final String NAME = "Partie#";
+    public static final String NAME = "Partie_";
 
     public static final String DESCRIPTION = "J3xtainer Groupe V0.3";
 
@@ -61,7 +61,7 @@ public class J3GroupRDV extends Process {
      * 
      */
     public J3GroupRDV(PeerGroup proot, DiscoveryService pdiscoSvc) {
-        super(180000);
+        super(60 * 1000);
         rootGroup = proot;
         discoSvc = pdiscoSvc;
         //		PeerGroupID peerGroupID = net.jxta.id.IDFactory.newPeerGroupID();
@@ -87,7 +87,7 @@ public class J3GroupRDV extends Process {
     }
 
     public void publishGroup() {
-        //        System.out.println("Publication du groupe");
+                System.out.println("Publication du groupe : " + peerGroup.getPeerGroupName());
         try {
 //            discoSvc.remotePublish(peerGroup.getPeerGroupAdvertisement());
             discoSvc.remotePublish(adv);
@@ -138,6 +138,7 @@ public class J3GroupRDV extends Process {
                 //                doc.sendToWriter(out);
                 //                System.out.println(out.toString());
                 //                out.close();
+                J3xta.setStatut(J3xta.JXTA_STATUT_ON);
             } else {
                 System.out.println("Failure: unable to join group");
             }

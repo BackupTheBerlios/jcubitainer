@@ -28,7 +28,7 @@ package org.jcubitainer.p2p.jxta;
 
 public class J3xta {
 
-    public static final String JXTA_ID = "J3xtainerV0_3#";
+    public static final String JXTA_ID = "J3xtainerV0_3_";
 
     public static final int JXTA_STATUT_OFF = 0;
 

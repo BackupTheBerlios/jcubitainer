@@ -65,7 +65,7 @@ public class J3AdvDiscoveryListener extends Process implements
                     adv = (PeerGroupAdvertisement) theAdvertisementEnumeration
                             .nextElement();
 
-                    //                    System.out.println(" Adv = " + adv.getName());
+                                        System.out.println(" Adv = " + adv.getName());
                 } catch (Exception e) {
                     //System.out.print("#");
                 }

@@ -67,8 +67,8 @@ public class J3GroupDiscoveryListener extends Process implements
 							.nextElement();
 					                    System.out.println(" Peer Group = " + adv.getName());
 					if (adv.getName().startsWith(J3xta.JXTA_ID)) {
-//						System.out.println("Peergroup à nous : "
-//								+ adv.getName());
+						System.out.println("Peergroup à nous : "
+								+ adv.getName());
 						J3Group J3g = J3Group.getInstance(adv, rootGroup,
 								discoveryService);
 
