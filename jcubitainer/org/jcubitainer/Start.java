@@ -101,16 +101,10 @@ public class Start {
         int maxX = (screenSize.width - frame.getWidth()) / 2;
         int maxY = (screenSize.height - frame.getHeight()) / 2;
         frame.setLocation(maxX, maxY);
-        // Seulement pour le JDK 1.4 :
-        //frame.setLocationRelativeTo(null);
-        /*
-         * GraphicsDevice device = GraphicsEnvironment
-         * .getLocalGraphicsEnvironment() .getDefaultScreenDevice();
-         */
         new Game(db, mi);
         ss.hide(1000);
         frame.setVisible(true);
-        mb.getTexte().setTexte("http://jcubitainer.berlios.de");
+        mb.getTexte().setTexte("http://langagelinotte.free.fr/linotte/archive/jcubitainer.html");
     }
 
     public static void main(String[] args) {
