@@ -1,3 +1,5 @@
+Projet abandonné.
+
  ________________________________
 /                                \
 | Use Case gestion des groupes : |#
