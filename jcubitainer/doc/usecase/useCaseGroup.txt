@@ -42,13 +42,13 @@ Sinon, on garde le Peer dans un hashtable.
 
 # rejoindre une partie :
 	* On se joint au groupe JXTA. ( déjà fait ? )
-	* On recherche tous peers connecté à ce groupe. ( comment ? )
+	* On recherche tous peers connectés à ce groupe. ( comment ? )
 	* On ouvre un Pipe sur tous les peers.
 	* On grise les boutons sauf "quitter".
 	* On ne peut plus sélectionner une autre partie.
 
 # quitter une partie :
-	* On envoie un message par Pipe pour notifier la suppresion.
+	* On envoie un message par Pipe pour notifier la suppression.
 	* On ferme tous les Pipes.
 	* On ne stocke plus l'ID du groupe
 	* On grise le bouton "quitter".
