@@ -133,8 +133,6 @@ public class DisplayBoard extends JPanel {
      */
     public void toPaint(Graphics2D g2) {
 
-        //        if (getMetaInfo().isGame_over()) {
-
         // En pause :
         Composite c = g2.getComposite();
         if (Game.getGameService().isPause() && !getMetaInfo().isGame_over())
@@ -197,7 +195,7 @@ public class DisplayBoard extends JPanel {
         int[] ombre = metabox.getOmbre().getFormat();
 
         if (ombre == null) return;
-        //System.out.println(metabox.getOmbre());
+
         for (int x = 0; x < ombre.length; x++) {
             int ligne = ombre[x];
             if (ligne > 0) {
@@ -239,7 +237,6 @@ public class DisplayBoard extends JPanel {
      * @see java.awt.Component#repaint()
      */
     public void repaint() {
-        //System.out.println("refresh");
         super.repaint();
     }
 

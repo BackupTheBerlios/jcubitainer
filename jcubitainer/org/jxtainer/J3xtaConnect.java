@@ -59,13 +59,13 @@ public class J3xtaConnect {
 
             if (!proxy && !config_jxta.exists()) {
                 try {
-                    Log.debug("! Creation du fichier de configuration JXTA.");
+                    Log.debug("! Création du fichier de configuration JXTA.");
                     String name = StartJXTA.getPeerName();
                     Configurator config = new Configurator(name, "JXTAConfiguration", name, "monmotdepasse2005");
                     config.save();
 
                 } catch (Exception ce) {
-                    Log.debug("! Creation du fichier de configuration JXTA impossible.");
+                    Log.debug("! Création du fichier de configuration JXTA impossible.");
                     // Impossible de faire une configuration automatique !
                 }
             }
